@@ -6,10 +6,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
-// Importações Lombok
-import lombok.Getter;
-import lombok.Setter;
-
 @Entity
 @Table(name = "Usuario")
 public class Usuario {
