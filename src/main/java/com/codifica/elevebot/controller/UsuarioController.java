@@ -6,13 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/usuarios")
@@ -24,7 +20,13 @@ public class UsuarioController {
     @PostMapping
     public ResponseEntity<Map<String, Object>> cadastrarUsuario(@RequestBody Usuario usuario) {
         if (usuarioRepository.findByEmail(usuario.getEmail()) != null) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+            Map<String, Object> resposta = new LinkedHashMap<>();
+            resposta.put("timestamp", LocalDateTime.now());
+            resposta.put("status", HttpStatus.CONFLICT.value());
+            resposta.put("error", "CONFLICT");
+            resposta.put("message", "Não é possível cadastrar dois usuários com o mesmo e-mail.");
+
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(resposta);
         }
 
         usuarioRepository.save(usuario);
@@ -85,25 +87,48 @@ public class UsuarioController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Usuario> atualizarUsuario(@PathVariable Integer id,
-                                             @RequestBody Usuario usuario) {
+    public ResponseEntity<Map<String, Object>> atualizarUsuario(@PathVariable Integer id,
+                                                                @RequestBody Usuario usuario) {
         if (!usuarioRepository.existsById(id)) {
-            return ResponseEntity.notFound().build();
+            Map<String, Object> resposta = new LinkedHashMap<>();
+            resposta.put("timestamp", LocalDateTime.now());
+            resposta.put("status", HttpStatus.NOT_FOUND.value());
+            resposta.put("error", "NOT_FOUND");
+            resposta.put("message", "Usuário não encontrado.");
+
+            return new ResponseEntity<>(resposta, HttpStatus.NOT_FOUND);
         }
 
         usuario.setId(id);
         Usuario usuarioAtualizado = usuarioRepository.save(usuario);
 
-        return ResponseEntity.ok(usuarioAtualizado);
+        Map<String, Object> resposta = new LinkedHashMap<>();
+        resposta.put("timestamp", LocalDateTime.now());
+        resposta.put("status", HttpStatus.OK.value());
+        resposta.put("message", "Usuário atualizado com sucesso!");
+
+        return ResponseEntity.ok(resposta);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletarUsuario(@PathVariable Integer id) {
+    public ResponseEntity<Map<String, Object>> deletarUsuario(@PathVariable Integer id) {
         if (!usuarioRepository.existsById(id)) {
-            return ResponseEntity.notFound().build();
+            Map<String, Object> resposta = new LinkedHashMap<>();
+            resposta.put("timestamp", LocalDateTime.now());
+            resposta.put("status", HttpStatus.NOT_FOUND.value());
+            resposta.put("error", "NOT FOUND");
+            resposta.put("message", "Usuário não encontrado.");
+
+            return new ResponseEntity<>(resposta, HttpStatus.NOT_FOUND);
         }
 
         usuarioRepository.deleteById(id);
-        return ResponseEntity.noContent().build();
+
+        Map<String, Object> resposta = new LinkedHashMap<>();
+        resposta.put("timestamp", LocalDateTime.now());
+        resposta.put("status", HttpStatus.NO_CONTENT.value());
+        resposta.put("message", "Usuário deletado com sucesso.");
+
+        return new ResponseEntity<>(resposta, HttpStatus.NO_CONTENT);
     }
 }

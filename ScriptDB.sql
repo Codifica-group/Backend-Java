@@ -9,3 +9,5 @@ CREATE TABLE Usuario (
 );
 
 SELECT * FROM Usuario;
+
+-- DROP database eleve; --
