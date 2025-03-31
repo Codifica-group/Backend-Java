@@ -17,7 +17,7 @@ public class UsuarioController {
 
     @PostMapping
     public ResponseEntity<Usuario> cadastrarUsuario(@RequestBody Usuario usuario) {
-        Usuario usuarioSalvo = usuarioService.cadastrarUsuario(usuario);
+        Usuario usuarioSalvo = usuarioService.cadastrar(usuario);
         return ResponseEntity.status(201).body(usuarioSalvo);
     }
 
@@ -29,7 +29,7 @@ public class UsuarioController {
 
     @GetMapping
     public ResponseEntity<List<Usuario>> listarUsuarios() {
-        List<Usuario> usuarios = usuarioService.listarUsuarios();
+        List<Usuario> usuarios = usuarioService.listar();
         if (usuarios.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
@@ -45,13 +45,13 @@ public class UsuarioController {
     @PutMapping("/{id}")
     public ResponseEntity<Usuario> atualizarUsuario(@PathVariable Integer id,
                                                     @RequestBody Usuario usuario) {
-        Usuario usuarioAtualizado = usuarioService.atualizarUsuario(id, usuario);
+        Usuario usuarioAtualizado = usuarioService.atualizar(id, usuario);
         return ResponseEntity.ok(usuarioAtualizado);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletarUsuario(@PathVariable Integer id) {
-        usuarioService.deletarUsuario(id);
+        usuarioService.deletar(id);
         return ResponseEntity.noContent().build();
     }
 }

@@ -16,7 +16,7 @@ public class UsuarioService {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
-    public Usuario cadastrarUsuario(Usuario usuario) {
+    public Usuario cadastrar(Usuario usuario) {
         if (usuarioRepository.findByEmail(usuario.getEmail()) != null) {
             throw new ConflictException("Não é possível cadastrar dois usuários com o mesmo e-mail.");
         }
@@ -34,7 +34,7 @@ public class UsuarioService {
         return usuario;
     }
 
-    public List<Usuario> listarUsuarios() {
+    public List<Usuario> listar() {
         return usuarioRepository.findAll();
     }
 
@@ -43,7 +43,7 @@ public class UsuarioService {
                 .orElseThrow(() -> new NotFoundException("Usuário não encontrado."));
     }
 
-    public Usuario atualizarUsuario(Integer id, Usuario usuario) {
+    public Usuario atualizar(Integer id, Usuario usuario) {
         if (!usuarioRepository.existsById(id)) {
             throw new NotFoundException("Usuário não encontrado.");
         }
@@ -51,7 +51,7 @@ public class UsuarioService {
         return usuarioRepository.save(usuario);
     }
 
-    public void deletarUsuario(Integer id) {
+    public void deletar(Integer id) {
         if (!usuarioRepository.existsById(id)) {
             throw new NotFoundException("Usuário não encontrado.");
         }

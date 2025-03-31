@@ -4,7 +4,6 @@ server.port = 8080
 server.error.include-message=always
 server.error.include-binding-errors=always
 
-#Configuração do Banco MySQL
 spring.datasource.url=${DB_URL}
 spring.datasource.username=${DB_USERNAME}
 spring.datasource.password=${DB_PASSWORD}
