@@ -16,22 +16,26 @@ public class UsuarioService {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
-    public Usuario cadastrar(Usuario usuario) {
+    public String cadastrar(Usuario usuario) {
         if (usuarioRepository.findByEmail(usuario.getEmail()) != null) {
             throw new ConflictException("Não é possível cadastrar dois usuários com o mesmo e-mail.");
         }
-        return usuarioRepository.save(usuario);
+
+        usuarioRepository.save(usuario);
+        return "Usuário cadastrado com sucesso.";
     }
 
-    public Usuario login(Usuario usuarioRequest) {
+    public String login(Usuario usuarioRequest) {
         Usuario usuario = usuarioRepository.findByEmailAndSenha(
                 usuarioRequest.getEmail(),
                 usuarioRequest.getSenha()
         );
+
         if (usuario == null) {
             throw new UnauthorizedException("Credenciais inválidas.");
         }
-        return usuario;
+
+        return "Acesso autorizado.";
     }
 
     public List<Usuario> listar() {
@@ -43,18 +47,22 @@ public class UsuarioService {
                 .orElseThrow(() -> new NotFoundException("Usuário não encontrado."));
     }
 
-    public Usuario atualizar(Integer id, Usuario usuario) {
+    public String atualizar(Integer id, Usuario usuario) {
         if (!usuarioRepository.existsById(id)) {
             throw new NotFoundException("Usuário não encontrado.");
         }
+
         usuario.setId(id);
-        return usuarioRepository.save(usuario);
+        usuarioRepository.save(usuario);
+        return "Usuário atualizado com sucesso.";
     }
 
-    public void deletar(Integer id) {
+    public String deletar(Integer id) {
         if (!usuarioRepository.existsById(id)) {
             throw new NotFoundException("Usuário não encontrado.");
         }
+
         usuarioRepository.deleteById(id);
+        return "Usuário deletado com sucessoo.";
     }
 }

@@ -29,7 +29,8 @@ public class ClienteService {
     }
 
     public Cliente buscarPorId(Integer id) {
-        return clienteRepository.findById(id).orElse(null);
+        return clienteRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Cliente não encontrado."));
     }
 
     public String atualizar(Integer id, Cliente cliente) {

@@ -19,12 +19,13 @@ public class ClienteController {
     @PostMapping
     public ResponseEntity<String> cadastrarCliente(@RequestBody Cliente cliente) {
         String mensagem = clienteService.cadastrar(cliente);
-        return ResponseEntity.created(null).body(mensagem);
+        return ResponseEntity.status(HttpStatus.CREATED).body(mensagem);
     }
 
     @GetMapping
     public ResponseEntity<List<Cliente>> listarClientes() {
-        return ResponseEntity.ok(clienteService.listar());
+        List<Cliente> clientes = clienteService.listar();
+        return clientes.isEmpty() ? ResponseEntity.noContent().build() : ResponseEntity.ok().body(clientes);
     }
 
     @GetMapping("/{id}")
@@ -35,12 +36,14 @@ public class ClienteController {
     @PutMapping("/{id}")
     public ResponseEntity<String> atualizarCliente(@PathVariable Integer id,
                                                    @RequestBody Cliente cliente) {
-        return ResponseEntity.ok(clienteService.atualizar(id, cliente));
+        String mensagem = clienteService.atualizar(id, cliente);
+        return ResponseEntity.ok(mensagem);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deletarCliente(@PathVariable Integer id) {
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(clienteService.deletar(id));
+        String mensagem = clienteService.deletar(id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(mensagem);
     }
 
 }
