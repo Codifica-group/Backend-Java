@@ -63,6 +63,6 @@ public class UsuarioService {
         }
 
         usuarioRepository.deleteById(id);
-        return "Usuário deletado com sucessoo.";
+        return "Usuário deletado com sucesso.";
     }
 }

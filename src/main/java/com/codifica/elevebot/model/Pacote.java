@@ -2,13 +2,12 @@ package com.codifica.elevebot.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Future;
-import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDate;
 
 @Entity
 @Table(name="cliente_pacote")
-public class ClientePacote {
+public class Pacote {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

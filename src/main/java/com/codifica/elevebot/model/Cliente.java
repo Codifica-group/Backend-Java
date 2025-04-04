@@ -2,6 +2,9 @@ package com.codifica.elevebot.model;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name= "cliente")
 public class Cliente {
@@ -15,6 +18,20 @@ public class Cliente {
     private String cep;
     private Integer numeroEndereco;
     private String complemento;
+
+    @OneToMany(mappedBy = "cliente",
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    private List<Pet> pets = new ArrayList<>();
+
+    public Cliente() {}
+
+    public Cliente(String nome, String numeroCelular, String cep, Integer numeroEndereco, String complemento) {
+        this.nome = nome;
+        this.numeroCelular = numeroCelular;
+        this.cep = cep;
+        this.numeroEndereco = numeroEndereco;
+        this.complemento = complemento;
+    }
 
     public Integer getId() {
         return id;
@@ -62,5 +79,13 @@ public class Cliente {
 
     public void setComplemento(String complemento) {
         this.complemento = complemento;
+    }
+
+    public List<Pet> getPets() {
+        return pets;
+    }
+
+    public void setPets(List<Pet> pets) {
+        this.pets = pets;
     }
 }

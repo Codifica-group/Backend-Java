@@ -5,6 +5,8 @@ import com.codifica.elevebot.exception.NotFoundException;
 import com.codifica.elevebot.model.Cliente;
 import com.codifica.elevebot.repository.ClienteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,12 +18,12 @@ public class ClienteService {
     private ClienteRepository clienteRepository;
 
     public String cadastrar(Cliente cliente) {
-        if (clienteRepository.findByNome(cliente.getNome()) != null) {
-            throw new ConflictException("Não é possível cadastrar dois clientes com o mesmo nome.");
+        if (clienteExiste(cliente)) {
+            throw new ConflictException("Cliente já cadastrado.");
         }
 
         clienteRepository.save(cliente);
-        return "Cliente cadastrado com sucesso!";
+        return "Cliente cadastrado com sucesso.";
     }
 
     public List<Cliente> listar() {
@@ -35,7 +37,7 @@ public class ClienteService {
 
     public String atualizar(Integer id, Cliente cliente) {
         if (!clienteRepository.existsById(id)) {
-            throw new NotFoundException("Cliente nao encontrado.");
+            throw new NotFoundException("Cliente não encontrado.");
         }
 
         cliente.setId(id);
@@ -44,11 +46,29 @@ public class ClienteService {
     }
 
     public String deletar(Integer id) {
-        if (!clienteRepository.existsById(id)) {
-            throw new NotFoundException("Cliente nao encontrado.");
+        Cliente cliente = clienteRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Cliente nao encontrado."));
+
+        if (cliente.getPets() != null && !cliente.getPets().isEmpty()) {
+            throw new ConflictException("Não é possível deletar clientes que possui pets cadastrados.");
         }
 
         clienteRepository.deleteById(id);
-        return "Cliente deletado com sucesso!";
+        return "Cliente deletado com sucesso.";
+    }
+
+    private boolean clienteExiste(Cliente cliente) {
+        Cliente clienteFiltro = new Cliente(cliente.getNome(),
+                                            cliente.getNumeroCelular(),
+                                            cliente.getCep(),
+                                            cliente.getNumeroEndereco(),
+                                            cliente.getComplemento());
+
+        ExampleMatcher matcher = ExampleMatcher.matching()
+                .withIgnoreNullValues()
+                .withIgnoreCase("nome", "numeroCelular", "cep", "complemento");
+
+        Example<Cliente> example = Example.of(clienteFiltro, matcher);
+        return clienteRepository.exists(example);
     }
 }
