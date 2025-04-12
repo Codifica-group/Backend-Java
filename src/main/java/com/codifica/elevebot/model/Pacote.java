@@ -1,7 +1,7 @@
 package com.codifica.elevebot.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Future;
 
 import java.time.LocalDate;
 
@@ -13,11 +13,22 @@ public class Pacote {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    private Integer idCliente;
-    private Integer idPacote;
+    @ManyToOne
+    @JoinColumn(name = "cliente_id")
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private Cliente cliente;
 
-    @Future
+    private Integer idPacote;
     private LocalDate dataExpiracao;
+
+    public Pacote() {}
+
+    public Pacote(Integer id, Cliente cliente, Integer idPacote, LocalDate dataExpiracao) {
+        this.id = id;
+        this.cliente = cliente;
+        this.idPacote = idPacote;
+        this.dataExpiracao = dataExpiracao;
+    }
 
     public Integer getId() {
         return id;
@@ -27,12 +38,12 @@ public class Pacote {
         this.id = id;
     }
 
-    public Integer getIdCliente() {
-        return idCliente;
+    public Cliente getCliente() {
+        return cliente;
     }
 
-    public void setIdCliente(Integer idCliente) {
-        this.idCliente = idCliente;
+    public void setCliente(Cliente cliente) {
+        this.cliente = cliente;
     }
 
     public Integer getIdPacote() {
@@ -43,11 +54,11 @@ public class Pacote {
         this.idPacote = idPacote;
     }
 
-    public @Future LocalDate getDataExpiracao() {
+    public LocalDate getDataExpiracao() {
         return dataExpiracao;
     }
 
-    public void setDataExpiracao(@Future LocalDate dataExpiracao) {
+    public void setDataExpiracao(LocalDate dataExpiracao) {
         this.dataExpiracao = dataExpiracao;
     }
 }

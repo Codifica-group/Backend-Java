@@ -4,6 +4,7 @@ import com.codifica.elevebot.exception.ConflictException;
 import com.codifica.elevebot.exception.NotFoundException;
 import com.codifica.elevebot.model.Cliente;
 import com.codifica.elevebot.repository.ClienteRepository;
+import com.codifica.elevebot.repository.PacoteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
@@ -16,6 +17,9 @@ public class ClienteService {
 
     @Autowired
     private ClienteRepository clienteRepository;
+
+    @Autowired
+    private PacoteRepository pacoteRepository;
 
     public String cadastrar(Cliente cliente) {
         if (clienteExiste(cliente)) {

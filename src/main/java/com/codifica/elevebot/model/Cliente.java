@@ -23,6 +23,9 @@ public class Cliente {
             cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private List<Pet> pets = new ArrayList<>();
 
+    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL)
+    private List<Pacote> pacotes;
+
     public Cliente() {}
 
     public Cliente(String nome, String numeroCelular, String cep, Integer numeroEndereco, String complemento) {
@@ -87,5 +90,13 @@ public class Cliente {
 
     public void setPets(List<Pet> pets) {
         this.pets = pets;
+    }
+
+    public List<Pacote> getPacotes() {
+        return pacotes;
+    }
+
+    public void setPacotes(List<Pacote> pacotes) {
+        this.pacotes = pacotes;
     }
 }
