@@ -3,6 +3,7 @@ package com.codifica.elevebot.service;
 import com.codifica.elevebot.exception.ConflictException;
 import com.codifica.elevebot.exception.NotFoundException;
 import com.codifica.elevebot.model.Cliente;
+import com.codifica.elevebot.model.Pacote;
 import com.codifica.elevebot.repository.ClienteRepository;
 import com.codifica.elevebot.repository.PacoteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -31,7 +33,18 @@ public class ClienteService {
     }
 
     public List<Cliente> listar() {
-        return clienteRepository.findAll();
+        List<Cliente> clientes = clienteRepository.findAll();
+
+        for (Cliente cliente : clientes) {
+            Pacote pacoteAtivo = pacoteRepository.findActivePacoteByCliente(cliente.getId(), LocalDate.now());
+
+            if (pacoteAtivo != null) {
+                cliente.setPacotes(List.of(pacoteAtivo));
+            } else {
+                cliente.setPacotes(List.of());
+            }
+        }
+        return clientes;
     }
 
     public Cliente buscarPorId(Integer id) {

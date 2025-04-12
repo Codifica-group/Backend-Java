@@ -1,6 +1,7 @@
 package com.codifica.elevebot.service;
 
 import com.codifica.elevebot.dto.PacoteDTO;
+import com.codifica.elevebot.dto.PacoteHistoricoDTO;
 import com.codifica.elevebot.exception.ConflictException;
 import com.codifica.elevebot.exception.NotFoundException;
 import com.codifica.elevebot.model.Cliente;
@@ -26,7 +27,7 @@ public class PacoteService {
         Cliente cliente = clienteRepository.findById(pacoteDTO.getIdCliente())
                 .orElseThrow(() -> new NotFoundException("Cliente nao encontrado."));
 
-        boolean clientePossuiPacoteAtivo = pacoteRepository.existsByClienteIdAndDataExpiracaoGreaterThanEqual(
+        boolean clientePossuiPacoteAtivo = pacoteRepository.existsByClienteIdAndDataExpiracaoGreaterThan(
                 cliente.getId(), LocalDate.now());
 
         if (clientePossuiPacoteAtivo) {
@@ -55,8 +56,17 @@ public class PacoteService {
         return "Pacote cadastrado com sucesso.";
     }
 
-    public List<Pacote> listar() {
-        return pacoteRepository.findAll();
+    public List<PacoteHistoricoDTO> listar() {
+        List<Pacote> pacotes = pacoteRepository.findAll();
+
+        return pacotes.stream()
+                .map(pacote -> new PacoteHistoricoDTO(
+                        pacote.getId(),
+                        pacote.getCliente().getId(),
+                        pacote.getIdPacote(),
+                        pacote.getDataExpiracao()
+                ))
+                .toList();
     }
 
     public Pacote buscarPorId(Integer id) {

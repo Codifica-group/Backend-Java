@@ -151,11 +151,11 @@ public class DevConfig {
             pacoteRepository.save(pacote);
 
 //            //PACOTE (ativo)
-            pacote = new Pacote();
-            pacote.setIdPacote(1);
-            pacote.setCliente(cliente);
-            pacote.setDataExpiracao(LocalDate.now().plusDays(31));
-            pacoteRepository.save(pacote);
+//            pacote = new Pacote();
+//            pacote.setIdPacote(1);
+//            pacote.setCliente(cliente);
+//            pacote.setDataExpiracao(LocalDate.now().plusDays(31));
+//            pacoteRepository.save(pacote);
         };
     }
 }

@@ -11,9 +11,9 @@ public interface PacoteRepository extends JpaRepository<Pacote, Integer> {
 
     @Query("SELECT p FROM Pacote p " +
             "WHERE p.cliente.id = :idCliente " +
-            "AND p.dataExpiracao >= :dataAtual")
+            "AND p.dataExpiracao > :dataAtual")
     Pacote findActivePacoteByCliente(@Param("idCliente") Integer idCliente,
                                      @Param("dataAtual") LocalDate dataAtual);
 
-    boolean existsByClienteIdAndDataExpiracaoGreaterThanEqual(Integer clienteId, LocalDate dataExpiracao);
+    boolean existsByClienteIdAndDataExpiracaoGreaterThan(Integer clienteId, LocalDate dataExpiracao);
 }
