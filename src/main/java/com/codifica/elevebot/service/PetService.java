@@ -1,5 +1,6 @@
 package com.codifica.elevebot.service;
 
+import com.codifica.elevebot.adapter.PetAdapter;
 import com.codifica.elevebot.dto.PetDTO;
 import com.codifica.elevebot.exception.ConflictException;
 import com.codifica.elevebot.exception.NotFoundException;
@@ -20,6 +21,8 @@ public class PetService {
     @Autowired
     private PetRepository petRepository;
 
+    private PetAdapter petAdapter;
+
     @Autowired
     private ClienteRepository clienteRepository;
 
@@ -27,7 +30,7 @@ public class PetService {
         Cliente cliente = clienteRepository.findById(petDTO.getIdCliente())
                 .orElseThrow(() -> new NotFoundException("Cliente não encontrado."));
 
-        Pet pet = new Pet(petDTO.getIdRaca(), petDTO.getNome(), cliente);
+        Pet pet = petAdapter.toEntity(petDTO, cliente);
 
         if (petExiste(pet)) {
             throw new ConflictException("Pet já cadastrado.");

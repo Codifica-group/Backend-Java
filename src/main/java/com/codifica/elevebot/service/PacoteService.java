@@ -1,5 +1,6 @@
 package com.codifica.elevebot.service;
 
+import com.codifica.elevebot.adapter.PacoteAdapter;
 import com.codifica.elevebot.dto.PacoteDTO;
 import com.codifica.elevebot.dto.PacoteHistoricoDTO;
 import com.codifica.elevebot.exception.ConflictException;
@@ -20,6 +21,8 @@ public class PacoteService {
     @Autowired
     private PacoteRepository pacoteRepository;
 
+    private PacoteAdapter pacoteAdapter;
+
     @Autowired
     private ClienteRepository clienteRepository;
 
@@ -34,8 +37,7 @@ public class PacoteService {
             throw new ConflictException("Cliente já possui um pacote ativo.");
         }
 
-        Pacote pacote = new Pacote();
-        pacote.setCliente(cliente);
+        Pacote pacote = pacoteAdapter.toEntity(pacoteDTO, cliente);
 
         switch (pacoteDTO.getIdPacote()) {
             case 1:
@@ -60,12 +62,7 @@ public class PacoteService {
         List<Pacote> pacotes = pacoteRepository.findAll();
 
         return pacotes.stream()
-                .map(pacote -> new PacoteHistoricoDTO(
-                        pacote.getId(),
-                        pacote.getCliente().getId(),
-                        pacote.getIdPacote(),
-                        pacote.getDataExpiracao()
-                ))
+                .map(PacoteAdapter::toHistoricoDTO)
                 .toList();
     }
 
