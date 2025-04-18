@@ -1,18 +1,27 @@
 package com.codifica.elevebot.model;
 
 public enum CategoriaProduto {
-    GASTOS_FIXOS("Gastos Fixos"),
-    MANUTENCAO("Manutenção"),
-    INSUMOS("Insumos"),
-    PRODUTO("Produto");
+    GASTO_FIXO(1),
+    MANUTENCAO(2),
+    INSUMO(3),
+    PRODUTO(4);
 
-    private String nome;
+    private final int code;
 
-    CategoriaProduto(String nome) {
-        this.nome = nome;
+    CategoriaProduto(int code) {
+        this.code = code;
     }
 
-    public String getNome() {
-        return nome;
+    public int getCode() {
+        return code;
+    }
+
+    public static CategoriaProduto fromCode(int code) {
+        for (CategoriaProduto valor : values()) {
+            if (valor.getCode() == code) {
+                return valor;
+            }
+        }
+        throw new IllegalArgumentException("Código inválido para CategoriaProduto: " + code);
     }
 }

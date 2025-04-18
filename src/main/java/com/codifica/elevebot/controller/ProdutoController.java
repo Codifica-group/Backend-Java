@@ -18,8 +18,8 @@ public class ProdutoController {
     private ProdutoService produtoService;
 
     @PostMapping
-    public ResponseEntity<String> cadastrarProduto(@RequestBody ProdutoDTO produtoDTO) {
-        String mensagem = produtoService.cadastrar(produtoDTO);
+    public ResponseEntity<String> cadastrarProduto(@RequestBody List<ProdutoDTO> produtosDTO) {
+        String mensagem = produtoService.cadastrar(produtosDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(mensagem);
     }
 
@@ -27,5 +27,17 @@ public class ProdutoController {
     public ResponseEntity<Map<String, List<ProdutoDTO>>> listarProdutos() {
         Map<String, List<ProdutoDTO>> produtos = produtoService.listar();
         return produtos.isEmpty() ? ResponseEntity.noContent().build() : ResponseEntity.ok(produtos);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<String> atualizarProduto(@PathVariable Integer id, @RequestBody ProdutoDTO produtoDTO) {
+        String mensagem = produtoService.atualizar(id, produtoDTO);
+        return ResponseEntity.ok(mensagem);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deletarProduto(@PathVariable Integer id) {
+        String mensagem = produtoService.deletar(id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(mensagem);
     }
 }

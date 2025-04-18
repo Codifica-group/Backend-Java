@@ -1,6 +1,7 @@
 package com.codifica.elevebot.dto;
 
 import com.codifica.elevebot.model.CategoriaProduto;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class ProdutoDTO {
 
@@ -9,6 +10,11 @@ public class ProdutoDTO {
     private String nome;
 
     public ProdutoDTO() {}
+
+    public ProdutoDTO(Integer idCategoria, String nome) {
+        this.idCategoria = idCategoria;
+        this.nome = nome;
+    }
 
     public Integer getId() {
         return id;
@@ -34,7 +40,8 @@ public class ProdutoDTO {
         this.nome = nome;
     }
 
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     public CategoriaProduto getCategoria() {
-        return CategoriaProduto.values()[idCategoria];
+        return CategoriaProduto.fromCode(idCategoria);
     }
 }
