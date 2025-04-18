@@ -1,7 +1,6 @@
 package com.codifica.elevebot.adapter;
 
 import com.codifica.elevebot.dto.PacoteDTO;
-import com.codifica.elevebot.dto.PacoteHistoricoDTO;
 import com.codifica.elevebot.model.Cliente;
 import com.codifica.elevebot.model.Pacote;
 
@@ -14,8 +13,8 @@ public class PacoteAdapter {
         return pacote;
     }
 
-    public static PacoteHistoricoDTO toHistoricoDTO(Pacote pacote) {
-        PacoteHistoricoDTO dto = new PacoteHistoricoDTO();
+    public static PacoteDTO toDTO(Pacote pacote) {
+        PacoteDTO dto = new PacoteDTO();
         dto.setId(pacote.getId());
         dto.setIdCliente(pacote.getCliente().getId());
         dto.setIdPacote(pacote.getIdPacote());
