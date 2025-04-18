@@ -1,5 +1,6 @@
 package com.codifica.elevebot.config;
 
+import com.codifica.elevebot.dto.ProdutoDTO;
 import com.codifica.elevebot.model.Pacote;
 import com.codifica.elevebot.model.Usuario;
 import com.codifica.elevebot.model.Cliente;
@@ -8,6 +9,7 @@ import com.codifica.elevebot.repository.PacoteRepository;
 import com.codifica.elevebot.repository.UsuarioRepository;
 import com.codifica.elevebot.repository.ClienteRepository;
 import com.codifica.elevebot.repository.PetRepository;
+import com.codifica.elevebot.service.ProdutoService;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.boot.CommandLineRunner;
@@ -16,6 +18,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Configuration
 @Profile("dev")
@@ -32,6 +36,9 @@ public class DevConfig {
 
     @Autowired
     private PacoteRepository pacoteRepository;
+
+    @Autowired
+    private ProdutoService produtoService;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -65,25 +72,6 @@ public class DevConfig {
                             ")"
             );
 
-            // Tabela CATEGORIA_DESPESAS
-            jdbcTemplate.execute(
-                    "CREATE TABLE IF NOT EXISTS CATEGORIA_DESPESAS (" +
-                            "    id_categoria_despesas INT PRIMARY KEY AUTO_INCREMENT, " +
-                            "    nome VARCHAR(100) NOT NULL" +
-                            ")"
-            );
-
-            // Tabela PRODUTO
-//            jdbcTemplate.execute(
-//                    "CREATE TABLE IF NOT EXISTS PRODUTO (" +
-//                            "    id_produto INT PRIMARY KEY AUTO_INCREMENT, " +
-//                            "    fk_categoria_despesas INT NOT NULL, " +
-//                            "    nome VARCHAR(100) NOT NULL, " +
-//                            "    FOREIGN KEY (fk_categoria_despesas) " +
-//                            "       REFERENCES CATEGORIA_DESPESAS(id_categoria_despesas)" +
-//                            ")"
-//            );
-
             // Tabela DESPESAS
 //            jdbcTemplate.execute(
 //                    "CREATE TABLE IF NOT EXISTS DESPESAS (" +
@@ -111,12 +99,6 @@ public class DevConfig {
             jdbcTemplate.update("INSERT INTO SERVICO (nome, valor_base) VALUES ('Banho', 50.0)");
             jdbcTemplate.update("INSERT INTO SERVICO (nome, valor_base) VALUES ('Tosa', 70.0)");
             jdbcTemplate.update("INSERT INTO SERVICO (nome, valor_base) VALUES ('Hidratação', 30.0)");
-
-            //CATEGORIA_DESPESAS
-            jdbcTemplate.update("INSERT INTO CATEGORIA_DESPESAS (nome) VALUES ('Gastos fixos')");
-            jdbcTemplate.update("INSERT INTO CATEGORIA_DESPESAS (nome) VALUES ('Manutenção')");
-            jdbcTemplate.update("INSERT INTO CATEGORIA_DESPESAS (nome) VALUES ('Insumos')");
-            jdbcTemplate.update("INSERT INTO CATEGORIA_DESPESAS (nome) VALUES ('Produtos')");
 
             //USUARIO
             Usuario usuario = new Usuario();
@@ -150,12 +132,20 @@ public class DevConfig {
             pacote.setDataExpiracao(LocalDate.now());
             pacoteRepository.save(pacote);
 
-//            //PACOTE (ativo)
+            //PACOTE (ativo)
             pacote = new Pacote();
             pacote.setIdPacote(1);
             pacote.setCliente(cliente);
             pacote.setDataExpiracao(LocalDate.now().plusDays(31));
             pacoteRepository.save(pacote);
+
+//            PRODUTOS
+            List<ProdutoDTO> produtos = new ArrayList<ProdutoDTO>();
+            produtos.add(new ProdutoDTO(1, "Conta de Luz"));
+            produtos.add(new ProdutoDTO(2, "Máquina de Tosa"));
+            produtos.add(new ProdutoDTO(3, "Algodão"));
+            produtos.add(new ProdutoDTO(4, "Shampoo"));
+            produtoService.cadastrar(produtos);
         };
     }
 }
