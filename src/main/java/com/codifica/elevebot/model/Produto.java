@@ -1,6 +1,9 @@
 package com.codifica.elevebot.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "produto")
@@ -14,6 +17,10 @@ public class Produto {
     private CategoriaProduto categoriaProduto;
 
     private String nome;
+
+    @OneToMany(mappedBy = "produto", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private List<Despesa> despesas = new ArrayList<>();
 
     public Produto() {}
 
@@ -39,5 +46,13 @@ public class Produto {
 
     public void setNome(String nome) {
         this.nome = nome;
+    }
+
+    public List<Despesa> getDespesas() {
+        return despesas;
+    }
+
+    public void setDespesas(List<Despesa> despesas) {
+        this.despesas = despesas;
     }
 }

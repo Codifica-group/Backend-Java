@@ -1,6 +1,6 @@
 package com.codifica.elevebot.controller;
 
-import com.codifica.elevebot.model.Despesa;
+import com.codifica.elevebot.dto.DespesaDTO;
 import com.codifica.elevebot.service.DespesaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,25 +17,26 @@ public class DespesaController {
     private DespesaService despesaService;
 
     @PostMapping
-    public ResponseEntity<String> cadastrarDespesa(@RequestBody List<Despesa> despesas) {
-        String mensagem = despesaService.cadastrar(despesas);
+    public ResponseEntity<String> cadastrarDespesa(@RequestBody List<DespesaDTO> despesasDTO) {
+        String mensagem = despesaService.cadastrar(despesasDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(mensagem);
     }
 
     @GetMapping
-    public ResponseEntity<List<Despesa>> listarDespesas() {
-        List<Despesa> despesas = despesaService.listar();
-        return despesas.isEmpty() ? ResponseEntity.noContent().build() : ResponseEntity.ok().body(despesas);
+    public ResponseEntity<List<DespesaDTO>> listarDespesas() {
+        List<DespesaDTO> despesas = despesaService.listar();
+        return despesas.isEmpty() ? ResponseEntity.noContent().build() : ResponseEntity.ok(despesas);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Despesa> buscarDespesaPorId(@PathVariable Integer id) {
-        return ResponseEntity.ok(despesaService.buscarPorId(id));
+    public ResponseEntity<DespesaDTO> buscarDespesaPorId(@PathVariable Integer id) {
+        DespesaDTO despesaDTO = despesaService.buscarPorId(id);
+        return ResponseEntity.ok(despesaDTO);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<String> atualizarDespesa(@PathVariable Integer id, @RequestBody Despesa despesa) {
-        String mensagem = despesaService.atualizar(id, despesa);
+    public ResponseEntity<String> atualizarDespesa(@PathVariable Integer id, @RequestBody DespesaDTO despesaDTO) {
+        String mensagem = despesaService.atualizar(id, despesaDTO);
         return ResponseEntity.ok(mensagem);
     }
 

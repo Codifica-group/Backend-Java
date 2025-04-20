@@ -1,24 +1,15 @@
-package com.codifica.elevebot.model;
+package com.codifica.elevebot.dto;
 
-import jakarta.persistence.*;
 import java.time.LocalDate;
 
-@Entity
-@Table(name = "despesa")
-public class Despesa {
+public class DespesaDTO {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-
-    @ManyToOne
-    @JoinColumn(name = "id_produto")
-    private Produto produto;
-
+    private Integer id = 0;
+    private Integer idProduto;
     private Double valor;
     private LocalDate data;
 
-    public Despesa() {}
+    public DespesaDTO() {}
 
     public Integer getId() {
         return id;
@@ -28,12 +19,12 @@ public class Despesa {
         this.id = id;
     }
 
-    public Produto getProduto() {
-        return produto;
+    public Integer getIdProduto() {
+        return idProduto;
     }
 
-    public void setProduto(Produto produto) {
-        this.produto = produto;
+    public void setIdProduto(Integer idProduto) {
+        this.idProduto = idProduto;
     }
 
     public Double getValor() {
