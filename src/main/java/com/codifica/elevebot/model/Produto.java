@@ -14,6 +14,7 @@ public class Produto {
     private Integer id;
 
     @Enumerated(EnumType.ORDINAL)
+    @Column(name="categoria_despesa_id")
     private CategoriaProduto categoriaProduto;
 
     private String nome;

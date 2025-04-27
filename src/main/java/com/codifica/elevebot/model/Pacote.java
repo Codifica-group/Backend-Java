@@ -18,15 +18,15 @@ public class Pacote {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private Cliente cliente;
 
-    private Integer idPacote;
+    private Integer pacoteId;
     private LocalDate dataExpiracao;
 
     public Pacote() {}
 
-    public Pacote(Integer id, Cliente cliente, Integer idPacote, LocalDate dataExpiracao) {
+    public Pacote(Integer id, Cliente cliente, Integer pacoteId, LocalDate dataExpiracao) {
         this.id = id;
         this.cliente = cliente;
-        this.idPacote = idPacote;
+        this.pacoteId = pacoteId;
         this.dataExpiracao = dataExpiracao;
     }
 
@@ -46,12 +46,12 @@ public class Pacote {
         this.cliente = cliente;
     }
 
-    public Integer getIdPacote() {
-        return idPacote;
+    public Integer getPacoteId() {
+        return pacoteId;
     }
 
-    public void setIdPacote(Integer idPacote) {
-        this.idPacote = idPacote;
+    public void setPacoteId(Integer pacoteId) {
+        this.pacoteId = pacoteId;
     }
 
     public LocalDate getDataExpiracao() {

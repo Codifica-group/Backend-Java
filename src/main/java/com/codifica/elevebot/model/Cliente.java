@@ -14,9 +14,9 @@ public class Cliente {
     private Integer id;
 
     private String nome;
-    private String numeroCelular;
+    private String numCelular;
     private String cep;
-    private Integer numeroEndereco;
+    private Integer numEndereco;
     private String complemento;
 
     @OneToMany(mappedBy = "cliente",
@@ -28,11 +28,11 @@ public class Cliente {
 
     public Cliente() {}
 
-    public Cliente(String nome, String numeroCelular, String cep, Integer numeroEndereco, String complemento) {
+    public Cliente(String nome, String numCelular, String cep, Integer numEndereco, String complemento) {
         this.nome = nome;
-        this.numeroCelular = numeroCelular;
+        this.numCelular = numCelular;
         this.cep = cep;
-        this.numeroEndereco = numeroEndereco;
+        this.numEndereco = numEndereco;
         this.complemento = complemento;
     }
 
@@ -52,12 +52,12 @@ public class Cliente {
         this.nome = nome;
     }
 
-    public String getNumeroCelular() {
-        return numeroCelular;
+    public String getNumCelular() {
+        return numCelular;
     }
 
-    public void setNumeroCelular(String numeroCelular) {
-        this.numeroCelular = numeroCelular;
+    public void setNumCelular(String numCelular) {
+        this.numCelular = numCelular;
     }
 
     public String getCep() {
@@ -68,12 +68,12 @@ public class Cliente {
         this.cep = cep;
     }
 
-    public Integer getNumeroEndereco() {
-        return numeroEndereco;
+    public Integer getNumEndereco() {
+        return numEndereco;
     }
 
-    public void setNumeroEndereco(Integer numeroEndereco) {
-        this.numeroEndereco = numeroEndereco;
+    public void setNumEndereco(Integer numEndereco) {
+        this.numEndereco = numEndereco;
     }
 
     public String getComplemento() {

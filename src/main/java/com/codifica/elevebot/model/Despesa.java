@@ -27,7 +27,7 @@ public class Despesa {
     public void setId(Integer id) {
         this.id = id;
     }
-
+  
     public Produto getProduto() {
         return produto;
     }

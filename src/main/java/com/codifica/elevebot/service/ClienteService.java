@@ -64,7 +64,7 @@ public class ClienteService {
 
     public String deletar(Integer id) {
         Cliente cliente = clienteRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Cliente nao encontrado."));
+                .orElseThrow(() -> new NotFoundException("Cliente não encontrado."));
 
         if (cliente.getPets() != null && !cliente.getPets().isEmpty()) {
             throw new ConflictException("Não é possível deletar clientes que possui pets cadastrados.");
@@ -76,9 +76,9 @@ public class ClienteService {
 
     private boolean clienteExiste(Cliente cliente) {
         Cliente clienteFiltro = new Cliente(cliente.getNome(),
-                                            cliente.getNumeroCelular(),
+                                            cliente.getNumCelular(),
                                             cliente.getCep(),
-                                            cliente.getNumeroEndereco(),
+                                            cliente.getNumEndereco(),
                                             cliente.getComplemento());
 
         ExampleMatcher matcher = ExampleMatcher.matching()
