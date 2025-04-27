@@ -2,7 +2,6 @@ package com.codifica.elevebot.service;
 
 import com.codifica.elevebot.adapter.PacoteAdapter;
 import com.codifica.elevebot.dto.PacoteDTO;
-import com.codifica.elevebot.dto.PacoteHistoricoDTO;
 import com.codifica.elevebot.exception.ConflictException;
 import com.codifica.elevebot.exception.NotFoundException;
 import com.codifica.elevebot.model.Cliente;
@@ -21,54 +20,82 @@ public class PacoteService {
     @Autowired
     private PacoteRepository pacoteRepository;
 
-    private PacoteAdapter pacoteAdapter;
-
     @Autowired
     private ClienteRepository clienteRepository;
+
+    private PacoteAdapter pacoteAdapter;
 
     public String cadastrar(PacoteDTO pacoteDTO) {
         Cliente cliente = clienteRepository.findById(pacoteDTO.getIdCliente())
                 .orElseThrow(() -> new NotFoundException("Cliente nao encontrado."));
 
-        boolean clientePossuiPacoteAtivo = pacoteRepository.existsByClienteIdAndDataExpiracaoGreaterThan(
-                cliente.getId(), LocalDate.now());
-
+        boolean clientePossuiPacoteAtivo = pacoteRepository.existsByClienteIdAndDataExpiracaoGreaterThan(cliente.getId(), LocalDate.now());
         if (clientePossuiPacoteAtivo) {
             throw new ConflictException("Cliente já possui um pacote ativo.");
         }
 
         Pacote pacote = pacoteAdapter.toEntity(pacoteDTO, cliente);
 
+        LocalDate dataInicio = (pacoteDTO.getDataExpiracao() != null) ? pacoteDTO.getDataExpiracao() : LocalDate.now();
+
         switch (pacoteDTO.getIdPacote()) {
-            case 1:
-                // Mensal (31 dias)
-                pacote.setPacoteId(1);
-                pacote.setDataExpiracao(LocalDate.now().plusDays(31));
+            case 1: // Mensal = +31 dias
+                pacote.setIdPacote(1);
+                pacote.setDataExpiracao(dataInicio.plusDays(31));
                 break;
-            case 2:
-                // Quinzenal (16 dias)
-                pacote.setPacoteId(2);
-                pacote.setDataExpiracao(LocalDate.now().plusDays(16));
+            case 2: // Quinzenal = +16 dias
+                pacote.setIdPacote(2);
+                pacote.setDataExpiracao(dataInicio.plusDays(16));
                 break;
             default:
                 throw new IllegalArgumentException("Tipo (id) do pacote deve ser 1 (Mensal) ou 2 (Quinzenal).");
+        }
+
+        if (!pacote.getDataExpiracao().isAfter(LocalDate.now())) {
+            throw new ConflictException("Impossível cadastrar um pacote expirado.");
         }
 
         pacoteRepository.save(pacote);
         return "Pacote cadastrado com sucesso.";
     }
 
-    public List<PacoteHistoricoDTO> listar() {
+    public List<PacoteDTO> listar() {
         List<Pacote> pacotes = pacoteRepository.findAll();
 
         return pacotes.stream()
-                .map(PacoteAdapter::toHistoricoDTO)
+                .map(PacoteAdapter::toDTO)
                 .toList();
     }
 
     public Pacote buscarPorId(Integer id) {
         return pacoteRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Registro cliente_pacote não encontrado."));
+    }
+
+    public String atualizar(Integer id, PacoteDTO pacoteDTO) {
+        Pacote pacoteExistente = pacoteRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Pacote não encontrado."));
+
+        if (!pacoteExistente.getDataExpiracao().isAfter(LocalDate.now())) {
+            throw new ConflictException("Impossível atualizar um pacote expirado.");
+        }
+
+        pacoteExistente.setIdPacote(pacoteDTO.getIdPacote());
+        LocalDate dataInicio = pacoteDTO.getDataExpiracao();
+
+        switch (pacoteDTO.getIdPacote()) {
+            case 1: // Mensal = +31 dias
+                pacoteExistente.setDataExpiracao(dataInicio.plusDays(31));
+                break;
+            case 2: // Quinzenal = +16 dias
+                pacoteExistente.setDataExpiracao(dataInicio.plusDays(16));
+                break;
+            default:
+                throw new IllegalArgumentException("Tipo (id) do pacote deve ser 1 (Mensal) ou 2 (Quinzenal).");
+        }
+
+        pacoteRepository.save(pacoteExistente);
+        return "Pacote atualizado com sucesso.";
     }
 
     public String deletar(Integer id) {

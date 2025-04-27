@@ -1,7 +1,6 @@
 package com.codifica.elevebot.controller;
 
 import com.codifica.elevebot.dto.PacoteDTO;
-import com.codifica.elevebot.dto.PacoteHistoricoDTO;
 import com.codifica.elevebot.model.Pacote;
 import com.codifica.elevebot.service.PacoteService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@CrossOrigin(origins = "http://localhost:5173")
 @RestController
 @RequestMapping("/api/pacotes")
 public class PacoteController {
@@ -26,14 +24,20 @@ public class PacoteController {
     }
 
     @GetMapping
-    public ResponseEntity<List<PacoteHistoricoDTO>> listarPacotes() {
-        List<PacoteHistoricoDTO> pacotes = pacoteService.listar();
+    public ResponseEntity<List<PacoteDTO>> listarPacotes() {
+        List<PacoteDTO> pacotes = pacoteService.listar();
         return pacotes.isEmpty() ? ResponseEntity.noContent().build() : ResponseEntity.ok(pacotes);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Pacote> buscarPacotePorId(@PathVariable Integer id) {
         return ResponseEntity.ok(pacoteService.buscarPorId(id));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<String> atualizarPacote(@PathVariable Integer id, @RequestBody PacoteDTO pacoteDTO) {
+        String mensagem = pacoteService.atualizar(id, pacoteDTO);
+        return ResponseEntity.ok(mensagem);
     }
 
     @DeleteMapping("/{id}")
