@@ -118,7 +118,7 @@ public class DevConfig {
 
             //PET
             Pet pet = new Pet();
-            pet.setIdRaca(1);
+            pet.setRacaId(1);
             pet.setNome("Pet Test");
             pet.setCliente(cliente);
             cliente.getPets().add(pet);
@@ -126,7 +126,7 @@ public class DevConfig {
 
             //PACOTE (expirado)
             Pacote pacote = new Pacote();
-            pacote.setIdPacote(1);
+            pacote.setPacoteId(1);
             pacote.setCliente(cliente);
 //            pacote.setDataExpiracao(LocalDate.now().minusDays(1));
             pacote.setDataExpiracao(LocalDate.now());
@@ -134,7 +134,7 @@ public class DevConfig {
 
             //PACOTE (ativo)
             pacote = new Pacote();
-            pacote.setIdPacote(1);
+            pacote.setPacoteId(1);
             pacote.setCliente(cliente);
             pacote.setDataExpiracao(LocalDate.now().plusDays(31));
             pacoteRepository.save(pacote);

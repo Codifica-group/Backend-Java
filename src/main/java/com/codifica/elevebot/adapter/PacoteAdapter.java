@@ -10,7 +10,7 @@ public class PacoteAdapter {
     public static Pacote toEntity(PacoteDTO dto, Cliente cliente) {
         Pacote pacote = new Pacote();
         pacote.setCliente(cliente);
-        pacote.setIdPacote(dto.getIdPacote());
+        pacote.setPacoteId(dto.getIdPacote());
         return pacote;
     }
 
@@ -18,7 +18,7 @@ public class PacoteAdapter {
         PacoteHistoricoDTO dto = new PacoteHistoricoDTO();
         dto.setId(pacote.getId());
         dto.setIdCliente(pacote.getCliente().getId());
-        dto.setIdPacote(pacote.getIdPacote());
+        dto.setIdPacote(pacote.getPacoteId());
         dto.setDataExpiracao(pacote.getDataExpiracao());
         return dto;
     }

@@ -2,7 +2,6 @@ package com.codifica.elevebot.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name="pet")
@@ -12,18 +11,18 @@ public class Pet {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    private Integer idRaca;
+    private Integer racaId;
     private String nome;
 
     @ManyToOne
-    @JoinColumn(name = "id_cliente")
+    @JoinColumn(name = "cliente_id")
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private Cliente cliente;
 
     public Pet() {}
 
-    public Pet(Integer idRaca, String nome, Cliente cliente) {
-        this.idRaca = idRaca;
+    public Pet(Integer racaId, String nome, Cliente cliente) {
+        this.racaId = racaId;
         this.nome = nome;
         this.cliente = cliente;
     }
@@ -36,12 +35,12 @@ public class Pet {
         this.id = id;
     }
 
-    public Integer getIdRaca() {
-        return idRaca;
+    public Integer getRacaId() {
+        return racaId;
     }
 
-    public void setIdRaca(Integer idRaca) {
-        this.idRaca = idRaca;
+    public void setRacaId(Integer racaId) {
+        this.racaId = racaId;
     }
 
     public String getNome() {

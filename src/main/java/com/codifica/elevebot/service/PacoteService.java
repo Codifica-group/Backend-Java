@@ -42,12 +42,12 @@ public class PacoteService {
         switch (pacoteDTO.getIdPacote()) {
             case 1:
                 // Mensal (31 dias)
-                pacote.setIdPacote(1);
+                pacote.setPacoteId(1);
                 pacote.setDataExpiracao(LocalDate.now().plusDays(31));
                 break;
             case 2:
                 // Quinzenal (16 dias)
-                pacote.setIdPacote(2);
+                pacote.setPacoteId(2);
                 pacote.setDataExpiracao(LocalDate.now().plusDays(16));
                 break;
             default:

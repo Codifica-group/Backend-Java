@@ -56,7 +56,7 @@ public class PetService {
         Cliente cliente = clienteRepository.findById(petDTO.getIdCliente())
                 .orElseThrow(() -> new NotFoundException("Cliente não encontrado."));
 
-        petExistente.setIdRaca(petDTO.getIdRaca());
+        petExistente.setRacaId(petDTO.getIdRaca());
         petExistente.setNome(petDTO.getNome());
         petExistente.setCliente(cliente);
 
@@ -74,7 +74,7 @@ public class PetService {
     }
 
     private boolean petExiste(Pet pet) {
-        Pet petFiltro = new Pet(pet.getIdRaca(), pet.getNome(), pet.getCliente());
+        Pet petFiltro = new Pet(pet.getRacaId(), pet.getNome(), pet.getCliente());
 
         ExampleMatcher matcher = ExampleMatcher.matching()
                 .withIgnoreNullValues()
