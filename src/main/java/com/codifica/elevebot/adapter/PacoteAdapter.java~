@@ -9,15 +9,15 @@ public class PacoteAdapter {
     public static Pacote toEntity(PacoteDTO dto, Cliente cliente) {
         Pacote pacote = new Pacote();
         pacote.setCliente(cliente);
-        pacote.setPacoteId(dto.getPacoteId());
+        pacote.setPacoteId(dto.getIdPacote());
         return pacote;
     }
 
     public static PacoteDTO toDTO(Pacote pacote) {
         PacoteDTO dto = new PacoteDTO();
         dto.setId(pacote.getId());
-        dto.setClienteId(pacote.getCliente().getId());
-        dto.setPacoteId(pacote.getPacoteId());
+        dto.setIdCliente(pacote.getCliente().getId());
+        dto.setIdPacote(pacote.getPacoteId());
         dto.setDataExpiracao(pacote.getDataExpiracao());
         return dto;
     }

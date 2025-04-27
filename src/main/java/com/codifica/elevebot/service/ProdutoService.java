@@ -6,6 +6,7 @@ import com.codifica.elevebot.exception.ConflictException;
 import com.codifica.elevebot.exception.NotFoundException;
 import com.codifica.elevebot.model.CategoriaProduto;
 import com.codifica.elevebot.model.Produto;
+import com.codifica.elevebot.repository.DespesaRepository;
 import com.codifica.elevebot.repository.ProdutoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,9 @@ public class ProdutoService {
 
     @Autowired
     private ProdutoRepository produtoRepository;
+
+    @Autowired
+    private DespesaRepository despesaRepository;
 
     private ProdutoAdapter produtoAdapter;
 
@@ -67,6 +71,10 @@ public class ProdutoService {
     public String atualizar(Integer id, ProdutoDTO produtoDTO) {
         if (!produtoRepository.existsById(id)) {
             throw new NotFoundException("Produto não encontrado.");
+        }
+
+        if (despesaRepository.existsByProduto_Id(id)) {
+            throw new ConflictException("Não é possível atualizar produtos que possuem despesas cadastradas.");
         }
 
         Produto produto = produtoAdapter.toEntity(produtoDTO);

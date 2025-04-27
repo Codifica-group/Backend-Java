@@ -17,7 +17,7 @@ public class DespesaAdapter {
     public static DespesaDTO toDTO(Despesa despesa) {
         DespesaDTO dto = new DespesaDTO();
         dto.setId(despesa.getId());
-        dto.setIdProduto(despesa.getProduto().getId());
+        dto.setProdutoId(despesa.getProduto().getId());
         dto.setValor(despesa.getValor());
         dto.setData(despesa.getData());
         return dto;

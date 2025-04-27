@@ -24,8 +24,8 @@ public class DespesaService {
 
     public String cadastrar(List<DespesaDTO> despesasDTO) {
         List<Despesa> despesas = despesasDTO.stream().map(dto -> {
-            Produto produto = produtoRepository.findById(dto.getIdProduto())
-                    .orElseThrow(() -> new NotFoundException("Produto não encontrado. ID: " + dto.getIdProduto()));
+            Produto produto = produtoRepository.findById(dto.getProdutoId())
+                    .orElseThrow(() -> new NotFoundException("Produto não encontrado. ID: " + dto.getProdutoId()));
             return DespesaAdapter.toEntity(dto, produto);
         }).collect(Collectors.toList());
 
@@ -52,8 +52,8 @@ public class DespesaService {
         Despesa despesaExistente = despesaRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Despesa não encontrada."));
 
-        Produto produto = produtoRepository.findById(despesaDTO.getIdProduto())
-                .orElseThrow(() -> new NotFoundException("Produto não encontrado. ID: " + despesaDTO.getIdProduto()));
+        Produto produto = produtoRepository.findById(despesaDTO.getProdutoId())
+                .orElseThrow(() -> new NotFoundException("Produto não encontrado. ID: " + despesaDTO.getProdutoId()));
 
         despesaExistente.setProduto(produto);
         despesaExistente.setValor(despesaDTO.getValor());

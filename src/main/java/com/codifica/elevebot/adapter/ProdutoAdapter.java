@@ -15,7 +15,7 @@ public class ProdutoAdapter {
     public static  ProdutoDTO toDTO(Produto produto) {
         ProdutoDTO produtoDTO = new ProdutoDTO();
         produtoDTO.setId(produto.getId());
-        produtoDTO.setIdCategoria(produto.getCategoriaProduto().getCode());
+        produtoDTO.setCategoriaId(produto.getCategoriaProduto().getCode());
         produtoDTO.setNome(produto.getNome());
         return produtoDTO;
     }

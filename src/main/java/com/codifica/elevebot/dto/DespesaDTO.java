@@ -5,7 +5,7 @@ import java.time.LocalDate;
 public class DespesaDTO {
 
     private Integer id = 0;
-    private Integer idProduto;
+    private Integer produtoId;
     private Double valor;
     private LocalDate data;
 
@@ -19,12 +19,12 @@ public class DespesaDTO {
         this.id = id;
     }
 
-    public Integer getIdProduto() {
-        return idProduto;
+    public Integer getProdutoId() {
+        return produtoId;
     }
 
-    public void setIdProduto(Integer idProduto) {
-        this.idProduto = idProduto;
+    public void setProdutoId(Integer produtoId) {
+        this.produtoId = produtoId;
     }
 
     public Double getValor() {

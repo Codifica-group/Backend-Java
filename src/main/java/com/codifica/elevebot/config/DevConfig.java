@@ -110,9 +110,9 @@ public class DevConfig {
             //CLIENTE
             Cliente cliente = new Cliente();
             cliente.setNome("Cliente Test");
-            cliente.setNumeroCelular("11900000000");
+            cliente.setNumCelular("11900000000");
             cliente.setCep("00000000");
-            cliente.setNumeroEndereco(0);
+            cliente.setNumEndereco(0);
             cliente.setComplemento("");
             clienteRepository.save(cliente);
 

@@ -26,7 +26,7 @@ public class PacoteService {
     private PacoteAdapter pacoteAdapter;
 
     public String cadastrar(PacoteDTO pacoteDTO) {
-        Cliente cliente = clienteRepository.findById(pacoteDTO.getIdCliente())
+        Cliente cliente = clienteRepository.findById(pacoteDTO.getClienteId())
                 .orElseThrow(() -> new NotFoundException("Cliente nao encontrado."));
 
         boolean clientePossuiPacoteAtivo = pacoteRepository.existsByClienteIdAndDataExpiracaoGreaterThan(cliente.getId(), LocalDate.now());
@@ -38,13 +38,13 @@ public class PacoteService {
 
         LocalDate dataInicio = (pacoteDTO.getDataExpiracao() != null) ? pacoteDTO.getDataExpiracao() : LocalDate.now();
 
-        switch (pacoteDTO.getIdPacote()) {
+        switch (pacoteDTO.getPacoteId()) {
             case 1: // Mensal = +31 dias
-                pacote.setIdPacote(1);
+                pacote.setPacoteId(1);
                 pacote.setDataExpiracao(dataInicio.plusDays(31));
                 break;
             case 2: // Quinzenal = +16 dias
-                pacote.setIdPacote(2);
+                pacote.setPacoteId(2);
                 pacote.setDataExpiracao(dataInicio.plusDays(16));
                 break;
             default:
@@ -80,10 +80,10 @@ public class PacoteService {
             throw new ConflictException("Impossível atualizar um pacote expirado.");
         }
 
-        pacoteExistente.setIdPacote(pacoteDTO.getIdPacote());
+        pacoteExistente.setPacoteId(pacoteDTO.getPacoteId());
         LocalDate dataInicio = pacoteDTO.getDataExpiracao();
 
-        switch (pacoteDTO.getIdPacote()) {
+        switch (pacoteDTO.getPacoteId()) {
             case 1: // Mensal = +31 dias
                 pacoteExistente.setDataExpiracao(dataInicio.plusDays(31));
                 break;
@@ -92,6 +92,10 @@ public class PacoteService {
                 break;
             default:
                 throw new IllegalArgumentException("Tipo (id) do pacote deve ser 1 (Mensal) ou 2 (Quinzenal).");
+        }
+
+        if (!pacoteExistente.getDataExpiracao().isAfter(LocalDate.now())) {
+            throw new ConflictException("Impossível atualizar um pacote ativo para um pacote expirado.");
         }
 
         pacoteRepository.save(pacoteExistente);

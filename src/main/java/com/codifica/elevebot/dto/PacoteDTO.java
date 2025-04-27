@@ -7,26 +7,26 @@ import java.time.LocalDate;
 public class PacoteDTO {
 
     private Integer id = 0;
-    private Integer idCliente;
-    private Integer idPacote;
+    private Integer clienteId;
+    private Integer pacoteId;
     private LocalDate dataExpiracao = LocalDate.now();
 
     public PacoteDTO () {}
 
-    public Integer getIdCliente() {
-        return idCliente;
+    public Integer getClienteId() {
+        return clienteId;
     }
 
-    public void setIdCliente(Integer idCliente) {
-        this.idCliente = idCliente;
+    public void setClienteId(Integer clienteId) {
+        this.clienteId = clienteId;
     }
 
-    public Integer getIdPacote() {
-        return idPacote;
+    public Integer getPacoteId() {
+        return pacoteId;
     }
 
-    public void setIdPacote(Integer idPacote) {
-        this.idPacote = idPacote;
+    public void setPacoteId(Integer pacoteId) {
+        this.pacoteId = pacoteId;
     }
 
     public Integer getId() {

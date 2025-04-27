@@ -6,13 +6,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class ProdutoDTO {
 
     private Integer id = 0;
-    private Integer idCategoria;
+    private Integer categoriaId;
     private String nome;
 
     public ProdutoDTO() {}
 
-    public ProdutoDTO(Integer idCategoria, String nome) {
-        this.idCategoria = idCategoria;
+    public ProdutoDTO(Integer categoriaId, String nome) {
+        this.categoriaId = categoriaId;
         this.nome = nome;
     }
 
@@ -24,12 +24,12 @@ public class ProdutoDTO {
         this.id = id;
     }
 
-    public Integer getIdCategoria() {
-        return idCategoria;
+    public Integer getCategoriaId() {
+        return categoriaId;
     }
 
-    public void setIdCategoria(Integer idCategoria) {
-        this.idCategoria = idCategoria;
+    public void setCategoriaId(Integer categoriaId) {
+        this.categoriaId = categoriaId;
     }
 
     public String getNome() {
@@ -42,6 +42,6 @@ public class ProdutoDTO {
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     public CategoriaProduto getCategoria() {
-        return CategoriaProduto.fromCode(idCategoria);
+        return CategoriaProduto.fromCode(categoriaId);
     }
 }
