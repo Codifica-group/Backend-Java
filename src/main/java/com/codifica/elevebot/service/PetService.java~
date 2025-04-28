@@ -27,7 +27,7 @@ public class PetService {
     private ClienteRepository clienteRepository;
 
     public String cadastrar(PetDTO petDTO) {
-        Cliente cliente = clienteRepository.findById(petDTO.getClienteId())
+        Cliente cliente = clienteRepository.findById(petDTO.getIdCliente())
                 .orElseThrow(() -> new NotFoundException("Cliente não encontrado."));
 
         Pet pet = petAdapter.toEntity(petDTO, cliente);
@@ -53,10 +53,10 @@ public class PetService {
         Pet petExistente = petRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Pet não encontrado."));
 
-        Cliente cliente = clienteRepository.findById(petDTO.getClienteId())
+        Cliente cliente = clienteRepository.findById(petDTO.getIdCliente())
                 .orElseThrow(() -> new NotFoundException("Cliente não encontrado."));
 
-        petExistente.setRacaId(petDTO.getRacaId());
+        petExistente.setRacaId(petDTO.getIdRaca());
         petExistente.setNome(petDTO.getNome());
         petExistente.setCliente(cliente);
 

@@ -15,10 +15,6 @@ import static org.junit.jupiter.api.Assertions.*;
 class ElevebotApplicationTests {
 
 	@Test
-	void contextLoads() {
-	}
-
-	@Test
 	void shouldValidateValidToken() {
 		String username = "fernanda";
 		Algorithm algorithm = Algorithm.HMAC256("Eleve");
@@ -37,7 +33,7 @@ class ElevebotApplicationTests {
 
 	@Test
 	void shouldThrowExceptionForInvalidToken() {
-		String invalidToken = "Não é um token vá";
+		String invalidToken = "Não é um token válido";
 
 		assertThrows(Exception.class, () -> {
 			TokenService.validateToken(invalidToken);

@@ -2,23 +2,23 @@ package com.codifica.elevebot.dto;
 
 public class PetDTO {
 
-    private Integer idRaca;
+    private Integer racaId;
     private String nome;
-    private Integer idCliente;
+    private Integer clienteId;
 
     public PetDTO() {}
 
-    public PetDTO(Integer idRaca, String nome, Integer idCliente) {
-        this.idRaca = idRaca;
+    public PetDTO(Integer racaId, String nome, Integer clienteId) {
+        this.racaId = racaId;
         this.nome = nome;
-        this.idCliente = idCliente;
+        this.clienteId = clienteId;
     }
 
-    public Integer getIdRaca() {
-        return idRaca;
+    public Integer getRacaId() {
+        return racaId;
     }
-    public void setIdRaca(Integer idRaca) {
-        this.idRaca = idRaca;
+    public void setRacaId(Integer racaId) {
+        this.racaId = racaId;
     }
     public String getNome() {
         return nome;
@@ -26,10 +26,10 @@ public class PetDTO {
     public void setNome(String nome) {
         this.nome = nome;
     }
-    public Integer getIdCliente() {
-        return idCliente;
+    public Integer getClienteId() {
+        return clienteId;
     }
-    public void setIdCliente(Integer idCliente) {
-        this.idCliente = idCliente;
+    public void setClienteId(Integer clienteId) {
+        this.clienteId = clienteId;
     }
 }

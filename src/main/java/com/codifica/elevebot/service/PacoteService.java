@@ -4,6 +4,7 @@ import com.codifica.elevebot.adapter.PacoteAdapter;
 import com.codifica.elevebot.dto.PacoteDTO;
 import com.codifica.elevebot.exception.ConflictException;
 import com.codifica.elevebot.exception.NotFoundException;
+import com.codifica.elevebot.exception.IllegalArgumentException;
 import com.codifica.elevebot.model.Cliente;
 import com.codifica.elevebot.model.Pacote;
 import com.codifica.elevebot.repository.PacoteRepository;
