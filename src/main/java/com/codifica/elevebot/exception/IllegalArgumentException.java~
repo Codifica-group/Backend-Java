@@ -1,4 +1,0 @@
-package com.codifica.elevebot.exception;
-
-public class IllegalArgumentException {
-}
