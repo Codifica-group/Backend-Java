@@ -4,11 +4,13 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.auth0.jwt.interfaces.JWTVerifier;
+import org.springframework.stereotype.Service;
 
+@Service
 public class TokenService {
     private static final String SECRET_KEY = "Eleve";
 
-    public static String generateToken(String username) {
+    public String generateToken(String username) {
         return JWT.create()
                 .withSubject(username)
                 .withIssuer("elevebot")

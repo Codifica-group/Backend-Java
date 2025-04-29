@@ -1,13 +1,16 @@
 package com.codifica.elevebot.controller;
 
 import com.codifica.elevebot.model.Usuario;
+import com.codifica.elevebot.service.TokenService;
 import com.codifica.elevebot.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/usuarios")
@@ -16,6 +19,9 @@ public class UsuarioController {
     @Autowired
     private UsuarioService usuarioService;
 
+    @Autowired
+    private TokenService tokenService;
+
     @PostMapping
     public ResponseEntity<String> cadastrarUsuario(@RequestBody Usuario usuario) {
         String mensagem = usuarioService.cadastrar(usuario);
@@ -23,9 +29,13 @@ public class UsuarioController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody Usuario usuarioRequest) {
+    public ResponseEntity<?> login(@RequestBody Usuario usuarioRequest) {
         String mensagem = usuarioService.login(usuarioRequest);
-        return ResponseEntity.ok(mensagem);
+        String token = tokenService.generateToken(usuarioRequest.getEmail());
+        Map<String, String> resposta = new HashMap<>();
+        resposta.put("mensagem", "Acesso autorizado.");
+        resposta.put("token", token);
+        return ResponseEntity.ok(resposta);
     }
 
     @GetMapping
