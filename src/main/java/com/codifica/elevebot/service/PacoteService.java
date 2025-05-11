@@ -57,7 +57,7 @@ public class PacoteService {
         }
 
         pacoteRepository.save(pacote);
-        return "Pacote cadastrado com sucesso.";
+        return "Pacote cadastrado com sucesso. ID: " + pacote.getId();
     }
 
     public List<PacoteDTO> listar() {

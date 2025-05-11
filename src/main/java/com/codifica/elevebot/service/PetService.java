@@ -37,7 +37,7 @@ public class PetService {
         }
 
         petRepository.save(pet);
-        return "Pet cadastrado com sucesso.";
+        return "Pet cadastrado com sucesso. ID: " + pet.getId();
     }
 
     public List<Pet> listar() {

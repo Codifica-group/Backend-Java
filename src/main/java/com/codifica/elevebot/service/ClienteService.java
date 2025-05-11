@@ -29,7 +29,7 @@ public class ClienteService {
         }
 
         clienteRepository.save(cliente);
-        return "Cliente cadastrado com sucesso.";
+        return "Cliente cadastrado com sucesso. ID: " + cliente.getId();
     }
 
     public List<Cliente> listar() {

@@ -36,6 +36,11 @@ public class ProdutoService {
             return produtoAdapter.toEntity(produtoDTO);
         }).collect(Collectors.toList());
 
+        if (produtos.size() == 1) {
+            Produto produto = produtoRepository.save(produtos.get(0));
+            return "Produto cadastrados com sucesso. ID: " + produto.getId();
+        }
+
         produtoRepository.saveAll(produtos);
         return "Produtos cadastrados com sucesso.";
     }
