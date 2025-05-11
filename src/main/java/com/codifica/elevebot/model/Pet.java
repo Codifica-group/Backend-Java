@@ -11,7 +11,10 @@ public class Pet {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    private Integer racaId;
+    @ManyToOne
+    @JoinColumn(name = "raca_id")
+    private Raca raca;
+
     private String nome;
 
     @ManyToOne
@@ -21,8 +24,8 @@ public class Pet {
 
     public Pet() {}
 
-    public Pet(Integer racaId, String nome, Cliente cliente) {
-        this.racaId = racaId;
+    public Pet(Raca raca, String nome, Cliente cliente) {
+        this.raca = raca;
         this.nome = nome;
         this.cliente = cliente;
     }
@@ -35,12 +38,12 @@ public class Pet {
         this.id = id;
     }
 
-    public Integer getRacaId() {
-        return racaId;
+    public Raca getRaca() {
+        return raca;
     }
 
-    public void setRacaId(Integer racaId) {
-        this.racaId = racaId;
+    public void setRaca(Raca raca) {
+        this.raca = raca;
     }
 
     public String getNome() {

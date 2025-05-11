@@ -1,14 +1,8 @@
 package com.codifica.elevebot.config;
 
 import com.codifica.elevebot.dto.ProdutoDTO;
-import com.codifica.elevebot.model.Pacote;
-import com.codifica.elevebot.model.Usuario;
-import com.codifica.elevebot.model.Cliente;
-import com.codifica.elevebot.model.Pet;
-import com.codifica.elevebot.repository.PacoteRepository;
-import com.codifica.elevebot.repository.UsuarioRepository;
-import com.codifica.elevebot.repository.ClienteRepository;
-import com.codifica.elevebot.repository.PetRepository;
+import com.codifica.elevebot.model.*;
+import com.codifica.elevebot.repository.*;
 import com.codifica.elevebot.service.ProdutoService;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -30,6 +24,12 @@ public class DevConfig {
 
     @Autowired
     private ClienteRepository clienteRepository;
+
+    @Autowired
+    private PorteRepository porteRepository;
+
+    @Autowired
+    private RacaRepository racaRepository;
 
     @Autowired
     private PetRepository petRepository;
@@ -116,9 +116,28 @@ public class DevConfig {
             cliente.setComplemento("");
             clienteRepository.save(cliente);
 
+            //PORTE
+            Porte porte = new Porte();
+            porte.setNome("Pequeno");
+            porteRepository.save(porte);
+
+            Porte porte2 = new Porte();
+            porte.setNome("Médio");
+            porteRepository.save(porte);
+
+            Porte porte3 = new Porte();
+            porte.setNome("Grande");
+            porteRepository.save(porte);
+
+            //RAÇA
+            Raca raca = new Raca();
+            raca.setNome("Raça Test");
+            raca.setPorte(porte);
+            racaRepository.save(raca);
+
             //PET
             Pet pet = new Pet();
-            pet.setRacaId(1);
+            pet.setRaca(raca);
             pet.setNome("Pet Test");
             pet.setCliente(cliente);
             cliente.getPets().add(pet);

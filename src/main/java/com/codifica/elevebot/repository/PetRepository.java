@@ -10,4 +10,6 @@ public interface PetRepository extends JpaRepository<Pet, Integer> {
 
     Pet findByNome(String nome);
 
+    boolean existsByRacaId(Integer racaId);
+
 }

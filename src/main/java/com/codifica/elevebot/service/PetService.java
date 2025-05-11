@@ -6,8 +6,10 @@ import com.codifica.elevebot.exception.ConflictException;
 import com.codifica.elevebot.exception.NotFoundException;
 import com.codifica.elevebot.model.Cliente;
 import com.codifica.elevebot.model.Pet;
+import com.codifica.elevebot.model.Raca;
 import com.codifica.elevebot.repository.ClienteRepository;
 import com.codifica.elevebot.repository.PetRepository;
+import com.codifica.elevebot.repository.RacaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
@@ -21,6 +23,9 @@ public class PetService {
     @Autowired
     private PetRepository petRepository;
 
+    @Autowired
+    private RacaRepository racaRepository;
+
     private PetAdapter petAdapter;
 
     @Autowired
@@ -30,7 +35,11 @@ public class PetService {
         Cliente cliente = clienteRepository.findById(petDTO.getClienteId())
                 .orElseThrow(() -> new NotFoundException("Cliente não encontrado."));
 
-        Pet pet = petAdapter.toEntity(petDTO, cliente);
+        Raca raca = racaRepository.findById(petDTO.getRacaId())
+                .orElseThrow(() -> new NotFoundException("Raça não encontrada."));
+
+
+        Pet pet = petAdapter.toEntity(petDTO, cliente, raca);
 
         if (petExiste(pet)) {
             throw new ConflictException("Pet já cadastrado.");
@@ -56,7 +65,10 @@ public class PetService {
         Cliente cliente = clienteRepository.findById(petDTO.getClienteId())
                 .orElseThrow(() -> new NotFoundException("Cliente não encontrado."));
 
-        petExistente.setRacaId(petDTO.getRacaId());
+        Raca raca = racaRepository.findById(petDTO.getRacaId())
+                .orElseThrow(() -> new NotFoundException("Raça não encontrada."));
+
+        petExistente.setRaca(raca);
         petExistente.setNome(petDTO.getNome());
         petExistente.setCliente(cliente);
 
@@ -74,7 +86,7 @@ public class PetService {
     }
 
     private boolean petExiste(Pet pet) {
-        Pet petFiltro = new Pet(pet.getRacaId(), pet.getNome(), pet.getCliente());
+        Pet petFiltro = new Pet(pet.getRaca(), pet.getNome(), pet.getCliente());
 
         ExampleMatcher matcher = ExampleMatcher.matching()
                 .withIgnoreNullValues()
