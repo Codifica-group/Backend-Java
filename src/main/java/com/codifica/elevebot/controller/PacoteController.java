@@ -18,9 +18,9 @@ public class PacoteController {
     private PacoteService pacoteService;
 
     @PostMapping
-    public ResponseEntity<String> cadastrarPacote(@RequestBody PacoteDTO pacoteDTO) {
-        String mensagem = pacoteService.cadastrar(pacoteDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).body(mensagem);
+    public ResponseEntity<Object> cadastrarPacote(@RequestBody PacoteDTO pacoteDTO) {
+        Object json = pacoteService.cadastrar(pacoteDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(json);
     }
 
     @GetMapping

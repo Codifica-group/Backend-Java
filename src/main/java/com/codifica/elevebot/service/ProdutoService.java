@@ -11,6 +11,7 @@ import com.codifica.elevebot.repository.ProdutoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,7 +28,7 @@ public class ProdutoService {
 
     private ProdutoAdapter produtoAdapter;
 
-    public String cadastrar(List<ProdutoDTO> produtosDTO) {
+    public Object cadastrar(List<ProdutoDTO> produtosDTO) {
         List<Produto> produtos = produtosDTO.stream().map(produtoDTO -> {
             if(produtoRepository.existsByCategoriaProdutoAndNome(produtoDTO.getCategoria(), produtoDTO.getNome())) {
                 throw new ConflictException("Não é possível cadastrar dois produtos iguais, remova: "
@@ -36,13 +37,17 @@ public class ProdutoService {
             return produtoAdapter.toEntity(produtoDTO);
         }).collect(Collectors.toList());
 
+        Map<String, Object> resposta = new HashMap<>();
         if (produtos.size() == 1) {
             Produto produto = produtoRepository.save(produtos.get(0));
-            return "Produto cadastrados com sucesso. ID: " + produto.getId();
+            resposta.put("mensagem", "Produto cadastrado com sucesso.");
+            resposta.put("id", produto.getId());
+            return resposta;
         }
 
         produtoRepository.saveAll(produtos);
-        return "Produtos cadastrados com sucesso.";
+        resposta.put("mensagem", "Produtos cadastrados com sucesso.");
+        return resposta;
     }
 
     public Map<String, List<ProdutoDTO>> listar() {

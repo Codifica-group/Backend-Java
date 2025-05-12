@@ -19,9 +19,9 @@ public class RacaController {
     private RacaService racaService;
 
     @PostMapping
-    public ResponseEntity<String> cadastrarRaca(@RequestBody RacaDTO racaDTO) {
-        String mensagem = racaService.cadastrar(racaDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).body(mensagem);
+    public ResponseEntity<Object> cadastrarRaca(@RequestBody RacaDTO racaDTO) {
+        Object json = racaService.cadastrar(racaDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(json);
     }
 
     @GetMapping

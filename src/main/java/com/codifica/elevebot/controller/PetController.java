@@ -18,9 +18,9 @@ public class PetController {
     private PetService petService;
 
     @PostMapping
-    public ResponseEntity<String> cadastrarPet(@RequestBody PetDTO petDTO) {
-        String mensagem = petService.cadastrar(petDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).body(mensagem);
+    public ResponseEntity<Object> cadastrarPet(@RequestBody PetDTO petDTO) {
+        Object json = petService.cadastrar(petDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(json);
     }
 
     @GetMapping

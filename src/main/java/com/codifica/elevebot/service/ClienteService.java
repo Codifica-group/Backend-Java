@@ -12,6 +12,7 @@ import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
 
 @Service
@@ -23,13 +24,17 @@ public class ClienteService {
     @Autowired
     private PacoteRepository pacoteRepository;
 
-    public String cadastrar(Cliente cliente) {
+    public Object cadastrar(Cliente cliente) {
         if (clienteExiste(cliente)) {
             throw new ConflictException("Cliente já cadastrado.");
         }
 
         clienteRepository.save(cliente);
-        return "Cliente cadastrado com sucesso. ID: " + cliente.getId();
+
+        var resposta = new HashMap<String, Object>();
+        resposta.put("mensagem", "Cliente cadastrado com sucesso.");
+        resposta.put("id", cliente.getId());
+        return resposta;
     }
 
     public List<Cliente> listar() {

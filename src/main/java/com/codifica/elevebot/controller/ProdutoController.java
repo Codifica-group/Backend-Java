@@ -18,9 +18,9 @@ public class ProdutoController {
     private ProdutoService produtoService;
 
     @PostMapping
-    public ResponseEntity<String> cadastrarProduto(@RequestBody List<ProdutoDTO> produtosDTO) {
-        String mensagem = produtoService.cadastrar(produtosDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).body(mensagem);
+    public ResponseEntity<Object> cadastrarProduto(@RequestBody List<ProdutoDTO> produtosDTO) {
+        Object json = produtoService.cadastrar(produtosDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(json);
     }
 
     @GetMapping

@@ -9,10 +9,12 @@ import com.codifica.elevebot.model.Cliente;
 import com.codifica.elevebot.model.Pacote;
 import com.codifica.elevebot.repository.PacoteRepository;
 import com.codifica.elevebot.repository.ClienteRepository;
+import org.apache.logging.log4j.spi.ObjectThreadContextMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
 
 @Service
@@ -26,7 +28,7 @@ public class PacoteService {
 
     private PacoteAdapter pacoteAdapter;
 
-    public String cadastrar(PacoteDTO pacoteDTO) {
+    public Object cadastrar(PacoteDTO pacoteDTO) {
         Cliente cliente = clienteRepository.findById(pacoteDTO.getClienteId())
                 .orElseThrow(() -> new NotFoundException("Cliente nao encontrado."));
 
@@ -57,7 +59,11 @@ public class PacoteService {
         }
 
         pacoteRepository.save(pacote);
-        return "Pacote cadastrado com sucesso. ID: " + pacote.getId();
+
+        var resposta = new HashMap<String, Object>();
+        resposta.put("mensagem", "Pacote cadastrado com sucesso.");
+        resposta.put("id", pacote.getId());
+        return resposta;
     }
 
     public List<PacoteDTO> listar() {

@@ -15,6 +15,7 @@ import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
 
 @Service
@@ -31,7 +32,7 @@ public class PetService {
     @Autowired
     private ClienteRepository clienteRepository;
 
-    public String cadastrar(PetDTO petDTO) {
+    public Object cadastrar(PetDTO petDTO) {
         Cliente cliente = clienteRepository.findById(petDTO.getClienteId())
                 .orElseThrow(() -> new NotFoundException("Cliente não encontrado."));
 
@@ -46,7 +47,11 @@ public class PetService {
         }
 
         petRepository.save(pet);
-        return "Pet cadastrado com sucesso. ID: " + pet.getId();
+
+        var resposta = new HashMap<String, Object>();
+        resposta.put("mensagem", "Pet cadastrado com sucesso.");
+        resposta.put("id", pet.getId());
+        return resposta;
     }
 
     public List<PetDTO> listar() {

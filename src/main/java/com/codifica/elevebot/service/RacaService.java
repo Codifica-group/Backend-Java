@@ -12,6 +12,7 @@ import com.codifica.elevebot.repository.PorteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,7 +32,7 @@ public class RacaService {
 
     private RacaAdapter racaAdapter;
 
-    public String cadastrar(RacaDTO racaDTO) {
+    public Object cadastrar(RacaDTO racaDTO) {
         if (racaRepository.existsByNome(racaDTO.getNome())) {
             throw new ConflictException("Raça já cadastrada.");
         }
@@ -41,7 +42,11 @@ public class RacaService {
 
         Raca raca = RacaAdapter.toEntity(racaDTO, porte);
         racaRepository.save(raca);
-        return "Raça cadastrada com sucesso. ID: " + raca.getId();
+
+        var resposta = new HashMap<String, Object>();
+        resposta.put("mensagem", "Raça cadastrada com sucesso.");
+        resposta.put("id", raca.getId());
+        return resposta;
     }
 
     public Map<String, List<RacaDTO>> listar() {
