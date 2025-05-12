@@ -24,13 +24,13 @@ public class PetController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Pet>> listarPets() {
-        List<Pet> pets = petService.listar();
+    public ResponseEntity<List<PetDTO>> listarPets() {
+        List<PetDTO> pets = petService.listar();
         return pets.isEmpty() ? ResponseEntity.noContent().build() : ResponseEntity.ok(pets);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Pet> buscarPetPorId(@PathVariable Integer id) {
+    public ResponseEntity<PetDTO> buscarPetPorId(@PathVariable Integer id) {
         return ResponseEntity.ok(petService.buscarPorId(id));
     }
 

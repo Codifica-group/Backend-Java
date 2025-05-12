@@ -49,13 +49,19 @@ public class PetService {
         return "Pet cadastrado com sucesso. ID: " + pet.getId();
     }
 
-    public List<Pet> listar() {
-        return petRepository.findAll();
+    public List<PetDTO> listar() {
+        List<Pet> pets = petRepository.findAll();
+
+        return pets.stream()
+                .map(PetAdapter::toDTO)
+                .toList();
     }
 
-    public Pet buscarPorId(Integer id) {
-        return petRepository.findById(id)
+    public PetDTO buscarPorId(Integer id) {
+        Pet pet = petRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Pet não encontrado."));
+
+        return PetAdapter.toDTO(pet);
     }
 
     public String atualizar(Integer id, PetDTO petDTO) {

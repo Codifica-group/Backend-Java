@@ -13,7 +13,7 @@ public class Raca {
     private String nome;
 
     @ManyToOne
-    @JoinColumn(name = "porte_id", nullable = false)
+    @JoinColumn(name = "porte_id")
     private Porte porte;
 
     public Raca() {}

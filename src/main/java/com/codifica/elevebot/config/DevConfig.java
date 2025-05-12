@@ -55,14 +55,6 @@ public class DevConfig {
                             ")"
             );
 
-            // Tabela RACA
-            jdbcTemplate.execute(
-                    "CREATE TABLE IF NOT EXISTS RACA (" +
-                            "    id_raca INT PRIMARY KEY AUTO_INCREMENT, " +
-                            "    nome VARCHAR(100) NOT NULL" +
-                            ")"
-            );
-
             // Tabela SERVICO
             jdbcTemplate.execute(
                     "CREATE TABLE IF NOT EXISTS SERVICO (" +
@@ -72,28 +64,10 @@ public class DevConfig {
                             ")"
             );
 
-            // Tabela DESPESAS
-//            jdbcTemplate.execute(
-//                    "CREATE TABLE IF NOT EXISTS DESPESAS (" +
-//                            "    id_despesas INT PRIMARY KEY AUTO_INCREMENT, " +
-//                            "    fk_produto INT NOT NULL, " +
-//                            "    valor FLOAT NOT NULL, " +
-//                            "    data DATETIME, " +
-//                            "    FOREIGN KEY (fk_produto) REFERENCES PRODUTO(id_produto)" +
-//                            ")"
-//            );
-
             //Populando Tabelas
             //PACOTE
             jdbcTemplate.update("INSERT INTO PACOTE (tipo) VALUES ('Mensal')");
             jdbcTemplate.update("INSERT INTO PACOTE (tipo) VALUES ('Quinzenal')");
-
-            //RACA
-            jdbcTemplate.update("INSERT INTO RACA (nome) VALUES ('Pug')");
-            jdbcTemplate.update("INSERT INTO RACA (nome) VALUES ('Rotweiller')");
-            jdbcTemplate.update("INSERT INTO RACA (nome) VALUES ('Shih Tzu')");
-            jdbcTemplate.update("INSERT INTO RACA (nome) VALUES ('Golden Retriever')");
-            jdbcTemplate.update("INSERT INTO RACA (nome) VALUES ('Labrador')");
 
             //SERVICO
             jdbcTemplate.update("INSERT INTO SERVICO (nome, valor_base) VALUES ('Banho', 50.0)");
@@ -122,12 +96,12 @@ public class DevConfig {
             porteRepository.save(porte);
 
             Porte porte2 = new Porte();
-            porte.setNome("Médio");
-            porteRepository.save(porte);
+            porte2.setNome("Médio");
+            porteRepository.save(porte2);
 
             Porte porte3 = new Porte();
-            porte.setNome("Grande");
-            porteRepository.save(porte);
+            porte3.setNome("Grande");
+            porteRepository.save(porte3);
 
             //RAÇA
             Raca raca = new Raca();
