@@ -18,7 +18,7 @@ public class RacaAdapter {
         RacaDTO dto = new RacaDTO();
         dto.setId(raca.getId());
         dto.setNome(raca.getNome());
-        dto.setPorte_id(raca.getPorte() != null ? raca.getPorte().getId() : null);
+        dto.setPorteId(raca.getPorte() != null ? raca.getPorte().getId() : null);
         dto.setPorteNome(raca.getPorte() != null ? raca.getPorte().getNome() : null);
         return dto;
     }

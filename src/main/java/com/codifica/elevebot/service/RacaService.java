@@ -37,7 +37,7 @@ public class RacaService {
             throw new ConflictException("Raça já cadastrada.");
         }
 
-        Porte porte = porteRepository.findById(racaDTO.getPorte_id())
+        Porte porte = porteRepository.findById(racaDTO.getPorteId())
                 .orElseThrow(() -> new NotFoundException("Porte não encontrado."));
 
         Raca raca = RacaAdapter.toEntity(racaDTO, porte);
@@ -77,7 +77,7 @@ public class RacaService {
         Raca racaExistente = racaRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Raça não encontrada."));
 
-        Porte porte = porteRepository.findById(racaDTO.getPorte_id())
+        Porte porte = porteRepository.findById(racaDTO.getPorteId())
                 .orElseThrow(() -> new NotFoundException("Porte não encontrado."));
 
         racaExistente.setNome(racaDTO.getNome());

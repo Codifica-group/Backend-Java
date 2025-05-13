@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,6 +42,15 @@ public class DevConfig {
     private ProdutoService produtoService;
 
     @Autowired
+    private ServicoRepository servicoRepository;
+
+    @Autowired
+    private AgendaRepository agendaRepository;
+
+    @Autowired
+    private AgendaServicoRepository agendaServicoRepository;
+
+    @Autowired
     private JdbcTemplate jdbcTemplate;
 
     @Bean
@@ -55,24 +65,18 @@ public class DevConfig {
                             ")"
             );
 
-            // Tabela SERVICO
-            jdbcTemplate.execute(
-                    "CREATE TABLE IF NOT EXISTS SERVICO (" +
-                            "    id_servico INT PRIMARY KEY AUTO_INCREMENT, " +
-                            "    nome VARCHAR(100) NOT NULL, " +
-                            "    valor_base FLOAT" +
-                            ")"
-            );
-
             //Populando Tabelas
             //PACOTE
             jdbcTemplate.update("INSERT INTO PACOTE (tipo) VALUES ('Mensal')");
             jdbcTemplate.update("INSERT INTO PACOTE (tipo) VALUES ('Quinzenal')");
 
             //SERVICO
-            jdbcTemplate.update("INSERT INTO SERVICO (nome, valor_base) VALUES ('Banho', 50.0)");
-            jdbcTemplate.update("INSERT INTO SERVICO (nome, valor_base) VALUES ('Tosa', 70.0)");
-            jdbcTemplate.update("INSERT INTO SERVICO (nome, valor_base) VALUES ('Hidratação', 30.0)");
+            List<Servico> servicos = List.of(
+                    new Servico("Banho", 30.0),
+                    new Servico("Tosa", 40.0),
+                    new Servico("Hidratação", 50.0)
+            );
+            servicoRepository.saveAll(servicos);
 
             //USUARIO
             Usuario usuario = new Usuario();
@@ -91,22 +95,17 @@ public class DevConfig {
             clienteRepository.save(cliente);
 
             //PORTE
-            Porte porte = new Porte();
-            porte.setNome("Pequeno");
-            porteRepository.save(porte);
-
-            Porte porte2 = new Porte();
-            porte2.setNome("Médio");
-            porteRepository.save(porte2);
-
-            Porte porte3 = new Porte();
-            porte3.setNome("Grande");
-            porteRepository.save(porte3);
+            List<Porte> portes = List.of(
+                    new Porte("Pequeno"),
+                    new Porte("Médio"),
+                    new Porte("Grande")
+            );
+            porteRepository.saveAll(portes);
 
             //RAÇA
             Raca raca = new Raca();
             raca.setNome("Raça Test");
-            raca.setPorte(porte);
+            raca.setPorte(portes.get(0));
             racaRepository.save(raca);
 
             //PET
@@ -115,7 +114,24 @@ public class DevConfig {
             pet.setNome("Pet Test");
             pet.setCliente(cliente);
             cliente.getPets().add(pet);
+            petRepository.save(pet);
+
+            cliente.getPets().add(pet);
             clienteRepository.save(cliente);
+
+            //AGENDA
+            Agenda agenda = new Agenda();
+            agenda.setPet(pet);
+            agenda.setDataHoraInicio(LocalDateTime.now());
+            agenda.setDataHoraFim(LocalDateTime.now().plusHours(1));
+            agenda.setValor(30.0);
+            agendaRepository.save(agenda);
+
+            //AGENDA_SERVICO
+            AgendaServico agendaServico = new AgendaServico();
+            agendaServico.setAgenda(agenda);
+            agendaServico.setServico(servicos.get(0));
+            agendaServicoRepository.save(agendaServico);
 
             //PACOTE (expirado)
             Pacote pacote = new Pacote();
@@ -132,7 +148,7 @@ public class DevConfig {
             pacote.setDataExpiracao(LocalDate.now().plusDays(31));
             pacoteRepository.save(pacote);
 
-//            PRODUTOS
+            //PRODUTOS
             List<ProdutoDTO> produtos = new ArrayList<ProdutoDTO>();
             produtos.add(new ProdutoDTO(1, "Conta de Luz"));
             produtos.add(new ProdutoDTO(2, "Máquina de Tosa"));

@@ -1,12 +1,11 @@
 package com.codifica.elevebot.dto;
 
-import com.codifica.elevebot.model.Porte;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class RacaDTO {
 
     private Integer id;
-    private Integer porte_id;
+    private Integer porteId;
     private String nome;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
@@ -14,9 +13,9 @@ public class RacaDTO {
 
     public RacaDTO() {}
 
-    public RacaDTO(Integer id, Integer porte_id, String nome, String porteNome) {
+    public RacaDTO(Integer id, Integer porteId, String nome, String porteNome) {
         this.id = id;
-        this.porte_id = porte_id;
+        this.porteId = porteId;
         this.nome = nome;
         this.porteNome = porteNome;
     }
@@ -29,12 +28,12 @@ public class RacaDTO {
         this.id = id;
     }
 
-    public Integer getPorte_id() {
-        return porte_id;
+    public Integer getPorteId() {
+        return porteId;
     }
 
-    public void setPorte_id(Integer porte_id) {
-        this.porte_id = porte_id;
+    public void setPorteId(Integer porteId) {
+        this.porteId = porteId;
     }
 
     public String getNome() {

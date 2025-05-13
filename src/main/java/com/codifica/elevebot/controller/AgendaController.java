@@ -1,0 +1,47 @@
+package com.codifica.elevebot.controller;
+
+import com.codifica.elevebot.dto.AgendaDTO;
+import com.codifica.elevebot.service.AgendaService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/agendas")
+public class AgendaController {
+
+    @Autowired
+    private AgendaService agendaService;
+
+    @PostMapping
+    public ResponseEntity<Object> cadastrarAgenda(@RequestBody AgendaDTO agendaDTO) {
+        Object json = agendaService.cadastrar(agendaDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(json);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<AgendaDTO>> listarAgendas() {
+        List<AgendaDTO> agendas = agendaService.listar();
+        return agendas.isEmpty() ? ResponseEntity.noContent().build() : ResponseEntity.ok(agendas);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<AgendaDTO> buscarAgendaPorId(@PathVariable Integer id) {
+        return ResponseEntity.ok(agendaService.buscarPorId(id));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<String> atualizarAgenda(@PathVariable Integer id, @RequestBody AgendaDTO agendaDTO) {
+        String mensagem = agendaService.atualizar(id, agendaDTO);
+        return ResponseEntity.ok(mensagem);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deletarAgenda(@PathVariable Integer id) {
+        String mensagem = agendaService.deletar(id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(mensagem);
+    }
+}

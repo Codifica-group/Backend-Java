@@ -10,9 +10,20 @@ public class AgendaServico {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    private Integer idAgenda;
-    private Integer idServico;
-    private Double valor;
+    @ManyToOne
+    @JoinColumn(name = "agenda_id")
+    private Agenda agenda;
+
+    @ManyToOne
+    @JoinColumn(name = "servico_id")
+    private Servico servico;
+
+    public AgendaServico () {}
+
+    public AgendaServico(Agenda agenda, Servico servico) {
+        this.agenda = agenda;
+        this.servico = servico;
+    }
 
     public Integer getId() {
         return id;
@@ -22,27 +33,19 @@ public class AgendaServico {
         this.id = id;
     }
 
-    public Integer getIdAgenda() {
-        return idAgenda;
+    public Agenda getAgenda() {
+        return agenda;
     }
 
-    public void setIdAgenda(Integer idAgenda) {
-        this.idAgenda = idAgenda;
+    public void setAgenda(Agenda agenda) {
+        this.agenda = agenda;
     }
 
-    public Integer getIdServico() {
-        return idServico;
+    public Servico getServico() {
+        return servico;
     }
 
-    public void setIdServico(Integer idServico) {
-        this.idServico = idServico;
-    }
-
-    public Double getValor() {
-        return valor;
-    }
-
-    public void setValor(Double valor) {
-        this.valor = valor;
+    public void setServico(Servico servico) {
+        this.servico = servico;
     }
 }

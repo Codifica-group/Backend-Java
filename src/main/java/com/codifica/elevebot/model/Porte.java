@@ -14,8 +14,7 @@ public class Porte {
 
     public Porte() {}
 
-    public Porte(Integer id, String nome) {
-        this.id = id;
+    public Porte(String nome) {
         this.nome = nome;
     }
 

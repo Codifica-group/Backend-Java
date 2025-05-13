@@ -14,6 +14,11 @@ public class Servico {
 
     public Servico() {}
 
+    public Servico(String nome, Double valorBase) {
+        this.nome = nome;
+        this.valorBase = valorBase;
+    }
+
     public Integer getId() {
         return id;
     }

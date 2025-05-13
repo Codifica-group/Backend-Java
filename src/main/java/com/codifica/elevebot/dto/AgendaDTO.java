@@ -1,26 +1,16 @@
-package com.codifica.elevebot.model;
-
-import jakarta.persistence.*;
+package com.codifica.elevebot.dto;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
-@Entity
-@Table(name="agenda")
-public class Agenda {
+public class AgendaDTO {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-
-    @ManyToOne
-    @JoinColumn(name = "pet_id")
-    private Pet pet;
-
+    private Integer petId;
+    private List<Integer> servicos;
     private LocalDateTime dataHoraInicio;
     private LocalDateTime dataHoraFim;
     private Double valor;
-
-    public Agenda() {}
 
     public Integer getId() {
         return id;
@@ -30,12 +20,20 @@ public class Agenda {
         this.id = id;
     }
 
-    public Pet getPet() {
-        return pet;
+    public Integer getPetId() {
+        return petId;
     }
 
-    public void setPet(Pet pet) {
-        this.pet = pet;
+    public void setPetId(Integer petId) {
+        this.petId = petId;
+    }
+
+    public List<Integer> getServicos() {
+        return servicos;
+    }
+
+    public void setServicos(List<Integer> servicos) {
+        this.servicos = servicos;
     }
 
     public LocalDateTime getDataHoraInicio() {
