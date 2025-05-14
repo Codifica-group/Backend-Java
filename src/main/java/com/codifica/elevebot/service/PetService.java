@@ -7,6 +7,7 @@ import com.codifica.elevebot.exception.NotFoundException;
 import com.codifica.elevebot.model.Cliente;
 import com.codifica.elevebot.model.Pet;
 import com.codifica.elevebot.model.Raca;
+import com.codifica.elevebot.repository.AgendaRepository;
 import com.codifica.elevebot.repository.ClienteRepository;
 import com.codifica.elevebot.repository.PetRepository;
 import com.codifica.elevebot.repository.RacaRepository;
@@ -32,6 +33,9 @@ public class PetService {
 
     @Autowired
     private ClienteRepository clienteRepository;
+
+    @Autowired
+    private AgendaRepository agendaRepository;
 
     public Object cadastrar(PetDTO petDTO) {
         Cliente cliente = clienteRepository.findById(petDTO.getClienteId())
@@ -91,6 +95,10 @@ public class PetService {
     public String deletar(Integer id) {
         if (!petRepository.existsById(id)) {
             throw new NotFoundException("Pet não encontrado.");
+        }
+
+        if (agendaRepository.existsByPetId(id)) {
+            throw new ConflictException("Não é possível deletar pets que possuem agendas associadas.");
         }
 
         petRepository.deleteById(id);

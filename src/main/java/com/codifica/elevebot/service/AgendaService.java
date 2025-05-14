@@ -33,11 +33,14 @@ public class AgendaService {
     @Autowired
     private ServicoRepository servicoRepository;
 
+    @Autowired
+    private AgendaAdapter agendaAdapter;
+
     public Object cadastrar(AgendaDTO agendaDTO) {
         Pet pet = petRepository.findById(agendaDTO.getPetId())
                 .orElseThrow(() -> new NotFoundException("Pet não encontrado."));
 
-        Agenda agenda = AgendaAdapter.toEntity(agendaDTO, pet);
+        Agenda agenda = agendaAdapter.toEntity(agendaDTO, pet);
         agendaRepository.save(agenda);
 
         List<Integer> servicos = agendaDTO.getServicos();
@@ -68,8 +71,7 @@ public class AgendaService {
                             .map(AgendaServico::getServico)
                             .collect(Collectors.toList());
 
-                    // Converte a agenda para DTO, incluindo os serviços
-                    return AgendaAdapter.toDTO(agenda, servicos);
+                    return agendaAdapter.toDTO(agenda, servicos);
                 })
                 .toList();
     }
@@ -82,7 +84,7 @@ public class AgendaService {
                 .map(AgendaServico::getServico)
                 .collect(Collectors.toList());
 
-        return AgendaAdapter.toDTO(agenda, servicos);
+        return agendaAdapter.toDTO(agenda, servicos);
     }
 
     public String atualizar(Integer id, AgendaDTO agendaDTO) {

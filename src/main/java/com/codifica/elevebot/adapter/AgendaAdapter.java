@@ -4,13 +4,15 @@ import com.codifica.elevebot.dto.AgendaDTO;
 import com.codifica.elevebot.model.Agenda;
 import com.codifica.elevebot.model.Pet;
 import com.codifica.elevebot.model.Servico;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Component
 public class AgendaAdapter {
 
-    public static Agenda toEntity(AgendaDTO agendaDTO, Pet pet) {
+    public Agenda toEntity(AgendaDTO agendaDTO, Pet pet) {
         Agenda agenda = new Agenda();
         agenda.setId(agendaDTO.getId());
         agenda.setPet(pet);
@@ -20,7 +22,7 @@ public class AgendaAdapter {
         return agenda;
     }
 
-    public static AgendaDTO toDTO(Agenda agenda, List<Servico> servicos) {
+    public AgendaDTO toDTO(Agenda agenda, List<Servico> servicos) {
         AgendaDTO agendaDTO = new AgendaDTO();
         agendaDTO.setId(agenda.getId());
         agendaDTO.setPetId(agenda.getPet().getId());

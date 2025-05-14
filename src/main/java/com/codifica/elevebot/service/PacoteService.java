@@ -26,6 +26,7 @@ public class PacoteService {
     @Autowired
     private ClienteRepository clienteRepository;
 
+    @Autowired
     private PacoteAdapter pacoteAdapter;
 
     public Object cadastrar(PacoteDTO pacoteDTO) {
@@ -70,7 +71,7 @@ public class PacoteService {
         List<Pacote> pacotes = pacoteRepository.findAll();
 
         return pacotes.stream()
-                .map(PacoteAdapter::toDTO)
+                .map(pacoteAdapter::toDTO)
                 .toList();
     }
 

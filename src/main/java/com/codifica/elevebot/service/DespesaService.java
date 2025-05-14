@@ -22,11 +22,14 @@ public class DespesaService {
     @Autowired
     private ProdutoRepository produtoRepository;
 
+    @Autowired
+    private DespesaAdapter despesaAdapter;
+
     public String cadastrar(List<DespesaDTO> despesasDTO) {
         List<Despesa> despesas = despesasDTO.stream().map(dto -> {
             Produto produto = produtoRepository.findById(dto.getProdutoId())
                     .orElseThrow(() -> new NotFoundException("Produto não encontrado. ID: " + dto.getProdutoId()));
-            return DespesaAdapter.toEntity(dto, produto);
+            return despesaAdapter.toEntity(dto, produto);
         }).collect(Collectors.toList());
 
         despesaRepository.saveAll(despesas);
@@ -37,7 +40,7 @@ public class DespesaService {
         List<Despesa> despesas = despesaRepository.findAll();
 
         return despesas.stream()
-                .map(DespesaAdapter::toDTO)
+                .map(despesaAdapter::toDTO)
                 .collect(Collectors.toList());
     }
 
@@ -45,7 +48,7 @@ public class DespesaService {
         Despesa despesa = despesaRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Despesa não encontrada."));
 
-        return DespesaAdapter.toDTO(despesa);
+        return despesaAdapter.toDTO(despesa);
     }
 
     public String atualizar(Integer id, DespesaDTO despesaDTO) {

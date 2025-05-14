@@ -26,6 +26,7 @@ public class ProdutoService {
     @Autowired
     private DespesaRepository despesaRepository;
 
+    @Autowired
     private ProdutoAdapter produtoAdapter;
 
     public Object cadastrar(List<ProdutoDTO> produtosDTO) {
@@ -54,7 +55,7 @@ public class ProdutoService {
         List<Produto> produtos = produtoRepository.findAll();
 
         List<ProdutoDTO> listaDTO = produtos.stream()
-                .map(ProdutoAdapter::toDTO)
+                .map(produtoAdapter::toDTO)
                 .collect(Collectors.toList());
 
         Map<CategoriaProduto, List<ProdutoDTO>> produtosAgrupados = listaDTO.stream()
@@ -96,6 +97,10 @@ public class ProdutoService {
     public String deletar(Integer id) {
         if (!produtoRepository.existsById(id)) {
             throw new NotFoundException("Produto não encontrado.");
+        }
+
+        if (despesaRepository.existsByProduto_Id(id)) {
+            throw new ConflictException("Não é possível deletar produtos que possuem despesas cadastradas.");
         }
 
         produtoRepository.deleteById(id);

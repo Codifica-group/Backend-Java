@@ -30,6 +30,7 @@ public class RacaService {
     @Autowired
     private PorteRepository porteRepository;
 
+    @Autowired
     private RacaAdapter racaAdapter;
 
     public Object cadastrar(RacaDTO racaDTO) {
@@ -40,7 +41,7 @@ public class RacaService {
         Porte porte = porteRepository.findById(racaDTO.getPorteId())
                 .orElseThrow(() -> new NotFoundException("Porte não encontrado."));
 
-        Raca raca = RacaAdapter.toEntity(racaDTO, porte);
+        Raca raca = racaAdapter.toEntity(racaDTO, porte);
         racaRepository.save(raca);
 
         var resposta = new HashMap<String, Object>();
@@ -53,7 +54,7 @@ public class RacaService {
         List<Raca> racas = racaRepository.findAll();
 
         List<RacaDTO> listaDTO = racas.stream()
-                .map(RacaAdapter::toDTO)
+                .map(racaAdapter::toDTO)
                 .collect(Collectors.toList());
 
         Map<String, List<RacaDTO>> racasAgrupadas = listaDTO.stream()
