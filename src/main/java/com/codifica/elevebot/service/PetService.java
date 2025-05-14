@@ -27,6 +27,7 @@ public class PetService {
     @Autowired
     private RacaRepository racaRepository;
 
+    @Autowired
     private PetAdapter petAdapter;
 
     @Autowired
@@ -58,7 +59,7 @@ public class PetService {
         List<Pet> pets = petRepository.findAll();
 
         return pets.stream()
-                .map(PetAdapter::toDTO)
+                .map(pet -> petAdapter.toDTO(pet))
                 .toList();
     }
 
@@ -66,7 +67,7 @@ public class PetService {
         Pet pet = petRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Pet não encontrado."));
 
-        return PetAdapter.toDTO(pet);
+        return petAdapter.toDTO(pet);
     }
 
     public String atualizar(Integer id, PetDTO petDTO) {

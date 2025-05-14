@@ -1,5 +1,6 @@
 package com.codifica.elevebot.controller;
 
+import com.codifica.elevebot.dto.ClienteDTO;
 import com.codifica.elevebot.model.Cliente;
 import com.codifica.elevebot.service.ClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,13 +24,13 @@ public class ClienteController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Cliente>> listarClientes() {
-        List<Cliente> clientes = clienteService.listar();
+    public ResponseEntity<List<ClienteDTO>> listarClientes() {
+        List<ClienteDTO> clientes = clienteService.listar();
         return clientes.isEmpty() ? ResponseEntity.noContent().build() : ResponseEntity.ok().body(clientes);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Cliente> buscarClientePorId(@PathVariable Integer id) {
+    public ResponseEntity<ClienteDTO> buscarClientePorId(@PathVariable Integer id) {
         return ResponseEntity.ok(clienteService.buscarPorId(id));
     }
 

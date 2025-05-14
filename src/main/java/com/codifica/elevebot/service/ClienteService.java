@@ -1,5 +1,9 @@
 package com.codifica.elevebot.service;
 
+import com.codifica.elevebot.adapter.ClienteAdapter;
+import com.codifica.elevebot.dto.ClienteDTO;
+import com.codifica.elevebot.dto.PacoteDTO;
+import com.codifica.elevebot.dto.PetDTO;
 import com.codifica.elevebot.exception.ConflictException;
 import com.codifica.elevebot.exception.NotFoundException;
 import com.codifica.elevebot.model.Cliente;
@@ -11,7 +15,6 @@ import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 
@@ -23,6 +26,9 @@ public class ClienteService {
 
     @Autowired
     private PacoteRepository pacoteRepository;
+
+    @Autowired
+    private ClienteAdapter clienteAdapter;
 
     public Object cadastrar(Cliente cliente) {
         if (clienteExiste(cliente)) {
@@ -37,24 +43,16 @@ public class ClienteService {
         return resposta;
     }
 
-    public List<Cliente> listar() {
+    public List<ClienteDTO> listar() {
         List<Cliente> clientes = clienteRepository.findAll();
-
-        for (Cliente cliente : clientes) {
-            Pacote pacoteAtivo = pacoteRepository.findActivePacoteByCliente(cliente.getId(), LocalDate.now());
-
-            if (pacoteAtivo != null) {
-                cliente.setPacotes(List.of(pacoteAtivo));
-            } else {
-                cliente.setPacotes(List.of());
-            }
-        }
-        return clientes;
+        return clientes.stream().map(cliente -> clienteAdapter.toDTO(cliente)).toList();
     }
 
-    public Cliente buscarPorId(Integer id) {
-        return clienteRepository.findById(id)
+    public ClienteDTO buscarPorId(Integer id) {
+        Cliente cliente = clienteRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Cliente não encontrado."));
+
+        return clienteAdapter.toDTO(cliente);
     }
 
     public String atualizar(Integer id, Cliente cliente) {

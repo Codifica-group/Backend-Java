@@ -4,10 +4,12 @@ import com.codifica.elevebot.dto.PetDTO;
 import com.codifica.elevebot.model.Cliente;
 import com.codifica.elevebot.model.Pet;
 import com.codifica.elevebot.model.Raca;
+import org.springframework.stereotype.Component;
 
+@Component
 public class PetAdapter {
 
-    public static Pet toEntity(PetDTO dto, Cliente cliente, Raca raca) {
+    public Pet toEntity(PetDTO dto, Cliente cliente, Raca raca) {
         Pet pet = new Pet();
         pet.setRaca(raca);
         pet.setNome(dto.getNome());
@@ -15,7 +17,7 @@ public class PetAdapter {
         return pet;
     }
 
-    public static PetDTO toDTO(Pet pet) {
+    public PetDTO toDTO(Pet pet) {
         PetDTO dto = new PetDTO();
         dto.setRacaId(pet.getRaca().getId());
         dto.setNome(pet.getNome());
