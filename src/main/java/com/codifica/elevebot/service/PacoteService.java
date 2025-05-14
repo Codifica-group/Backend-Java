@@ -9,7 +9,6 @@ import com.codifica.elevebot.model.Cliente;
 import com.codifica.elevebot.model.Pacote;
 import com.codifica.elevebot.repository.PacoteRepository;
 import com.codifica.elevebot.repository.ClienteRepository;
-import org.apache.logging.log4j.spi.ObjectThreadContextMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -40,7 +39,8 @@ public class PacoteService {
 
         Pacote pacote = pacoteAdapter.toEntity(pacoteDTO, cliente);
 
-        LocalDate dataInicio = (pacoteDTO.getDataExpiracao() != null) ? pacoteDTO.getDataExpiracao() : LocalDate.now();
+        LocalDate dataInicio = (pacoteDTO.getDataInicio() != null) ? pacoteDTO.getDataInicio() : LocalDate.now();
+        pacote.setDataInicio(dataInicio);
 
         switch (pacoteDTO.getPacoteId()) {
             case 1: // Mensal = +31 dias
@@ -69,15 +69,15 @@ public class PacoteService {
 
     public List<PacoteDTO> listar() {
         List<Pacote> pacotes = pacoteRepository.findAll();
-
         return pacotes.stream()
                 .map(pacoteAdapter::toDTO)
                 .toList();
     }
 
-    public Pacote buscarPorId(Integer id) {
-        return pacoteRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Registro cliente_pacote não encontrado."));
+    public PacoteDTO buscarPorId(Integer id) {
+        Pacote pacote = pacoteRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Pacote não encontrado."));
+        return pacoteAdapter.toDTO(pacote);
     }
 
     public String atualizar(Integer id, PacoteDTO pacoteDTO) {
@@ -89,14 +89,13 @@ public class PacoteService {
         }
 
         pacoteExistente.setPacoteId(pacoteDTO.getPacoteId());
-        LocalDate dataInicio = pacoteDTO.getDataExpiracao();
 
         switch (pacoteDTO.getPacoteId()) {
             case 1: // Mensal = +31 dias
-                pacoteExistente.setDataExpiracao(dataInicio.plusDays(31));
+                pacoteExistente.setDataExpiracao(pacoteDTO.getDataInicio().plusDays(31));
                 break;
             case 2: // Quinzenal = +16 dias
-                pacoteExistente.setDataExpiracao(dataInicio.plusDays(16));
+                pacoteExistente.setDataExpiracao(pacoteDTO.getDataInicio().plusDays(16));
                 break;
             default:
                 throw new IllegalArgumentException("Tipo (id) do pacote deve ser 1 (Mensal) ou 2 (Quinzenal).");
@@ -111,9 +110,10 @@ public class PacoteService {
     }
 
     public String deletar(Integer id) {
-        Pacote pacote = buscarPorId(id);
-        pacoteRepository.delete(pacote);
+        Pacote pacote = pacoteRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Pacote não encontrado."));
 
+        pacoteRepository.delete(pacote);
         return "Pacote deletado com sucesso.";
     }
 }

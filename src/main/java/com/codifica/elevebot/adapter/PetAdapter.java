@@ -19,6 +19,7 @@ public class PetAdapter {
 
     public PetDTO toDTO(Pet pet) {
         PetDTO dto = new PetDTO();
+        dto.setId(pet.getId());
         dto.setRacaId(pet.getRaca().getId());
         dto.setNome(pet.getNome());
         if (pet.getCliente() != null) {

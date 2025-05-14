@@ -30,7 +30,7 @@ public class PacoteController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Pacote> buscarPacotePorId(@PathVariable Integer id) {
+    public ResponseEntity<PacoteDTO> buscarPacotePorId(@PathVariable Integer id) {
         return ResponseEntity.ok(pacoteService.buscarPorId(id));
     }
 

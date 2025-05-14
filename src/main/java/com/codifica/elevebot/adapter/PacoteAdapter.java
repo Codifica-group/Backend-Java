@@ -5,6 +5,8 @@ import com.codifica.elevebot.model.Cliente;
 import com.codifica.elevebot.model.Pacote;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
+
 @Component
 public class PacoteAdapter {
 
@@ -20,7 +22,17 @@ public class PacoteAdapter {
         dto.setId(pacote.getId());
         dto.setClienteId(pacote.getCliente().getId());
         dto.setPacoteId(pacote.getPacoteId());
+        dto.setDataInicio(pacote.getDataInicio());
         dto.setDataExpiracao(pacote.getDataExpiracao());
+
+        LocalDate hoje = LocalDate.now();
+        if (hoje.isBefore(pacote.getDataInicio())) {
+            dto.setStatus("Espera");
+        } else if (!pacote.getDataExpiracao().isAfter(hoje)) {
+            dto.setStatus("Expirado");
+        } else {
+            dto.setStatus("Ativo");
+        }
         return dto;
     }
 }

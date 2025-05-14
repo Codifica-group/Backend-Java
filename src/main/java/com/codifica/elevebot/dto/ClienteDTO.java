@@ -12,7 +12,7 @@ public class ClienteDTO {
     private Integer numEndereco;
     private String complemento;
     private List<PetDTO> pets;
-    private List<Pacote> pacotes;
+    private List<PacoteDTO> pacotes;
 
     public ClienteDTO() {}
 
@@ -72,11 +72,11 @@ public class ClienteDTO {
         this.pets = pets;
     }
 
-    public List<Pacote> getPacotes() {
+    public List<PacoteDTO> getPacotes() {
         return pacotes;
     }
 
-    public void setPacotes(List<Pacote> pacotes) {
+    public void setPacotes(List<PacoteDTO> pacotes) {
         this.pacotes = pacotes;
     }
 }

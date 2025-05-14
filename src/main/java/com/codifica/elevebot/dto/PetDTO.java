@@ -2,6 +2,7 @@ package com.codifica.elevebot.dto;
 
 public class PetDTO {
 
+    private Integer id;
     private Integer racaId;
     private String nome;
     private Integer clienteId;
@@ -12,6 +13,14 @@ public class PetDTO {
         this.racaId = racaId;
         this.nome = nome;
         this.clienteId = clienteId;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public Integer getRacaId() {

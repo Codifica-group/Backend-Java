@@ -1,6 +1,7 @@
 package com.codifica.elevebot.adapter;
 
 import com.codifica.elevebot.dto.ClienteDTO;
+import com.codifica.elevebot.dto.PacoteDTO;
 import com.codifica.elevebot.model.Cliente;
 import com.codifica.elevebot.model.Pacote;
 import com.codifica.elevebot.model.Pet;
@@ -16,6 +17,9 @@ public class ClienteAdapter {
 
     @Autowired
     private PetAdapter petAdapter;
+
+    @Autowired
+    private PacoteAdapter pacoteAdapter;
 
     @Autowired
     private PacoteRepository pacoteRepository;
@@ -41,7 +45,7 @@ public class ClienteAdapter {
 
         Pacote pacoteAtivo = pacoteRepository.findActivePacoteByCliente(entity.getId(), LocalDate.now());
         if (pacoteAtivo != null) {
-            dto.setPacotes(List.of(pacoteAtivo));
+            dto.setPacotes(List.of(pacoteAdapter.toDTO(pacoteAtivo)));
         } else {
             dto.setPacotes(List.of());
         }

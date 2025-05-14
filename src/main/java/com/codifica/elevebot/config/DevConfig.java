@@ -137,6 +137,7 @@ public class DevConfig {
             Pacote pacote = new Pacote();
             pacote.setPacoteId(1);
             pacote.setCliente(cliente);
+            pacote.setDataInicio(LocalDate.now().minusDays(31));
 //            pacote.setDataExpiracao(LocalDate.now().minusDays(1));
             pacote.setDataExpiracao(LocalDate.now());
             pacoteRepository.save(pacote);
@@ -145,6 +146,7 @@ public class DevConfig {
             pacote = new Pacote();
             pacote.setPacoteId(1);
             pacote.setCliente(cliente);
+            pacote.setDataInicio(LocalDate.now());
             pacote.setDataExpiracao(LocalDate.now().plusDays(31));
             pacoteRepository.save(pacote);
 

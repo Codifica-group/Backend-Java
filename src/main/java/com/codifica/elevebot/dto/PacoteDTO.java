@@ -1,6 +1,7 @@
 package com.codifica.elevebot.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.springframework.cglib.core.Local;
 
 import java.time.LocalDate;
 
@@ -9,7 +10,9 @@ public class PacoteDTO {
     private Integer id = 0;
     private Integer clienteId;
     private Integer pacoteId;
-    private LocalDate dataExpiracao = LocalDate.now();
+    private LocalDate dataInicio = LocalDate.now();
+    private LocalDate dataExpiracao;
+    private String status;
 
     public PacoteDTO () {}
 
@@ -45,8 +48,19 @@ public class PacoteDTO {
         this.dataExpiracao = dataExpiracao;
     }
 
-    @JsonProperty("dataInicio")
-    public void setDataInicial(LocalDate dataInicio) {
-        this.dataExpiracao = dataInicio;
+    public LocalDate getDataInicio() {
+        return dataInicio;
+    }
+
+    public void setDataInicio(LocalDate dataInicio) {
+        this.dataInicio = dataInicio;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }
