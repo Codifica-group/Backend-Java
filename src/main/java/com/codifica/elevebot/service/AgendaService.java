@@ -3,10 +3,7 @@ package com.codifica.elevebot.service;
 import com.codifica.elevebot.adapter.AgendaAdapter;
 import com.codifica.elevebot.dto.AgendaDTO;
 import com.codifica.elevebot.exception.NotFoundException;
-import com.codifica.elevebot.model.Agenda;
-import com.codifica.elevebot.model.AgendaServico;
-import com.codifica.elevebot.model.Pet;
-import com.codifica.elevebot.model.Servico;
+import com.codifica.elevebot.model.*;
 import com.codifica.elevebot.repository.AgendaRepository;
 import com.codifica.elevebot.repository.AgendaServicoRepository;
 import com.codifica.elevebot.repository.PetRepository;
@@ -129,5 +126,59 @@ public class AgendaService {
         agendaServicoRepository.deleteAll(agendaServicos);
         agendaRepository.deleteById(id);
         return "Agenda deletada com sucesso.";
+    }
+
+    public List<AgendaDTO> filtrar(Filtro filtro) {
+        if (filtro.getDataInicio() == null || filtro.getDataFim() == null) {
+            throw new IllegalArgumentException("Os campos 'dataInicio' e 'dataFim' são obrigatórios.");
+        }
+
+        List<Agenda> agendas = agendaRepository.findAll();
+
+        agendas = agendas.stream()
+                .filter(agenda -> !agenda.getDataHoraInicio().toLocalDate().isBefore(filtro.getDataInicio()) &&
+                        !agenda.getDataHoraFim().toLocalDate().isAfter(filtro.getDataFim()))
+                .toList();
+
+        if (filtro.getClienteId() != null) {
+            agendas = agendas.stream()
+                    .filter(agenda -> agenda.getPet().getCliente().getId().equals(filtro.getClienteId()))
+                    .toList();
+        }
+
+        if (filtro.getPetId() != null) {
+            agendas = agendas.stream()
+                    .filter(agenda -> agenda.getPet().getId().equals(filtro.getPetId()))
+                    .toList();
+        }
+
+        if (filtro.getRacaId() != null) {
+            agendas = agendas.stream()
+                    .filter(agenda -> agenda.getPet().getRaca().getId().equals(filtro.getRacaId()))
+                    .toList();
+        }
+
+        if (filtro.getServicoId() != null && !filtro.getServicoId().isEmpty()) {
+            agendas = agendas.stream()
+                    .filter(agenda -> {
+                        List<Integer> agendaServicosIds = agendaServicoRepository.findByAgenda(agenda).stream()
+                                .map(agendaServico -> agendaServico.getServico().getId())
+                                .collect(Collectors.toList());
+
+                        return agendaServicosIds.size() == filtro.getServicoId().size() &&
+                                agendaServicosIds.containsAll(filtro.getServicoId());
+                    })
+                    .toList();
+        }
+
+
+        List<AgendaDTO> agendasDTO = agendas.stream().map(agenda -> {
+            List<Servico> servicos = agendaServicoRepository.findByAgenda(agenda).stream()
+                    .map(AgendaServico::getServico)
+                    .collect(Collectors.toList());
+
+            return agendaAdapter.toDTO(agenda, servicos);
+        }).toList();
+        return agendasDTO;
     }
 }

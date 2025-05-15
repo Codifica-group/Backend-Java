@@ -1,6 +1,7 @@
 package com.codifica.elevebot.controller;
 
 import com.codifica.elevebot.dto.AgendaDTO;
+import com.codifica.elevebot.model.Filtro;
 import com.codifica.elevebot.service.AgendaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -43,5 +44,11 @@ public class AgendaController {
     public ResponseEntity<String> deletarAgenda(@PathVariable Integer id) {
         String mensagem = agendaService.deletar(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(mensagem);
+    }
+
+    @PostMapping("/filtrar")
+    public ResponseEntity<List<AgendaDTO>> filtrarAgendas(@RequestBody Filtro filtro) {
+        List<AgendaDTO> agendas = agendaService.filtrar(filtro);
+        return agendas.isEmpty() ? ResponseEntity.noContent().build() : ResponseEntity.ok(agendas);
     }
 }
