@@ -2,6 +2,7 @@ package com.codifica.elevebot.controller;
 
 import com.codifica.elevebot.dto.AgendaDTO;
 import com.codifica.elevebot.model.Filtro;
+import com.codifica.elevebot.model.Total;
 import com.codifica.elevebot.service.AgendaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -50,5 +51,10 @@ public class AgendaController {
     public ResponseEntity<List<AgendaDTO>> filtrarAgendas(@RequestBody Filtro filtro) {
         List<AgendaDTO> agendas = agendaService.filtrar(filtro);
         return agendas.isEmpty() ? ResponseEntity.noContent().build() : ResponseEntity.ok(agendas);
+    }
+
+    @PostMapping("/calcular")
+    public ResponseEntity<Total> calcularAgendas(@RequestBody Total total){
+        return ResponseEntity.ok(agendaService.calcular(total));
     }
 }

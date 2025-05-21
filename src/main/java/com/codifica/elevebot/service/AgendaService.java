@@ -4,10 +4,7 @@ import com.codifica.elevebot.adapter.AgendaAdapter;
 import com.codifica.elevebot.dto.AgendaDTO;
 import com.codifica.elevebot.exception.NotFoundException;
 import com.codifica.elevebot.model.*;
-import com.codifica.elevebot.repository.AgendaRepository;
-import com.codifica.elevebot.repository.AgendaServicoRepository;
-import com.codifica.elevebot.repository.PetRepository;
-import com.codifica.elevebot.repository.ServicoRepository;
+import com.codifica.elevebot.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,6 +26,9 @@ public class AgendaService {
 
     @Autowired
     private ServicoRepository servicoRepository;
+
+    @Autowired
+    private DespesaRepository despesaRepository;
 
     @Autowired
     private AgendaAdapter agendaAdapter;
@@ -180,5 +180,37 @@ public class AgendaService {
             return agendaAdapter.toDTO(agenda, servicos);
         }).toList();
         return agendasDTO;
+    }
+
+    public Total calcular(Total total) {
+        if (total.getDataInicio().isAfter(total.getDataFim())) {
+            throw new IllegalArgumentException("A data de início deve ser anterior ou igual à data de fim.");
+        }
+
+        List<Agenda> agendasNoPeriodo = agendaRepository.findAll().stream()
+                .filter(agenda -> !agenda.getDataHoraInicio().toLocalDate().isBefore(total.getDataInicio()) &&
+                        !agenda.getDataHoraFim().toLocalDate().isAfter(total.getDataFim()))
+                .toList();
+
+        double totalGanhos = agendasNoPeriodo.stream()
+                .mapToDouble(Agenda::getValor)
+                .sum();
+
+        List<Despesa> despesasNoPeriodo = despesaRepository.findAll().stream()
+                .filter(despesa -> !despesa.getData().isBefore(total.getDataInicio()) &&
+                        !despesa.getData().isAfter(total.getDataFim()))
+                .toList();
+
+        double totalGastos = despesasNoPeriodo.stream()
+                .mapToDouble(Despesa::getValor)
+                .sum();
+
+        double lucro = totalGanhos - totalGastos;
+
+        total.setEntrada(totalGanhos);
+        total.setSaida(totalGastos);
+        total.setTotal(lucro);
+
+        return total;
     }
 }
