@@ -55,6 +55,11 @@ public class AgendaController {
 
     @PostMapping("/calcular/lucro")
     public ResponseEntity<Total> calcularLucro(@RequestBody Total total){
-        return ResponseEntity.ok(agendaService.calcular(total));
+        return ResponseEntity.ok(agendaService.calcularLucro(total));
+    }
+
+    @PostMapping("/calcular/servico")
+    public ResponseEntity<Object> calcularServico(@RequestBody AgendaDTO agendaDTO) {
+        return ResponseEntity.ok(agendaService.calcularServico(agendaDTO));
     }
 }

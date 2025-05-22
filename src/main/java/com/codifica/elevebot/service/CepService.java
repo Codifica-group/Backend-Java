@@ -9,7 +9,7 @@ import org.springframework.web.client.RestTemplate;
 @Service
 public class CepService {
 
-    private final String URL_VIACEP = "https://viacep.com.br/ws/{cep}/json/";
+    private static final String URL_VIACEP = System.getenv("URL_VIACEP");
 
     public CepDTO buscarCep(String cep) {
         validarCep(cep);

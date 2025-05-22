@@ -2,15 +2,18 @@ package com.codifica.elevebot.service;
 
 import com.codifica.elevebot.adapter.AgendaAdapter;
 import com.codifica.elevebot.dto.AgendaDTO;
+import com.codifica.elevebot.dto.CepDTO;
 import com.codifica.elevebot.exception.NotFoundException;
 import com.codifica.elevebot.exception.IllegalArgumentException;
 import com.codifica.elevebot.model.*;
 import com.codifica.elevebot.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -33,6 +36,12 @@ public class AgendaService {
 
     @Autowired
     private AgendaAdapter agendaAdapter;
+
+    @Autowired
+    private CepService cepService;
+
+    private static final String URL_DESLOCAMENTO = System.getenv("URL_DESLOCAMENTO");
+
 
     public Object cadastrar(AgendaDTO agendaDTO) {
         Pet pet = petRepository.findById(agendaDTO.getPetId())
@@ -191,7 +200,7 @@ public class AgendaService {
         }).toList();
     }
 
-    public Total calcular(Total total) {
+    public Total calcularLucro(Total total) {
         if (total.getDataInicio().isAfter(total.getDataFim())) {
             throw new IllegalArgumentException("A data de início deve ser anterior ou igual à data de fim.");
         }
@@ -221,5 +230,78 @@ public class AgendaService {
         total.setTotal(lucro);
 
         return total;
+    }
+
+    public Object calcularServico(AgendaDTO agendaDTO) {
+        Pet pet = petRepository.findById(agendaDTO.getPetId())
+                .orElseThrow(() -> new NotFoundException("Pet não encontrado."));
+
+        Cliente cliente = pet.getCliente();
+        if (cliente == null || cliente.getCep() == null) {
+            throw new IllegalArgumentException("Cliente ou CEP do cliente não encontrado.");
+        }
+
+        CepDTO enderecoCliente = cepService.buscarCep(cliente.getCep());
+        Map<String, Double> deslocamentoResponse = consultarMicroservicoDeslocamento(enderecoCliente, cliente);
+        if (deslocamentoResponse == null || !deslocamentoResponse.containsKey("distanciaKm") || !deslocamentoResponse.containsKey("taxa")) {
+            throw new RuntimeException("Falha ao consultar o microserviço de deslocamento.");
+        }
+
+        Double distanciaKm = deslocamentoResponse.get("distanciaKm");
+        Double taxaDeslocamento = deslocamentoResponse.get("taxa");
+        Double tempoHoras = deslocamentoResponse.get("tempoHoras");
+
+        List<Servico> servicos = agendaDTO.getServicos().stream().map(servicoId -> {
+            return servicoRepository.findById(servicoId)
+                    .orElseThrow(() -> new NotFoundException("Serviço não encontrado."));
+        }).collect(Collectors.toList());
+
+        Double valorServico = calcularValorServico(servicos, pet);
+        Double sugestaoValor = taxaDeslocamento + valorServico;
+
+        Map<String, Object> resposta = new HashMap<>();
+        resposta.put("sugestaoValor", sugestaoValor);
+        resposta.put("valorDeslocamento", taxaDeslocamento);
+        resposta.put("distanciaKm", distanciaKm);
+        resposta.put("tempoDeslocamento", tempoHoras);
+        resposta.put("valorServico", valorServico);
+        return resposta;
+    }
+
+    private Map<String, Double> consultarMicroservicoDeslocamento(CepDTO endereco, Cliente cliente) {
+        RestTemplate restTemplate = new RestTemplate();
+
+        Map<String, String> deslocamentoRequest = new HashMap<>();
+        deslocamentoRequest.put("rua", endereco.getLogradouro());
+        deslocamentoRequest.put("numero", cliente.getNumEndereco().toString());
+        deslocamentoRequest.put("cidade", endereco.getLocalidade());
+        deslocamentoRequest.put("cep", cliente.getCep());
+
+        return restTemplate.postForObject(URL_DESLOCAMENTO, deslocamentoRequest, Map.class);
+    }
+
+    private Double calcularValorServico(List<Servico> servicos, Pet pet) {
+        Double valorServico = 0.0;
+
+        for (Servico servico : servicos) {
+            valorServico += servico.getValorBase();
+        }
+
+        String porte = pet.getRaca().getPorte().getNome();
+        switch (porte) {
+            case "Pequeno":
+                valorServico += 10.0;
+                break;
+            case "Médio":
+                valorServico += 20.0;
+                break;
+            case "Grande":
+                valorServico += 30.0;
+                break;
+            default:
+                throw new IllegalArgumentException("Porte do pet inválido.");
+        }
+
+        return valorServico;
     }
 }

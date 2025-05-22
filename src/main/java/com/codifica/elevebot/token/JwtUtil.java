@@ -6,7 +6,8 @@ import com.auth0.jwt.algorithms.Algorithm;
 import java.util.Date;
 
 public class JwtUtil {
-    private static final String SECRET_KEY = "Eleve";
+
+    private static final String SECRET_KEY = System.getenv("SECRET_KEY");
 
     public static String generateToken(String username) {
         Algorithm algorithm = Algorithm.HMAC256(SECRET_KEY);
