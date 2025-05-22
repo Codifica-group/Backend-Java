@@ -1,5 +1,7 @@
 package com.codifica.elevebot.model;
 
+import com.codifica.elevebot.exception.IllegalArgumentException;
+
 public enum CategoriaProduto {
     GASTO_FIXO(1),
     MANUTENCAO(2),

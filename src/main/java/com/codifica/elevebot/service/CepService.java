@@ -2,6 +2,7 @@ package com.codifica.elevebot.service;
 
 import com.codifica.elevebot.dto.CepDTO;
 import com.codifica.elevebot.exception.NotFoundException;
+import com.codifica.elevebot.exception.IllegalArgumentException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 

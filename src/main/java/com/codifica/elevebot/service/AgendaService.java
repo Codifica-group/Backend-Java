@@ -3,6 +3,7 @@ package com.codifica.elevebot.service;
 import com.codifica.elevebot.adapter.AgendaAdapter;
 import com.codifica.elevebot.dto.AgendaDTO;
 import com.codifica.elevebot.exception.NotFoundException;
+import com.codifica.elevebot.exception.IllegalArgumentException;
 import com.codifica.elevebot.model.*;
 import com.codifica.elevebot.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -129,16 +130,26 @@ public class AgendaService {
     }
 
     public List<AgendaDTO> filtrar(Filtro filtro) {
-        if (filtro.getDataInicio() == null || filtro.getDataFim() == null) {
-            throw new IllegalArgumentException("Os campos 'dataInicio' e 'dataFim' são obrigatórios.");
+        if (filtro.getDataInicio().isAfter(filtro.getDataFim())) {
+            throw new IllegalArgumentException("A data de início deve ser anterior ou igual à data de fim.");
         }
 
         List<Agenda> agendas = agendaRepository.findAll();
 
-        agendas = agendas.stream()
-                .filter(agenda -> !agenda.getDataHoraInicio().toLocalDate().isBefore(filtro.getDataInicio()) &&
-                        !agenda.getDataHoraFim().toLocalDate().isAfter(filtro.getDataFim()))
-                .toList();
+        if (filtro.getDataInicio() != null && filtro.getDataFim() != null) {
+            agendas = agendas.stream()
+                    .filter(agenda -> !agenda.getDataHoraInicio().toLocalDate().isBefore(filtro.getDataInicio()) &&
+                            !agenda.getDataHoraFim().toLocalDate().isAfter(filtro.getDataFim()))
+                    .toList();
+        } else if (filtro.getDataInicio() != null) {
+            agendas = agendas.stream()
+                    .filter(agenda -> !agenda.getDataHoraInicio().toLocalDate().isBefore(filtro.getDataInicio()))
+                    .toList();
+        } else if (filtro.getDataFim() != null) {
+            agendas = agendas.stream()
+                    .filter(agenda -> !agenda.getDataHoraFim().toLocalDate().isAfter(filtro.getDataFim()))
+                    .toList();
+        }
 
         if (filtro.getClienteId() != null) {
             agendas = agendas.stream()
@@ -171,15 +182,13 @@ public class AgendaService {
                     .toList();
         }
 
-
-        List<AgendaDTO> agendasDTO = agendas.stream().map(agenda -> {
+        return agendas.stream().map(agenda -> {
             List<Servico> servicos = agendaServicoRepository.findByAgenda(agenda).stream()
                     .map(AgendaServico::getServico)
                     .collect(Collectors.toList());
 
             return agendaAdapter.toDTO(agenda, servicos);
         }).toList();
-        return agendasDTO;
     }
 
     public Total calcular(Total total) {

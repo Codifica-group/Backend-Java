@@ -53,8 +53,8 @@ public class AgendaController {
         return agendas.isEmpty() ? ResponseEntity.noContent().build() : ResponseEntity.ok(agendas);
     }
 
-    @PostMapping("/calcular")
-    public ResponseEntity<Total> calcularAgendas(@RequestBody Total total){
+    @PostMapping("/calcular/lucro")
+    public ResponseEntity<Total> calcularLucro(@RequestBody Total total){
         return ResponseEntity.ok(agendaService.calcular(total));
     }
 }
