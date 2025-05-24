@@ -1,9 +1,10 @@
 package com.codifica.elevebot.dto;
 
-import com.codifica.elevebot.model.Pacote;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.util.List;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ClienteDTO {
     private Integer id;
     private String nome;

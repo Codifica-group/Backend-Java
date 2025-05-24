@@ -1,11 +1,15 @@
 package com.codifica.elevebot.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class PetDTO {
 
     private Integer id;
     private Integer racaId;
     private String nome;
     private Integer clienteId;
+    private RacaDTO raca;
 
     public PetDTO() {}
 
@@ -29,6 +33,15 @@ public class PetDTO {
     public void setRacaId(Integer racaId) {
         this.racaId = racaId;
     }
+
+    public RacaDTO getRaca() {
+        return raca;
+    }
+
+    public void setRaca(RacaDTO raca) {
+        this.raca = raca;
+    }
+
     public String getNome() {
         return nome;
     }

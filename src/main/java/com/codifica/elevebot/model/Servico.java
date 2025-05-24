@@ -1,5 +1,6 @@
 package com.codifica.elevebot.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 
 @Entity
@@ -10,6 +11,8 @@ public class Servico {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String nome;
+
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private Double valorBase;
 
     public Servico() {}

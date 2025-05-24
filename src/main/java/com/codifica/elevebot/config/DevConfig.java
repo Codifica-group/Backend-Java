@@ -124,7 +124,7 @@ public class DevConfig {
             agenda.setPet(pet);
             agenda.setDataHoraInicio(LocalDateTime.now());
             agenda.setDataHoraFim(LocalDateTime.now().plusHours(1));
-            agenda.setValor(30.0);
+            agenda.setValor(300.0);
             agendaRepository.save(agenda);
 
             //AGENDA_SERVICO
@@ -132,6 +132,16 @@ public class DevConfig {
             agendaServico.setAgenda(agenda);
             agendaServico.setServico(servicos.get(0));
             agendaServicoRepository.save(agendaServico);
+
+            AgendaServico agendaServico2 = new AgendaServico();
+            agendaServico2.setAgenda(agenda);
+            agendaServico2.setServico(servicos.get(1));
+            agendaServicoRepository.save(agendaServico2);
+
+            AgendaServico agendaServico3 = new AgendaServico();
+            agendaServico3.setAgenda(agenda);
+            agendaServico3.setServico(servicos.get(2));
+            agendaServicoRepository.save(agendaServico3);
 
             //PACOTE (expirado)
             Pacote pacote = new Pacote();

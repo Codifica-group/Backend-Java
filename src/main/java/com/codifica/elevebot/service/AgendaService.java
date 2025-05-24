@@ -44,13 +44,18 @@ public class AgendaService {
 
 
     public Object cadastrar(AgendaDTO agendaDTO) {
+        List<Agenda> conflitos = agendaRepository.findConflitos(agendaDTO.getDataHoraInicio(), agendaDTO.getDataHoraFim());
+        if (!conflitos.isEmpty()) {
+            throw new IllegalArgumentException("Já existe um agendamento no período informado.");
+        }
+
         Pet pet = petRepository.findById(agendaDTO.getPetId())
                 .orElseThrow(() -> new NotFoundException("Pet não encontrado."));
 
         Agenda agenda = agendaAdapter.toEntity(agendaDTO, pet);
         agendaRepository.save(agenda);
 
-        List<Integer> servicos = agendaDTO.getServicos();
+        List<Integer> servicos = agendaDTO.getServicosId();
         if (servicos == null || servicos.isEmpty()) {
             throw new IllegalArgumentException("É necessário informar ao menos um serviço.");
         }
@@ -75,7 +80,9 @@ public class AgendaService {
         return agendaRepository.findAll().stream()
                 .map(agenda -> {
                     List<Servico> servicos = agendaServicoRepository.findByAgenda(agenda).stream()
-                            .map(AgendaServico::getServico)
+                            .map(agendaServico -> {
+                                return agendaServico.getServico();
+                            })
                             .collect(Collectors.toList());
 
                     return agendaAdapter.toDTO(agenda, servicos);
@@ -98,6 +105,11 @@ public class AgendaService {
         Agenda agendaExistente = agendaRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Agenda não encontrada."));
 
+        List<Agenda> conflitos = agendaRepository.findConflitosExcluindoId(id, agendaDTO.getDataHoraInicio(), agendaDTO.getDataHoraFim());
+        if (!conflitos.isEmpty()) {
+            throw new IllegalArgumentException("Já existe outro agendamento no período informado.");
+        }
+
         Pet pet = petRepository.findById(agendaDTO.getPetId())
                 .orElseThrow(() -> new NotFoundException("Pet não encontrado."));
 
@@ -110,7 +122,7 @@ public class AgendaService {
         List<AgendaServico> agendaServicosAntigos = agendaServicoRepository.findByAgenda(agendaExistente);
         agendaServicoRepository.deleteAll(agendaServicosAntigos);
 
-        List<Integer> novosServicosIds = agendaDTO.getServicos();
+        List<Integer> novosServicosIds = agendaDTO.getServicosId();
         if (novosServicosIds == null || novosServicosIds.isEmpty()) {
             throw new IllegalArgumentException("É necessário informar ao menos um serviço.");
         }
@@ -251,7 +263,7 @@ public class AgendaService {
         Double taxaDeslocamento = deslocamentoResponse.get("taxa");
         Double tempoHoras = deslocamentoResponse.get("tempoHoras");
 
-        List<Servico> servicos = agendaDTO.getServicos().stream().map(servicoId -> {
+        List<Servico> servicos = agendaDTO.getServicosId().stream().map(servicoId -> {
             return servicoRepository.findById(servicoId)
                     .orElseThrow(() -> new NotFoundException("Serviço não encontrado."));
         }).collect(Collectors.toList());
