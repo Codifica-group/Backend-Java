@@ -1,10 +1,10 @@
 package com.codifica.elevebot.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import org.springframework.cglib.core.Local;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.time.LocalDate;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class PacoteDTO {
 
     private Integer id = 0;

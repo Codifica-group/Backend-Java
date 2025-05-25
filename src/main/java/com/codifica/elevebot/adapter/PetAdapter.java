@@ -1,6 +1,8 @@
 package com.codifica.elevebot.adapter;
 
+import com.codifica.elevebot.dto.ClienteDTO;
 import com.codifica.elevebot.dto.PetDTO;
+import com.codifica.elevebot.dto.RacaDTO;
 import com.codifica.elevebot.model.Cliente;
 import com.codifica.elevebot.model.Pet;
 import com.codifica.elevebot.model.Raca;
@@ -20,10 +22,18 @@ public class PetAdapter {
     public PetDTO toDTO(Pet pet) {
         PetDTO dto = new PetDTO();
         dto.setId(pet.getId());
-        dto.setRacaId(pet.getRaca().getId());
         dto.setNome(pet.getNome());
+
+        RacaDTO racaDTO = new RacaDTO();
+        racaDTO.setId(pet.getRaca().getId());
+        racaDTO.setNome(pet.getRaca().getNome());
+        dto.setRaca(racaDTO);
+
         if (pet.getCliente() != null) {
-            dto.setClienteId(pet.getCliente().getId());
+            ClienteDTO clienteDTO = new ClienteDTO();
+            clienteDTO.setId(pet.getCliente().getId());
+            clienteDTO.setNome(pet.getCliente().getNome());
+            dto.setCliente(clienteDTO);
         }
         return dto;
     }

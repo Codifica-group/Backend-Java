@@ -1,8 +1,10 @@
 package com.codifica.elevebot.dto;
 
 import com.codifica.elevebot.model.CategoriaProduto;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ProdutoDTO {
 
     private Integer id = 0;

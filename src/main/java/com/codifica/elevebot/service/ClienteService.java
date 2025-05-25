@@ -2,12 +2,9 @@ package com.codifica.elevebot.service;
 
 import com.codifica.elevebot.adapter.ClienteAdapter;
 import com.codifica.elevebot.dto.ClienteDTO;
-import com.codifica.elevebot.dto.PacoteDTO;
-import com.codifica.elevebot.dto.PetDTO;
 import com.codifica.elevebot.exception.ConflictException;
 import com.codifica.elevebot.exception.NotFoundException;
 import com.codifica.elevebot.model.Cliente;
-import com.codifica.elevebot.model.Pacote;
 import com.codifica.elevebot.repository.ClienteRepository;
 import com.codifica.elevebot.repository.PacoteRepository;
 import org.springframework.beans.factory.annotation.Autowired;

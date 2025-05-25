@@ -2,9 +2,10 @@ package com.codifica.elevebot.adapter;
 
 import com.codifica.elevebot.dto.ClienteDTO;
 import com.codifica.elevebot.dto.PacoteDTO;
+import com.codifica.elevebot.dto.PetDTO;
+import com.codifica.elevebot.dto.RacaDTO;
 import com.codifica.elevebot.model.Cliente;
 import com.codifica.elevebot.model.Pacote;
-import com.codifica.elevebot.model.Pet;
 import com.codifica.elevebot.repository.PacoteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -45,13 +46,40 @@ public class ClienteAdapter {
 
         Pacote pacoteAtivo = pacoteRepository.findActivePacoteByCliente(entity.getId(), LocalDate.now());
         if (pacoteAtivo != null) {
-            dto.setPacotes(List.of(pacoteAdapter.toDTO(pacoteAtivo)));
+            PacoteDTO pacoteDTO = new PacoteDTO();
+            pacoteDTO.setId(pacoteAtivo.getId());
+            pacoteDTO.setPacoteId(pacoteAtivo.getPacoteId());
+            pacoteDTO.setDataInicio(pacoteAtivo.getDataInicio());
+            pacoteDTO.setDataExpiracao(pacoteAtivo.getDataExpiracao());
+
+            LocalDate hoje = LocalDate.now();
+            if (hoje.isBefore(pacoteAtivo.getDataInicio())) {
+                pacoteDTO.setStatus("Espera");
+            } else if (!pacoteAtivo.getDataExpiracao().isAfter(hoje)) {
+                pacoteDTO.setStatus("Expirado");
+            } else {
+                pacoteDTO.setStatus("Ativo");
+            }
+
+            dto.setPacotes(List.of(pacoteDTO));
         } else {
             dto.setPacotes(List.of());
         }
 
-        List<Pet> pets = entity.getPets();
-        dto.setPets(pets.stream().map(pet -> petAdapter.toDTO(pet)).toList());
+        List<PetDTO> petsDTO = entity.getPets().stream().map(pet -> {
+            RacaDTO racaDTO = new RacaDTO();
+            racaDTO.setId(pet.getRaca().getId());
+            racaDTO.setNome(pet.getRaca().getNome());
+
+            PetDTO petDTO = new PetDTO();
+            petDTO.setId(pet.getId());
+            petDTO.setNome(pet.getNome());
+            petDTO.setRaca(racaDTO);
+
+            return petDTO;
+        }).toList();
+        dto.setPets(petsDTO);
+
         return dto;
     }
 }

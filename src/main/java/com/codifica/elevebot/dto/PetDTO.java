@@ -6,10 +6,11 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 public class PetDTO {
 
     private Integer id;
-    private Integer racaId;
     private String nome;
+    private Integer racaId;
     private Integer clienteId;
     private RacaDTO raca;
+    private ClienteDTO cliente;
 
     public PetDTO() {}
 
@@ -22,26 +23,21 @@ public class PetDTO {
     public Integer getId() {
         return id;
     }
-
     public void setId(Integer id) {
         this.id = id;
     }
-
     public Integer getRacaId() {
         return racaId;
     }
     public void setRacaId(Integer racaId) {
         this.racaId = racaId;
     }
-
     public RacaDTO getRaca() {
         return raca;
     }
-
     public void setRaca(RacaDTO raca) {
         this.raca = raca;
     }
-
     public String getNome() {
         return nome;
     }
@@ -53,5 +49,11 @@ public class PetDTO {
     }
     public void setClienteId(Integer clienteId) {
         this.clienteId = clienteId;
+    }
+    public ClienteDTO getCliente() {
+        return cliente;
+    }
+    public void setCliente(ClienteDTO cliente) {
+        this.cliente = cliente;
     }
 }

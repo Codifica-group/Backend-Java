@@ -1,13 +1,17 @@
 package com.codifica.elevebot.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import java.time.LocalDate;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class DespesaDTO {
 
     private Integer id = 0;
     private Integer produtoId;
     private Double valor;
     private LocalDate data;
+    private ProdutoDTO produto;
 
     public DespesaDTO() {}
 
@@ -41,5 +45,13 @@ public class DespesaDTO {
 
     public void setData(LocalDate data) {
         this.data = data;
+    }
+
+    public ProdutoDTO getProduto() {
+        return produto;
+    }
+
+    public void setProduto(ProdutoDTO produto) {
+        this.produto = produto;
     }
 }
