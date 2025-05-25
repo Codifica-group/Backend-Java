@@ -3,6 +3,7 @@ package com.codifica.elevebot.controller;
 import com.codifica.elevebot.exception.ConflictException;
 import com.codifica.elevebot.exception.NotFoundException;
 import com.codifica.elevebot.model.Usuario;
+import com.codifica.elevebot.service.TokenService;
 import com.codifica.elevebot.service.UsuarioService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -33,6 +34,9 @@ class UsuarioControllerTest {
 
     @MockBean
     private UsuarioService service;
+
+    @MockBean
+    private TokenService tokenService;
 
     private static Usuario usuarioPadrao;
 
@@ -81,15 +85,18 @@ class UsuarioControllerTest {
     }
 
     // ---------- LOGIN ----------
-    @Test @Order(3)
+    @Test
+    @Order(3)
     void deveLogarComSucesso() throws Exception {
         when(service.login(any(Usuario.class))).thenReturn("Login OK");
+        when(tokenService.generateToken(any(String.class))).thenReturn("fake-token");
 
         mvc.perform(post("/api/usuarios/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJson(usuarioPadrao)))
                 .andExpect(status().isOk())
-                .andExpect(content().string("Login OK"));
+                .andExpect(jsonPath("$.mensagem").value("Acesso autorizado."))
+                .andExpect(jsonPath("$.token").value("fake-token"));
     }
 
     // ---------- GET ALL ----------

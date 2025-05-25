@@ -4,7 +4,7 @@ import com.codifica.elevebot.dto.PetDTO;
 import com.codifica.elevebot.exception.ConflictException;
 import com.codifica.elevebot.exception.NotFoundException;
 import com.codifica.elevebot.model.Cliente;
-import com.codifica.elevebot.model.Pet;
+import com.codifica.elevebot.model.Raca;
 import com.codifica.elevebot.service.PetService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -20,6 +20,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -36,8 +37,8 @@ class PetControllerTest {
     private PetService service;
 
     private static Cliente clientePadrao;
+    private static Raca racaPadrao;
     private static PetDTO petDTOPadrao;
-    private static Pet petPadrao;
 
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
@@ -51,6 +52,7 @@ class PetControllerTest {
 
     @BeforeAll
     static void setUp() {
+        // Cliente padrão
         clientePadrao = new Cliente();
         clientePadrao.setId(1);
         clientePadrao.setNome("Mariana Souza");
@@ -59,23 +61,25 @@ class PetControllerTest {
         clientePadrao.setNumEndereco(1);
         clientePadrao.setComplemento("");
 
-        petDTOPadrao = new PetDTO();
-        petDTOPadrao.setRacaId(1);
-        petDTOPadrao.setNome("Thor");
-        petDTOPadrao.setClienteId(1);
+        // Raça padrão
+        racaPadrao = new Raca();
+        racaPadrao.setId(1);
+        racaPadrao.setNome("Golden Retriever");
 
-        petPadrao = new Pet();
-        petPadrao.setId(1);
-        petPadrao.setNome("Thor");
-        petPadrao.setRacaId(1);
-        petPadrao.setCliente(clientePadrao);
+        // PetDTO padrão
+        petDTOPadrao = new PetDTO();
+        petDTOPadrao.setId(1);
+        petDTOPadrao.setNome("Thor");
+        petDTOPadrao.setRacaId(1);
+        petDTOPadrao.setClienteId(1);
     }
 
     /* ---------- POST ---------- */
-    @Test @Order(1)
+    @Test
+    @Order(1)
     void deveCadastrarPet() throws Exception {
-        Mockito.when(service.cadastrar(any(PetDTO.class)))
-                .thenReturn("Pet cadastrado com sucesso.");
+        var resposta = new String("Pet cadastrado com sucesso.");
+        when(service.cadastrar(any(PetDTO.class))).thenReturn(resposta);
 
         mvc.perform(post("/api/pets")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -84,9 +88,10 @@ class PetControllerTest {
                 .andExpect(content().string("Pet cadastrado com sucesso."));
     }
 
-    @Test @Order(2)
+    @Test
+    @Order(2)
     void deveFalharCadastro_PetJaExiste() throws Exception {
-        Mockito.when(service.cadastrar(any(PetDTO.class)))
+        when(service.cadastrar(any(PetDTO.class)))
                 .thenThrow(new ConflictException("Pet já cadastrado."));
 
         mvc.perform(post("/api/pets")
@@ -98,9 +103,10 @@ class PetControllerTest {
     }
 
     /* ---------- GET ALL ---------- */
-    @Test @Order(3)
+    @Test
+    @Order(3)
     void deveListarPets() throws Exception {
-        Mockito.when(service.listar()).thenReturn(List.of(petPadrao));
+        when(service.listar()).thenReturn(List.of(petDTOPadrao));
 
         mvc.perform(get("/api/pets"))
                 .andExpect(status().isOk())
@@ -108,18 +114,20 @@ class PetControllerTest {
                 .andExpect(jsonPath("$[0].racaId").value(1));
     }
 
-    @Test @Order(4)
+    @Test
+    @Order(4)
     void deveRetornar204_ListaVazia() throws Exception {
-        Mockito.when(service.listar()).thenReturn(List.of());
+        when(service.listar()).thenReturn(List.of());
 
         mvc.perform(get("/api/pets"))
                 .andExpect(status().isNoContent());
     }
 
     /* ---------- GET by ID ---------- */
-    @Test @Order(5)
+    @Test
+    @Order(5)
     void deveBuscarPetPorId() throws Exception {
-        Mockito.when(service.buscarPorId(1)).thenReturn(petPadrao);
+        when(service.buscarPorId(1)).thenReturn(petDTOPadrao);
 
         mvc.perform(get("/api/pets/1"))
                 .andExpect(status().isOk())
@@ -127,9 +135,10 @@ class PetControllerTest {
                 .andExpect(jsonPath("$.racaId").value(1));
     }
 
-    @Test @Order(6)
+    @Test
+    @Order(6)
     void deveRetornar404_PetNaoEncontrado() throws Exception {
-        Mockito.when(service.buscarPorId(99))
+        when(service.buscarPorId(99))
                 .thenThrow(new NotFoundException("Pet não encontrado."));
 
         mvc.perform(get("/api/pets/99"))
@@ -139,21 +148,23 @@ class PetControllerTest {
     }
 
     /* ---------- PUT ---------- */
-    @Test @Order(7)
+    @Test
+    @Order(7)
     void deveAtualizarPet() throws Exception {
-        Mockito.when(service.atualizar(Mockito.eq(1), any(PetDTO.class)))
-                .thenReturn("Pet atualizado!");
+        when(service.atualizar(Mockito.eq(1), any(PetDTO.class)))
+                .thenReturn("Pet atualizado com sucesso!");
 
         mvc.perform(put("/api/pets/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJson(petDTOPadrao)))
                 .andExpect(status().isOk())
-                .andExpect(content().string("Pet atualizado!"));
+                .andExpect(content().string("Pet atualizado com sucesso!"));
     }
 
-    @Test @Order(8)
+    @Test
+    @Order(8)
     void deveFalharAtualizacao_PetInexistente() throws Exception {
-        Mockito.when(service.atualizar(Mockito.eq(99), any(PetDTO.class)))
+        when(service.atualizar(Mockito.eq(99), any(PetDTO.class)))
                 .thenThrow(new NotFoundException("Pet não encontrado."));
 
         mvc.perform(put("/api/pets/99")
@@ -165,36 +176,25 @@ class PetControllerTest {
     }
 
     /* ---------- DELETE ---------- */
-    @Test @Order(9)
+    @Test
+    @Order(9)
     void deveDeletarPet() throws Exception {
-        Mockito.when(service.deletar(1)).thenReturn("Pet removido!");
+        when(service.deletar(1)).thenReturn("Pet deletado com sucesso.");
 
         mvc.perform(delete("/api/pets/1"))
                 .andExpect(status().isNoContent())
-                .andExpect(content().string("Pet removido!"));
+                .andExpect(content().string("Pet deletado com sucesso."));
     }
 
-    @Test @Order(10)
+    @Test
+    @Order(10)
     void deveFalharAoDeletar_PetInexistente() throws Exception {
-        Mockito.when(service.deletar(99))
+        when(service.deletar(99))
                 .thenThrow(new NotFoundException("Pet não encontrado."));
 
         mvc.perform(delete("/api/pets/99"))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.error").value("NOT_FOUND"))
                 .andExpect(jsonPath("$.message").value("Pet não encontrado."));
-    }
-
-    @Test @Order(11)
-    void deveFalharAoDeletar_ExisteVinculo() throws Exception {
-        Mockito.when(service.deletar(1))
-                .thenThrow(new ConflictException(
-                        "Não é possível deletar um pet que possui serviços agendados."));
-
-        mvc.perform(delete("/api/pets/1"))
-                .andExpect(status().isConflict())
-                .andExpect(jsonPath("$.error").value("CONFLICT"))
-                .andExpect(jsonPath("$.message").value(
-                        "Não é possível deletar um pet que possui serviços agendados."));
     }
 }

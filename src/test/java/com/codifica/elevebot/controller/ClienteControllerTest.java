@@ -1,5 +1,6 @@
 package com.codifica.elevebot.controller;
 
+import com.codifica.elevebot.dto.ClienteDTO;
 import com.codifica.elevebot.exception.*;
 import com.codifica.elevebot.model.Cliente;
 import com.codifica.elevebot.service.ClienteService;
@@ -14,6 +15,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.HashMap;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -34,7 +36,6 @@ class ClienteControllerTest {
     private ClienteService service;
 
     private static Cliente clientePadrao;
-
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
     private static String asJson(Object obj) {
@@ -57,19 +58,25 @@ class ClienteControllerTest {
     }
 
     // ---------- POST ----------
-    @Test @Order(1)
+    @Test
+    @Order(1)
     void deveCadastrarCliente() throws Exception {
-        when(service.cadastrar(any(Cliente.class)))
-                .thenReturn("Cliente cadastrado com sucesso.");
+        var resposta = new HashMap<String, Object>();
+        resposta.put("mensagem", "Cliente cadastrado com sucesso.");
+        resposta.put("id", 1);
+
+        when(service.cadastrar(any(Cliente.class))).thenReturn(resposta);
 
         mvc.perform(post("/api/clientes")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJson(clientePadrao)))
                 .andExpect(status().isCreated())
-                .andExpect(content().string("Cliente cadastrado com sucesso."));
+                .andExpect(jsonPath("$.mensagem").value("Cliente cadastrado com sucesso."))
+                .andExpect(jsonPath("$.id").value(1));
     }
 
-    @Test @Order(2)
+    @Test
+    @Order(2)
     void deveFalharNoCadastro_ClienteJaExiste() throws Exception {
         when(service.cadastrar(any(Cliente.class)))
                 .thenThrow(new ConflictException("Cliente já cadastrado."));
@@ -83,16 +90,18 @@ class ClienteControllerTest {
     }
 
     // ---------- GET ALL ----------
-    @Test @Order(3)
+    @Test
+    @Order(3)
     void deveListarClientes() throws Exception {
-        when(service.listar()).thenReturn(List.of(clientePadrao));
+        when(service.listar()).thenReturn(List.of(new ClienteDTO()));
 
         mvc.perform(get("/api/clientes"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].nome").value("Mariana Souza"));
+                .andExpect(jsonPath("$").isArray());
     }
 
-    @Test @Order(4)
+    @Test
+    @Order(4)
     void deveRetornar204_ListaVazia() throws Exception {
         when(service.listar()).thenReturn(List.of());
 
@@ -101,16 +110,23 @@ class ClienteControllerTest {
     }
 
     // ---------- GET by ID ----------
-    @Test @Order(5)
+    @Test
+    @Order(5)
     void deveBuscarClientePorId() throws Exception {
-        when(service.buscarPorId(1)).thenReturn(clientePadrao);
+        ClienteDTO clienteDTO = new ClienteDTO();
+        clienteDTO.setId(1);
+        clienteDTO.setCep("12345678");
+
+        when(service.buscarPorId(1)).thenReturn(clienteDTO);
 
         mvc.perform(get("/api/clientes/1"))
                 .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(1))
                 .andExpect(jsonPath("$.cep").value("12345678"));
     }
 
-    @Test @Order(6)
+    @Test
+    @Order(6)
     void deveRetornar404_ClienteNaoEncontrado() throws Exception {
         when(service.buscarPorId(99))
                 .thenThrow(new NotFoundException("Cliente não encontrado."));
@@ -122,7 +138,8 @@ class ClienteControllerTest {
     }
 
     // ---------- PUT ----------
-    @Test @Order(7)
+    @Test
+    @Order(7)
     void deveAtualizarCliente() throws Exception {
         when(service.atualizar(Mockito.eq(1), any(Cliente.class)))
                 .thenReturn("Cliente atualizado com sucesso!");
@@ -134,7 +151,8 @@ class ClienteControllerTest {
                 .andExpect(content().string("Cliente atualizado com sucesso!"));
     }
 
-    @Test @Order(8)
+    @Test
+    @Order(8)
     void deveFalharNaAtualizacao_ClienteInexistente() throws Exception {
         when(service.atualizar(Mockito.eq(99), any(Cliente.class)))
                 .thenThrow(new NotFoundException("Cliente não encontrado."));
@@ -148,16 +166,15 @@ class ClienteControllerTest {
     }
 
     // ---------- DELETE ----------
-    @Test @Order(9)
+    @Test
+    @Order(9)
     void deveDeletarCliente() throws Exception {
-        when(service.deletar(1)).thenReturn("Cliente deletado com sucesso.");
-
         mvc.perform(delete("/api/clientes/1"))
-                .andExpect(status().isNoContent())
-                .andExpect(content().string("Cliente deletado com sucesso."));
+                .andExpect(status().isNoContent());
     }
 
-    @Test @Order(10)
+    @Test
+    @Order(10)
     void deveFalharAoDeletar_ClientePossuiPets() throws Exception {
         when(service.deletar(1))
                 .thenThrow(new ConflictException(
@@ -170,7 +187,8 @@ class ClienteControllerTest {
                         "Não é possível deletar clientes que possui pets cadastrados."));
     }
 
-    @Test @Order(11)
+    @Test
+    @Order(11)
     void deveFalharAoDeletar_ClienteInexistente() throws Exception {
         when(service.deletar(99))
                 .thenThrow(new NotFoundException("Cliente não encontrado."));

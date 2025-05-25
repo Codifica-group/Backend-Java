@@ -32,8 +32,7 @@ public class ProdutoService {
     public Object cadastrar(List<ProdutoDTO> produtosDTO) {
         List<Produto> produtos = produtosDTO.stream().map(produtoDTO -> {
             if(produtoRepository.existsByCategoriaProdutoAndNome(produtoDTO.getCategoria(), produtoDTO.getNome())) {
-                throw new ConflictException("Não é possível cadastrar dois produtos iguais, remova: "
-                        + produtoDTO.getNome());
+                throw new ConflictException("Não é possível cadastrar dois produtos iguais.");
             }
             return produtoAdapter.toEntity(produtoDTO);
         }).collect(Collectors.toList());
