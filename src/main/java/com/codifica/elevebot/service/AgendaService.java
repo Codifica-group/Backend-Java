@@ -3,6 +3,7 @@ package com.codifica.elevebot.service;
 import com.codifica.elevebot.adapter.AgendaAdapter;
 import com.codifica.elevebot.dto.AgendaDTO;
 import com.codifica.elevebot.dto.CepDTO;
+import com.codifica.elevebot.exception.ConflictException;
 import com.codifica.elevebot.exception.NotFoundException;
 import com.codifica.elevebot.exception.IllegalArgumentException;
 import com.codifica.elevebot.model.*;
@@ -46,7 +47,7 @@ public class AgendaService {
     public Object cadastrar(AgendaDTO agendaDTO) {
         List<Agenda> conflitos = agendaRepository.findConflitos(agendaDTO.getDataHoraInicio(), agendaDTO.getDataHoraFim());
         if (!conflitos.isEmpty()) {
-            throw new IllegalArgumentException("Já existe um agendamento no período informado.");
+            throw new ConflictException("Já existe outro agendamento no período informado.");
         }
 
         Pet pet = petRepository.findById(agendaDTO.getPetId())
@@ -107,7 +108,7 @@ public class AgendaService {
 
         List<Agenda> conflitos = agendaRepository.findConflitosExcluindoId(id, agendaDTO.getDataHoraInicio(), agendaDTO.getDataHoraFim());
         if (!conflitos.isEmpty()) {
-            throw new IllegalArgumentException("Já existe outro agendamento no período informado.");
+            throw new ConflictException("Já existe outro agendamento no período informado.");
         }
 
         Pet pet = petRepository.findById(agendaDTO.getPetId())
