@@ -1,5 +1,6 @@
 package com.codifica.elevebot.config;
 
+import com.codifica.elevebot.adapter.ProdutoAdapter;
 import com.codifica.elevebot.dto.ProdutoDTO;
 import com.codifica.elevebot.model.*;
 import com.codifica.elevebot.repository.*;
@@ -15,6 +16,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.codifica.elevebot.model.CategoriaProduto.*;
 
 @Configuration
 @Profile("dev")
@@ -39,7 +42,10 @@ public class DevConfig {
     private PacoteRepository pacoteRepository;
 
     @Autowired
-    private ProdutoService produtoService;
+    private ProdutoRepository produtoRepository;
+
+    @Autowired
+    private DespesaRepository despesaRepository;
 
     @Autowired
     private ServicoRepository servicoRepository;
@@ -86,13 +92,12 @@ public class DevConfig {
             usuarioRepository.save(usuario);
 
             //CLIENTE
-            Cliente cliente = new Cliente();
-            cliente.setNome("Cliente Test");
-            cliente.setNumCelular("11900000000");
-            cliente.setCep("00000000");
-            cliente.setNumEndereco(0);
-            cliente.setComplemento("");
-            clienteRepository.save(cliente);
+            List<Cliente> clientes = new ArrayList<>(List.of(
+                    new Cliente("Cliente Test", "11900000000", "01001000", 0, ""),
+                    new Cliente("Cliente Test 2", "11900000001", "06020010", 1400, ""),
+                    new Cliente("Cliente Test 3", "11900000002", "06020194", 200, "")
+            ));
+            clienteRepository.saveAll(clientes);
 
             //PORTE
             List<Porte> portes = List.of(
@@ -103,50 +108,36 @@ public class DevConfig {
             porteRepository.saveAll(portes);
 
             //RAÇA
-            Raca raca = new Raca();
-            raca.setNome("Raça Test");
-            raca.setPorte(portes.get(0));
-            racaRepository.save(raca);
+            List<Raca> racas = List.of(
+                    new Raca("Raça Test", portes.get(0)),
+                    new Raca("Raça Test 2", portes.get(1)),
+                    new Raca("Raça Test 3", portes.get(2))
+            );
+            racaRepository.saveAll(racas);
 
-            //PET
-            Pet pet = new Pet();
-            pet.setRaca(raca);
-            pet.setNome("Pet Test");
-            pet.setCliente(cliente);
-            cliente.getPets().add(pet);
-            petRepository.save(pet);
+            // PETS
+            List<Pet> pets = new ArrayList<>(List.of(
+                    new Pet(racas.get(0), "Pet Test", clientes.get(0)),
+                    new Pet(racas.get(1), "Pet Test 2", clientes.get(0)),
+                    new Pet(racas.get(2), "Pet Test 3", clientes.get(1)),
+                    new Pet(racas.get(2), "Pet Test", clientes.get(2))
+            ));
 
-            cliente.getPets().add(pet);
-            clienteRepository.save(cliente);
+            for (Pet pet : pets) {
+                for (Cliente cliente : clientes) {
+                    if (pet.getCliente().equals(cliente)) {
+                        cliente.getPets().add(pet);
+                        break;
+                    }
+                }
+            }
 
-            //AGENDA
-            Agenda agenda = new Agenda();
-            agenda.setPet(pet);
-            agenda.setDataHoraInicio(LocalDateTime.now());
-            agenda.setDataHoraFim(LocalDateTime.now().plusHours(1));
-            agenda.setValor(300.0);
-            agendaRepository.save(agenda);
-
-            //AGENDA_SERVICO
-            AgendaServico agendaServico = new AgendaServico();
-            agendaServico.setAgenda(agenda);
-            agendaServico.setServico(servicos.get(0));
-            agendaServicoRepository.save(agendaServico);
-
-            AgendaServico agendaServico2 = new AgendaServico();
-            agendaServico2.setAgenda(agenda);
-            agendaServico2.setServico(servicos.get(1));
-            agendaServicoRepository.save(agendaServico2);
-
-            AgendaServico agendaServico3 = new AgendaServico();
-            agendaServico3.setAgenda(agenda);
-            agendaServico3.setServico(servicos.get(2));
-            agendaServicoRepository.save(agendaServico3);
+            petRepository.saveAll(pets);
 
             //PACOTE (expirado)
             Pacote pacote = new Pacote();
             pacote.setPacoteId(1);
-            pacote.setCliente(cliente);
+            pacote.setCliente(clientes.get(0));
             pacote.setDataInicio(LocalDate.now().minusDays(31));
 //            pacote.setDataExpiracao(LocalDate.now().minusDays(1));
             pacote.setDataExpiracao(LocalDate.now());
@@ -155,18 +146,166 @@ public class DevConfig {
             //PACOTE (ativo)
             pacote = new Pacote();
             pacote.setPacoteId(1);
-            pacote.setCliente(cliente);
+            pacote.setCliente(clientes.get(0));
             pacote.setDataInicio(LocalDate.now());
             pacote.setDataExpiracao(LocalDate.now().plusDays(31));
             pacoteRepository.save(pacote);
 
             //PRODUTOS
-            List<ProdutoDTO> produtos = new ArrayList<ProdutoDTO>();
-            produtos.add(new ProdutoDTO(1, "Conta de Luz"));
-            produtos.add(new ProdutoDTO(2, "Máquina de Tosa"));
-            produtos.add(new ProdutoDTO(3, "Algodão"));
-            produtos.add(new ProdutoDTO(4, "Shampoo"));
-            produtoService.cadastrar(produtos);
+            List<Produto> produtos = List.of(
+                    new Produto(GASTO_FIXO, "Conta de Luz"),
+                    new Produto(MANUTENCAO, "Máquina de Tosa"),
+                    new Produto(INSUMO, "Algodão"),
+                    new Produto(PRODUTO, "Shampoo")
+            );
+            produtoRepository.saveAll(produtos);
+
+            //DESPESAS
+            List<Despesa> despesas = List.of(
+                    new Despesa(produtos.get(0), 150.0, LocalDate.now()),
+                    new Despesa(produtos.get(1), 90.0, LocalDate.now()),
+                    new Despesa(produtos.get(2), 5.0, LocalDate.now()),
+                    new Despesa(produtos.get(3), 20.0, LocalDate.now())
+            );
+            despesaRepository.saveAll(despesas);
+
+            // AGENDAS
+            LocalDateTime dataHoraInicio = LocalDateTime.now().withHour(8).withMinute(0).withSecond(0).withNano(0);
+
+            // Pet 1: Banho (08:00 - 09:00, R$30,00)
+            Agenda agenda1 = new Agenda();
+            agenda1.setPet(pets.get(0));
+            agenda1.setDataHoraInicio(dataHoraInicio);
+            agenda1.setDataHoraFim(dataHoraInicio.plusHours(1));
+            agenda1.setValor(servicos.get(0).getValorBase());
+            agendaRepository.save(agenda1);
+
+            AgendaServico agendaServico1 = new AgendaServico();
+            agendaServico1.setAgenda(agenda1);
+            agendaServico1.setServico(servicos.get(0));
+            agendaServicoRepository.save(agendaServico1);
+
+            dataHoraInicio = dataHoraInicio.plusHours(1).plusSeconds(1);
+
+            // Pet 1: Tosa (09:00 - 10:00, R$40,00)
+            Agenda agenda2 = new Agenda();
+            agenda2.setPet(pets.get(0));
+            agenda2.setDataHoraInicio(dataHoraInicio);
+            agenda2.setDataHoraFim(dataHoraInicio.plusHours(1));
+            agenda2.setValor(servicos.get(1).getValorBase());
+            agendaRepository.save(agenda2);
+
+            AgendaServico agendaServico2 = new AgendaServico();
+            agendaServico2.setAgenda(agenda2);
+            agendaServico2.setServico(servicos.get(1));
+            agendaServicoRepository.save(agendaServico2);
+
+            dataHoraInicio = dataHoraInicio.plusHours(1).plusSeconds(1);
+
+            // Pet 2: Hidratação (10:00 - 11:00, R$50,00)
+            Agenda agenda3 = new Agenda();
+            agenda3.setPet(pets.get(1));
+            agenda3.setDataHoraInicio(dataHoraInicio);
+            agenda3.setDataHoraFim(dataHoraInicio.plusHours(1));
+            agenda3.setValor(servicos.get(2).getValorBase());
+            agendaRepository.save(agenda3);
+
+            AgendaServico agendaServico3 = new AgendaServico();
+            agendaServico3.setAgenda(agenda3);
+            agendaServico3.setServico(servicos.get(2));
+            agendaServicoRepository.save(agendaServico3);
+
+            dataHoraInicio = dataHoraInicio.plusHours(1).plusSeconds(1);
+
+            // Pet 2: Banho + Tosa (11:00 - 12:00, R$70,00)
+            Agenda agenda4 = new Agenda();
+            agenda4.setPet(pets.get(1));
+            agenda4.setDataHoraInicio(dataHoraInicio);
+            agenda4.setDataHoraFim(dataHoraInicio.plusHours(1));
+            agenda4.setValor(servicos.get(0).getValorBase() + servicos.get(1).getValorBase());
+            agendaRepository.save(agenda4);
+
+            AgendaServico agendaServico4a = new AgendaServico();
+            agendaServico4a.setAgenda(agenda4);
+            agendaServico4a.setServico(servicos.get(0));
+            agendaServicoRepository.save(agendaServico4a);
+
+            AgendaServico agendaServico4b = new AgendaServico();
+            agendaServico4b.setAgenda(agenda4);
+            agendaServico4b.setServico(servicos.get(1));
+            agendaServicoRepository.save(agendaServico4b);
+
+            dataHoraInicio = dataHoraInicio.plusHours(1).plusSeconds(1);
+
+            // Pet 3: Banho + Hidratação (12:00 - 13:00, R$80,00)
+            Agenda agenda5 = new Agenda();
+            agenda5.setPet(pets.get(2));
+            agenda5.setDataHoraInicio(dataHoraInicio);
+            agenda5.setDataHoraFim(dataHoraInicio.plusHours(1));
+            agenda5.setValor(servicos.get(0).getValorBase() + servicos.get(2).getValorBase());
+            agendaRepository.save(agenda5);
+
+            AgendaServico agendaServico5a = new AgendaServico();
+            agendaServico5a.setAgenda(agenda5);
+            agendaServico5a.setServico(servicos.get(0));
+            agendaServicoRepository.save(agendaServico5a);
+
+            AgendaServico agendaServico5b = new AgendaServico();
+            agendaServico5b.setAgenda(agenda5);
+            agendaServico5b.setServico(servicos.get(2));
+            agendaServicoRepository.save(agendaServico5b);
+
+            dataHoraInicio = dataHoraInicio.plusHours(1).plusSeconds(1);
+
+            // Pet 3: Tosa + Hidratação (13:00 - 14:00, R$90,00)
+            Agenda agenda6 = new Agenda();
+            agenda6.setPet(pets.get(2));
+            agenda6.setDataHoraInicio(dataHoraInicio);
+            agenda6.setDataHoraFim(dataHoraInicio.plusHours(1));
+            agenda6.setValor(servicos.get(1).getValorBase() + servicos.get(2).getValorBase());
+            agendaRepository.save(agenda6);
+
+            AgendaServico agendaServico6a = new AgendaServico();
+            agendaServico6a.setAgenda(agenda6);
+            agendaServico6a.setServico(servicos.get(1));
+            agendaServicoRepository.save(agendaServico6a);
+
+            AgendaServico agendaServico6b = new AgendaServico();
+            agendaServico6b.setAgenda(agenda6);
+            agendaServico6b.setServico(servicos.get(2));
+            agendaServicoRepository.save(agendaServico6b);
+
+            dataHoraInicio = dataHoraInicio.plusHours(1).plusSeconds(1);
+
+            // Pet 4: Banho + Tosa + Hidratação (14:00 - 15:00, R$120,00)
+            Agenda agenda7 = new Agenda();
+            agenda7.setPet(pets.get(3));
+            agenda7.setDataHoraInicio(dataHoraInicio);
+            agenda7.setDataHoraFim(dataHoraInicio.plusHours(1));
+            agenda7.setValor(servicos.get(0).getValorBase() + servicos.get(1).getValorBase() + servicos.get(2).getValorBase());
+            agendaRepository.save(agenda7);
+
+            for (Servico servico : servicos) {
+                AgendaServico agendaServico7 = new AgendaServico();
+                agendaServico7.setAgenda(agenda7);
+                agendaServico7.setServico(servico);
+                agendaServicoRepository.save(agendaServico7);
+            }
+
+            dataHoraInicio = dataHoraInicio.plusHours(1).plusSeconds(1);
+
+            // Pet 4: Banho (15:00 - 16:00, R$30,00)
+            Agenda agenda8 = new Agenda();
+            agenda8.setPet(pets.get(3));
+            agenda8.setDataHoraInicio(dataHoraInicio);
+            agenda8.setDataHoraFim(dataHoraInicio.plusHours(1));
+            agenda8.setValor(servicos.get(0).getValorBase());
+            agendaRepository.save(agenda8);
+
+            AgendaServico agendaServico8 = new AgendaServico();
+            agendaServico8.setAgenda(agenda8);
+            agendaServico8.setServico(servicos.get(0));
+            agendaServicoRepository.save(agendaServico8);
         };
     }
 }

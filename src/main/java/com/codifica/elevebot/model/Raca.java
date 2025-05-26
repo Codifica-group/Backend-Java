@@ -18,6 +18,11 @@ public class Raca {
 
     public Raca() {}
 
+    public Raca(String nome, Porte porte) {
+        this.nome = nome;
+        this.porte = porte;
+    }
+
     public Integer getId() {
         return id;
     }

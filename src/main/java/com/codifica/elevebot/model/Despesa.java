@@ -20,6 +20,12 @@ public class Despesa {
 
     public Despesa() {}
 
+    public Despesa(Produto produto, Double valor, LocalDate data) {
+        this.produto = produto;
+        this.valor = valor;
+        this.data = data;
+    }
+
     public Integer getId() {
         return id;
     }
