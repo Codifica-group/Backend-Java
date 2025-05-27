@@ -1,29 +1,36 @@
 package com.codifica.elevebot.model;
 
-import com.codifica.elevebot.exception.IllegalArgumentException;
+import jakarta.persistence.*;
 
-public enum CategoriaProduto {
-    GASTO_FIXO(1),
-    MANUTENCAO(2),
-    INSUMO(3),
-    PRODUTO(4);
+@Entity
+@Table(name = "categoria_produto")
+public class CategoriaProduto {
 
-    private final int code;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
 
-    CategoriaProduto(int code) {
-        this.code = code;
+    private String nome;
+
+    public CategoriaProduto() {}
+
+    public CategoriaProduto(String nome) {
+        this.nome = nome;
     }
 
-    public int getCode() {
-        return code;
+    public Integer getId() {
+        return id;
     }
 
-    public static CategoriaProduto fromCode(int code) {
-        for (CategoriaProduto valor : values()) {
-            if (valor.getCode() == code) {
-                return valor;
-            }
-        }
-        throw new IllegalArgumentException("Código inválido para CategoriaProduto: " + code);
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
     }
 }

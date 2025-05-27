@@ -30,9 +30,9 @@ public class ProdutoController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<String> atualizarProduto(@PathVariable Integer id, @RequestBody ProdutoDTO produtoDTO) {
-        String mensagem = produtoService.atualizar(id, produtoDTO);
-        return ResponseEntity.ok(mensagem);
+    public ResponseEntity<Object> atualizarProduto(@PathVariable Integer id, @RequestBody ProdutoDTO produtoDTO) {
+        Object json = produtoService.atualizar(id, produtoDTO);
+        return ResponseEntity.ok(json);
     }
 
     @DeleteMapping("/{id}")

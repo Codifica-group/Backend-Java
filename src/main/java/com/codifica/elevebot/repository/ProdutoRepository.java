@@ -7,4 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface ProdutoRepository extends JpaRepository<Produto, Integer> {
 
     public boolean existsByCategoriaProdutoAndNome(CategoriaProduto categoriaProduto, String nome);
+
+    public boolean existsByCategoriaProduto(CategoriaProduto categoriaProduto);
 }

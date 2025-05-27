@@ -41,9 +41,4 @@ public class ProdutoDTO {
     public void setNome(String nome) {
         this.nome = nome;
     }
-
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    public CategoriaProduto getCategoria() {
-        return CategoriaProduto.fromCode(categoriaId);
-    }
 }

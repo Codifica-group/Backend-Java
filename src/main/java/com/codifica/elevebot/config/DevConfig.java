@@ -57,6 +57,9 @@ public class DevConfig {
     private AgendaServicoRepository agendaServicoRepository;
 
     @Autowired
+    private CategoriaProdutoRepository categoriaProdutoRepository;
+
+    @Autowired
     private JdbcTemplate jdbcTemplate;
 
     @Bean
@@ -151,12 +154,21 @@ public class DevConfig {
             pacote.setDataExpiracao(LocalDate.now().plusDays(31));
             pacoteRepository.save(pacote);
 
+            //CATEGORIA_PRODUTO
+            List<CategoriaProduto> categorias = List.of(
+                    new CategoriaProduto("Gasto Fixo"),
+                    new CategoriaProduto("Manutenção"),
+                    new CategoriaProduto("Insumo"),
+                    new CategoriaProduto("Produto")
+            );
+            categoriaProdutoRepository.saveAll(categorias);
+
             //PRODUTOS
             List<Produto> produtos = List.of(
-                    new Produto(GASTO_FIXO, "Conta de Luz"),
-                    new Produto(MANUTENCAO, "Máquina de Tosa"),
-                    new Produto(INSUMO, "Algodão"),
-                    new Produto(PRODUTO, "Shampoo")
+                    new Produto(categorias.get(0), "Conta de Luz"),
+                    new Produto(categorias.get(1), "Máquina de Tosa"),
+                    new Produto(categorias.get(2), "Algodão"),
+                    new Produto(categorias.get(3), "Shampoo")
             );
             produtoRepository.saveAll(produtos);
 

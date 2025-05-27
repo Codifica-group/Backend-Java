@@ -1,6 +1,5 @@
 package com.codifica.elevebot.model;
 
-import com.codifica.elevebot.adapter.CategoriaProdutoAdapter;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import java.util.ArrayList;
@@ -14,8 +13,8 @@ public class Produto {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Convert(converter = CategoriaProdutoAdapter.class)
-    @Column(name = "categoria_despesa_id")
+    @ManyToOne
+    @JoinColumn(name = "categoria_produto_id", nullable = false)
     private CategoriaProduto categoriaProduto;
 
     private String nome;
