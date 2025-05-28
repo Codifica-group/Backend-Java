@@ -141,14 +141,13 @@ public class AgendaService {
         return "Agenda atualizada com sucesso!";
     }
 
-    public String deletar(Integer id) {
+    public void deletar(Integer id) {
         Agenda agenda = agendaRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Agenda não encontrada."));
 
         List<AgendaServico> agendaServicos = agendaServicoRepository.findByAgenda(agenda);
         agendaServicoRepository.deleteAll(agendaServicos);
         agendaRepository.deleteById(id);
-        return "Agenda deletada com sucesso.";
     }
 
     public List<AgendaDTO> filtrar(Filtro filtro) {

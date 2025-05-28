@@ -41,8 +41,8 @@ public class DespesaController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deletarDespesa(@PathVariable Integer id) {
-        String mensagem = despesaService.deletar(id);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(mensagem);
+    public ResponseEntity deletarDespesa(@PathVariable Integer id) {
+        despesaService.deletar(id);
+        return ResponseEntity.noContent().build();
     }
 }

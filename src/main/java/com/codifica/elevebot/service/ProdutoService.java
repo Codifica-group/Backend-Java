@@ -99,7 +99,7 @@ public class ProdutoService {
         return resposta;
     }
 
-    public String deletar(Integer id) {
+    public void deletar(Integer id) {
         if (!produtoRepository.existsById(id)) {
             throw new NotFoundException("Produto não encontrado.");
         }
@@ -109,6 +109,5 @@ public class ProdutoService {
         }
 
         produtoRepository.deleteById(id);
-        return "Produto deletado com sucesso.";
     }
 }

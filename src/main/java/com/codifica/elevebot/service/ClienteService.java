@@ -62,7 +62,7 @@ public class ClienteService {
         return "Cliente atualizado com sucesso!";
     }
 
-    public String deletar(Integer id) {
+    public void deletar(Integer id) {
         Cliente cliente = clienteRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Cliente não encontrado."));
 
@@ -71,7 +71,6 @@ public class ClienteService {
         }
 
         clienteRepository.deleteById(id);
-        return "Cliente deletado com sucesso.";
     }
 
     private boolean clienteExiste(Cliente cliente) {

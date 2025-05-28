@@ -71,7 +71,7 @@ public class RacaService {
         return "Raça atualizada com sucesso.";
     }
 
-    public String deletar(Integer id) {
+    public void deletar(Integer id) {
         if (!racaRepository.existsById(id)) {
             throw new NotFoundException("Raça não encontrada.");
         }
@@ -81,6 +81,5 @@ public class RacaService {
         }
 
         racaRepository.deleteById(id);
-        return "Raça deletada com sucesso.";
     }
 }

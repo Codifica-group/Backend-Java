@@ -92,7 +92,7 @@ public class PetService {
         return "Pet atualizado com sucesso!";
     }
 
-    public String deletar(Integer id) {
+    public void deletar(Integer id) {
         if (!petRepository.existsById(id)) {
             throw new NotFoundException("Pet não encontrado.");
         }
@@ -102,7 +102,6 @@ public class PetService {
         }
 
         petRepository.deleteById(id);
-        return "Pet deletado com sucesso.";
     }
 
     private boolean petExiste(Pet pet) {

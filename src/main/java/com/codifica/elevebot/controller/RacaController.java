@@ -35,8 +35,8 @@ public class RacaController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deletarRaca(@PathVariable Integer id) {
-        String mensagem = racaService.deletar(id);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(mensagem);
+    public ResponseEntity deletarRaca(@PathVariable Integer id) {
+        racaService.deletar(id);
+        return ResponseEntity.noContent().build();
     }
 }

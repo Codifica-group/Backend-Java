@@ -109,11 +109,10 @@ public class PacoteService {
         return "Pacote atualizado com sucesso.";
     }
 
-    public String deletar(Integer id) {
+    public void deletar(Integer id) {
         Pacote pacote = pacoteRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Pacote não encontrado."));
 
         pacoteRepository.delete(pacote);
-        return "Pacote deletado com sucesso.";
     }
 }

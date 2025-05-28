@@ -41,8 +41,8 @@ public class PacoteController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deletarPacote(@PathVariable Integer id) {
-        String mensagem = pacoteService.deletar(id);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(mensagem);
+    public ResponseEntity deletarPacote(@PathVariable Integer id) {
+        pacoteService.deletar(id);
+        return ResponseEntity.noContent().build();
     }
 }

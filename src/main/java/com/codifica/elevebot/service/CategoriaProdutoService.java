@@ -55,7 +55,7 @@ public class CategoriaProdutoService {
         return resposta;
     }
 
-    public String deletar(Integer id) {
+    public void deletar(Integer id) {
         CategoriaProduto categoriaProduto = categoriaProdutoRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Categoria não encontrada."));
 
@@ -64,6 +64,5 @@ public class CategoriaProdutoService {
         }
 
         categoriaProdutoRepository.deleteById(id);
-        return "Categoria deletada com sucesso.";
     }
 }

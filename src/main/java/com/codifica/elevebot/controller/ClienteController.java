@@ -42,9 +42,9 @@ public class ClienteController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deletarCliente(@PathVariable Integer id) {
-        String mensagem = clienteService.deletar(id);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(mensagem);
+    public ResponseEntity deletarCliente(@PathVariable Integer id) {
+        clienteService.deletar(id);
+        return ResponseEntity.noContent().build();
     }
 
 }

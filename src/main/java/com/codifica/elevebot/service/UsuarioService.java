@@ -57,12 +57,11 @@ public class UsuarioService {
         return "Usuário atualizado com sucesso.";
     }
 
-    public String deletar(Integer id) {
+    public void deletar(Integer id) {
         if (!usuarioRepository.existsById(id)) {
             throw new NotFoundException("Usuário não encontrado.");
         }
 
         usuarioRepository.deleteById(id);
-        return "Usuário deletado com sucesso.";
     }
 }

@@ -42,9 +42,9 @@ public class AgendaController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deletarAgenda(@PathVariable Integer id) {
-        String mensagem = agendaService.deletar(id);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(mensagem);
+    public ResponseEntity deletarAgenda(@PathVariable Integer id) {
+        agendaService.deletar(id);
+        return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/filtrar")

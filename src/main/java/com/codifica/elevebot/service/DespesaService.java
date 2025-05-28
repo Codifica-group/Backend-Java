@@ -65,12 +65,11 @@ public class DespesaService {
         return "Despesa atualizada com sucesso.";
     }
 
-    public String deletar(Integer id) {
+    public void deletar(Integer id) {
         if (!despesaRepository.existsById(id)) {
             throw new NotFoundException("Despesa não encontrada.");
         }
 
         despesaRepository.deleteById(id);
-        return "Despesa deletada com sucesso.";
     }
 }

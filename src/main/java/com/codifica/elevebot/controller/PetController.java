@@ -41,8 +41,8 @@ public class PetController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deletarPet(@PathVariable Integer id) {
-        String mensagem = petService.deletar(id);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(mensagem);
+    public ResponseEntity deletarPet(@PathVariable Integer id) {
+        petService.deletar(id);
+        return ResponseEntity.noContent().build();
     }
 }
