@@ -10,4 +10,6 @@ public interface AgendaServicoRepository extends JpaRepository<AgendaServico, In
 
     List<AgendaServico> findByAgenda(Agenda agenda);
 
+    boolean existsByServicoId(Integer servicoId);
+
 }
