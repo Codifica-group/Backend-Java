@@ -1,7 +1,6 @@
 package com.codifica.elevebot.controller;
 
 import com.codifica.elevebot.dto.RacaDTO;
-import com.codifica.elevebot.model.Raca;
 import com.codifica.elevebot.service.RacaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -9,7 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/racas")
@@ -25,8 +23,8 @@ public class RacaController {
     }
 
     @GetMapping
-    public ResponseEntity<Map<String, List<RacaDTO>>> listarRacas() {
-        Map<String, List<RacaDTO>> racas = racaService.listar();
+    public ResponseEntity<List<RacaDTO>> listarRacas() {
+        List<RacaDTO> racas = racaService.listar();
         return racas.isEmpty() ? ResponseEntity.noContent().build() : ResponseEntity.ok(racas);
     }
 

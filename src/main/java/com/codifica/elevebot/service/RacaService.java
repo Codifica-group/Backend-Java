@@ -50,28 +50,12 @@ public class RacaService {
         return resposta;
     }
 
-    public Map<String, List<RacaDTO>> listar() {
+    public List<RacaDTO> listar() {
         List<Raca> racas = racaRepository.findAll();
 
-        List<RacaDTO> listaDTO = racas.stream()
+        return racas.stream()
                 .map(racaAdapter::toDTO)
                 .collect(Collectors.toList());
-
-        Map<String, List<RacaDTO>> racasAgrupadas = listaDTO.stream()
-                .collect(Collectors.groupingBy(RacaDTO::getPorteNome));
-
-        Map<String, List<RacaDTO>> resultadoOrdenado = new LinkedHashMap<>();
-        if (racasAgrupadas.containsKey("Pequeno")) {
-            resultadoOrdenado.put("Pequeno", racasAgrupadas.get("Pequeno"));
-        }
-        if (racasAgrupadas.containsKey("Médio")) {
-            resultadoOrdenado.put("Médio", racasAgrupadas.get("Médio"));
-        }
-        if (racasAgrupadas.containsKey("Grande")) {
-            resultadoOrdenado.put("Grande", racasAgrupadas.get("Grande"));
-        }
-
-        return resultadoOrdenado;
     }
 
     public String atualizar(Integer id, RacaDTO racaDTO) {
