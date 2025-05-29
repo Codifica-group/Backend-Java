@@ -50,7 +50,9 @@ class ProdutoControllerTest {
     @BeforeAll
     static void setUp() {
         categoriaPadrao = new CategoriaProduto("Gasto Fixo");
-        produtoPadrao = new ProdutoDTO(categoriaPadrao, "Aluguel");
+        produtoPadrao = new ProdutoDTO();
+        produtoPadrao.setNome("Aluguel");
+        produtoPadrao.setCategoriaId(1);
         produtoPadrao.setId(1);
     }
 
@@ -89,20 +91,18 @@ class ProdutoControllerTest {
 
     /* -----------  GET  ----------- */
     @Test @Order(3)
-    void deveListarProdutosAgrupados() throws Exception {
-        Map<String, List<ProdutoDTO>> resposta = new LinkedHashMap<>();
-        resposta.put("Gasto Fixo", List.of(produtoPadrao));
-
+    void deveListarProdutos() throws Exception {
+        List<ProdutoDTO> resposta = List.of(produtoPadrao);
         Mockito.when(produtoService.listar()).thenReturn(resposta);
 
         mvc.perform(get("/api/produtos"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$['Gasto Fixo'][0].nome").value("Aluguel"));
+                .andExpect(jsonPath("$[0].nome").value("Aluguel"));
     }
 
     @Test @Order(4)
     void deveRetornar204_ListaVazia() throws Exception {
-        Mockito.when(produtoService.listar()).thenReturn(Map.of());
+        Mockito.when(produtoService.listar()).thenReturn(List.of());
 
         mvc.perform(get("/api/produtos"))
                 .andExpect(status().isNoContent());
