@@ -57,24 +57,10 @@ public class ProdutoService {
         return resposta;
     }
 
-    public Map<String, List<ProdutoDTO>> listar() {
-        List<CategoriaProduto> categorias = categoriaProdutoRepository.findAll();
-
-        List<ProdutoDTO> listaDTO = produtoRepository.findAll().stream()
+    public List<ProdutoDTO> listar() {
+        return produtoRepository.findAll().stream()
                 .map(produtoAdapter::toDTO)
                 .collect(Collectors.toList());
-
-        Map<String, List<ProdutoDTO>> produtosAgrupados = new LinkedHashMap<>();
-        for (CategoriaProduto categoria : categorias) {
-            List<ProdutoDTO> produtosDaCategoria = listaDTO.stream()
-                    .filter(produtoDTO -> produtoDTO.getCategoriaId().equals(categoria.getId()))
-                    .collect(Collectors.toList());
-            if (!produtosDaCategoria.isEmpty()) {
-                produtosAgrupados.put(categoria.getNome(), produtosDaCategoria);
-            }
-        }
-
-        return produtosAgrupados;
     }
 
     public Object atualizar(Integer id, ProdutoDTO produtoDTO) {

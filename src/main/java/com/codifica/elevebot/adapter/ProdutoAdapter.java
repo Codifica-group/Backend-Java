@@ -27,8 +27,8 @@ public class ProdutoAdapter {
     public ProdutoDTO toDTO(Produto produto) {
         ProdutoDTO produtoDTO = new ProdutoDTO();
         produtoDTO.setId(produto.getId());
-        produtoDTO.setCategoriaId(produto.getCategoriaProduto().getId());
         produtoDTO.setNome(produto.getNome());
+        produtoDTO.setCategoria(produto.getCategoriaProduto());
         return produtoDTO;
     }
 }

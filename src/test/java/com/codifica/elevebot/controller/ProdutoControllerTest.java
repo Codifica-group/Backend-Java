@@ -3,6 +3,7 @@ package com.codifica.elevebot.controller;
 import com.codifica.elevebot.dto.ProdutoDTO;
 import com.codifica.elevebot.exception.ConflictException;
 import com.codifica.elevebot.exception.NotFoundException;
+import com.codifica.elevebot.model.CategoriaProduto;
 import com.codifica.elevebot.service.ProdutoService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -35,6 +36,7 @@ class ProdutoControllerTest {
     private ProdutoService produtoService;
 
     private static ProdutoDTO produtoPadrao;
+    private static CategoriaProduto categoriaPadrao;
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
     private static String asJson(Object obj) {
@@ -47,7 +49,8 @@ class ProdutoControllerTest {
 
     @BeforeAll
     static void setUp() {
-        produtoPadrao = new ProdutoDTO(1, "Aluguel");
+        categoriaPadrao = new CategoriaProduto("Gasto Fixo");
+        produtoPadrao = new ProdutoDTO(categoriaPadrao, "Aluguel");
         produtoPadrao.setId(1);
     }
 

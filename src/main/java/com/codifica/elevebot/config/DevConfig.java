@@ -158,8 +158,7 @@ public class DevConfig {
             List<CategoriaProduto> categorias = List.of(
                     new CategoriaProduto("Gasto Fixo"),
                     new CategoriaProduto("Manutenção"),
-                    new CategoriaProduto("Insumo"),
-                    new CategoriaProduto("Produto")
+                    new CategoriaProduto("Insumo")
             );
             categoriaProdutoRepository.saveAll(categorias);
 
@@ -167,8 +166,7 @@ public class DevConfig {
             List<Produto> produtos = List.of(
                     new Produto(categorias.get(0), "Conta de Luz"),
                     new Produto(categorias.get(1), "Máquina de Tosa"),
-                    new Produto(categorias.get(2), "Algodão"),
-                    new Produto(categorias.get(3), "Shampoo")
+                    new Produto(categorias.get(2), "Algodão")
             );
             produtoRepository.saveAll(produtos);
 
@@ -176,8 +174,7 @@ public class DevConfig {
             List<Despesa> despesas = List.of(
                     new Despesa(produtos.get(0), 150.0, LocalDate.now()),
                     new Despesa(produtos.get(1), 90.0, LocalDate.now()),
-                    new Despesa(produtos.get(2), 5.0, LocalDate.now()),
-                    new Despesa(produtos.get(3), 20.0, LocalDate.now())
+                    new Despesa(produtos.get(2), 5.0, LocalDate.now())
             );
             despesaRepository.saveAll(despesas);
 

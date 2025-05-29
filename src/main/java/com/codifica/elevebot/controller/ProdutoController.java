@@ -24,8 +24,8 @@ public class ProdutoController {
     }
 
     @GetMapping
-    public ResponseEntity<Map<String, List<ProdutoDTO>>> listarProdutos() {
-        Map<String, List<ProdutoDTO>> produtos = produtoService.listar();
+    public ResponseEntity<List<ProdutoDTO>> listarProdutos() {
+        List<ProdutoDTO> produtos = produtoService.listar();
         return produtos.isEmpty() ? ResponseEntity.noContent().build() : ResponseEntity.ok(produtos);
     }
 
