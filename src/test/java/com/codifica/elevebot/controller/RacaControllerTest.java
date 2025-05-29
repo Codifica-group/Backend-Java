@@ -52,7 +52,6 @@ class RacaControllerTest {
         racaPadrao.setId(1);
         racaPadrao.setNome("Pug");
         racaPadrao.setPorteId(1);
-        racaPadrao.setPorteNome("Pequeno");
     }
 
     // ---------- POST ----------
@@ -91,20 +90,19 @@ class RacaControllerTest {
     @Test
     @Order(3)
     void deveListarRacas() throws Exception {
-        Map<String, List<RacaDTO>> racasAgrupadas = Map.of("Pequeno", List.of(racaPadrao));
-
-        when(service.listar()).thenReturn(racasAgrupadas);
+        when(service.listar()).thenReturn(List.of(racaPadrao));
 
         mvc.perform(get("/api/racas"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.Pequeno[0].id").value(1))
-                .andExpect(jsonPath("$.Pequeno[0].nome").value("Pug"));
+                .andExpect(jsonPath("$[0].id").value(1))
+                .andExpect(jsonPath("$[0].nome").value("Pug"))
+                .andExpect(jsonPath("$[0].porteId").value(1));
     }
 
     @Test
     @Order(4)
     void deveRetornar204_ListaVazia() throws Exception {
-        when(service.listar()).thenReturn(Map.of());
+        when(service.listar()).thenReturn(List.of());
 
         mvc.perform(get("/api/racas"))
                 .andExpect(status().isNoContent());
@@ -149,8 +147,8 @@ class RacaControllerTest {
     @Test
     @Order(8)
     void deveFalharAoDeletar_RacaPossuiPets() throws Exception {
-        when(service.deletar(1))
-                .thenThrow(new ConflictException("Não é possível deletar raça que possui pets cadastrados."));
+        Mockito.doThrow(new ConflictException("Não é possível deletar raça que possui pets cadastrados."))
+                        .when(service).deletar(1);
 
         mvc.perform(delete("/api/racas/1"))
                 .andExpect(status().isConflict())
@@ -161,8 +159,8 @@ class RacaControllerTest {
     @Test
     @Order(9)
     void deveFalharAoDeletar_RacaInexistente() throws Exception {
-        when(service.deletar(99))
-                .thenThrow(new NotFoundException("Raça não encontrada."));
+        Mockito.doThrow(new NotFoundException("Raça não encontrada."))
+                        .when(service).deletar(99);
 
         mvc.perform(delete("/api/racas/99"))
                 .andExpect(status().isNotFound())

@@ -154,8 +154,7 @@ class CategoriaProdutoControllerTest {
     @Test
     @Order(8)
     void deveDeletarCategoria() throws Exception {
-        Mockito.when(categoriaProdutoService.deletar(1))
-                .thenReturn("Categoria deletada com sucesso.");
+        Mockito.doNothing().when(categoriaProdutoService).deletar(1);
 
         mvc.perform(delete("/api/categorias/1"))
                 .andExpect(status().isNoContent());

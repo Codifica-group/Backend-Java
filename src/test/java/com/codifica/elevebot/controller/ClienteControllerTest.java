@@ -176,9 +176,8 @@ class ClienteControllerTest {
     @Test
     @Order(10)
     void deveFalharAoDeletar_ClientePossuiPets() throws Exception {
-        when(service.deletar(1))
-                .thenThrow(new ConflictException(
-                        "Não é possível deletar clientes que possui pets cadastrados."));
+        Mockito.doThrow(new ConflictException("Não é possível deletar clientes que possui pets cadastrados."))
+                        .when(service).deletar(1);
 
         mvc.perform(delete("/api/clientes/1"))
                 .andExpect(status().isConflict())
@@ -190,8 +189,8 @@ class ClienteControllerTest {
     @Test
     @Order(11)
     void deveFalharAoDeletar_ClienteInexistente() throws Exception {
-        when(service.deletar(99))
-                .thenThrow(new NotFoundException("Cliente não encontrado."));
+        Mockito.doThrow(new NotFoundException("Cliente não encontrado."))
+                .when(service).deletar(99);
 
         mvc.perform(delete("/api/clientes/99"))
                 .andExpect(status().isNotFound())

@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -106,7 +107,7 @@ class AgendaControllerTest {
         mvc.perform(get("/api/agendas"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id").value(1))
-                .andExpect(jsonPath("$[0].valor").value(200.0));
+                .andExpect(jsonPath("$[0].valorTotal").value(200.0));
     }
 
     @Test
@@ -127,7 +128,7 @@ class AgendaControllerTest {
         mvc.perform(get("/api/agendas/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1))
-                .andExpect(jsonPath("$.valor").value(200.0));
+                .andExpect(jsonPath("$.valorTotal").value(200.0));
     }
 
     @Test
@@ -181,8 +182,8 @@ class AgendaControllerTest {
     @Test
     @Order(10)
     void deveFalharAoDeletarAgendaNaoEncontrada() throws Exception {
-        when(service.deletar(99))
-                .thenThrow(new NotFoundException("Agenda não encontrada."));
+        doThrow(new NotFoundException("Agenda não encontrada."))
+                .when(service).deletar(99);
 
         mvc.perform(delete("/api/agendas/99"))
                 .andExpect(status().isNotFound())

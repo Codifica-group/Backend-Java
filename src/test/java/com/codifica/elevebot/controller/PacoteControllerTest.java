@@ -269,7 +269,7 @@ class PacoteControllerTest {
 
     @Test @Order(15)
     void deveDeletarPacote() throws Exception {
-        Mockito.when(service.deletar(1)).thenReturn("Pacote deletado com sucesso.");
+        Mockito.doNothing().when(service).deletar(1);
 
         mvc.perform(delete("/api/pacotes/1"))
                 .andExpect(status().isNoContent());
@@ -277,8 +277,8 @@ class PacoteControllerTest {
 
     @Test @Order(16)
     void deveFalharDelecao_PacoteInexistente() throws Exception {
-        Mockito.when(service.deletar(99))
-                .thenThrow(new NotFoundException("Pacote não encontrado."));
+        Mockito.doThrow(new NotFoundException("Pacote não encontrado."))
+                        .when(service).deletar(99);
 
         mvc.perform(delete("/api/pacotes/99"))
                 .andExpect(status().isNotFound())

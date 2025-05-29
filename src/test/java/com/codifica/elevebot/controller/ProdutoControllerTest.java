@@ -149,8 +149,7 @@ class ProdutoControllerTest {
     /* -----------  DELETE  ----------- */
     @Test @Order(8)
     void deveDeletarProduto() throws Exception {
-        Mockito.when(produtoService.deletar(1))
-                .thenReturn("Produto deletado com sucesso.");
+        Mockito.doNothing().when(produtoService).deletar(1);
 
         mvc.perform(delete("/api/produtos/1"))
                 .andExpect(status().isNoContent());
@@ -158,8 +157,8 @@ class ProdutoControllerTest {
 
     @Test @Order(9)
     void deveFalharAoDeletar_ProdutoInexistente() throws Exception {
-        Mockito.when(produtoService.deletar(99))
-                .thenThrow(new NotFoundException("Produto não encontrado."));
+        Mockito.doThrow(new NotFoundException("Produto não encontrado."))
+                .when(produtoService).deletar(99);
 
         mvc.perform(delete("/api/produtos/99"))
                 .andExpect(status().isNotFound())

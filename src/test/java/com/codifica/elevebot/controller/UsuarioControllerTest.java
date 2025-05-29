@@ -167,17 +167,16 @@ class UsuarioControllerTest {
     // ---------- DELETE ----------
     @Test @Order(10)
     void deveDeletarUsuario() throws Exception {
-        when(service.deletar(1)).thenReturn("Removido!");
+        Mockito.doNothing().when(service).deletar(1);
 
         mvc.perform(delete("/api/usuarios/1"))
-                .andExpect(status().isNoContent())
-                .andExpect(content().string("Removido!"));
+                .andExpect(status().isNoContent());
     }
 
     @Test @Order(11)
     void deveFalharAoDeletarUsuarioInexistente() throws Exception {
-        when(service.deletar(99))
-                .thenThrow(new NotFoundException("Usuário não encontrado."));
+        Mockito.doThrow(new NotFoundException("Usuário não encontrado."))
+                .when(service).deletar(99);
 
         mvc.perform(delete("/api/usuarios/99"))
                 .andExpect(status().isNotFound())

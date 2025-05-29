@@ -179,18 +179,17 @@ class PetControllerTest {
     @Test
     @Order(9)
     void deveDeletarPet() throws Exception {
-        when(service.deletar(1)).thenReturn("Pet deletado com sucesso.");
+        Mockito.doNothing().when(service).deletar(1);
 
         mvc.perform(delete("/api/pets/1"))
-                .andExpect(status().isNoContent())
-                .andExpect(content().string("Pet deletado com sucesso."));
+                .andExpect(status().isNoContent());
     }
 
     @Test
     @Order(10)
     void deveFalharAoDeletar_PetInexistente() throws Exception {
-        when(service.deletar(99))
-                .thenThrow(new NotFoundException("Pet não encontrado."));
+        Mockito.doThrow(new NotFoundException("Pet não encontrado."))
+                .when(service).deletar(99);
 
         mvc.perform(delete("/api/pets/99"))
                 .andExpect(status().isNotFound())

@@ -164,8 +164,7 @@ class DespesaControllerTest {
     /* -----------  DELETE  ----------- */
     @Test @Order(10)
     void deveDeletarDespesa() throws Exception {
-        Mockito.when(despesaService.deletar(1))
-                .thenReturn("Despesa deletada com sucesso.");
+        Mockito.doNothing().when(despesaService).deletar(1);
 
         mvc.perform(delete("/api/despesas/1"))
                 .andExpect(status().isNoContent());
@@ -173,8 +172,8 @@ class DespesaControllerTest {
 
     @Test @Order(11)
     void deveFalharAoDeletar_DespesaNaoEncontrada() throws Exception {
-        Mockito.when(despesaService.deletar(99))
-                .thenThrow(new NotFoundException("Despesa não encontrada."));
+        Mockito.doThrow(new NotFoundException("Despesa não encontrada."))
+                .when(despesaService).deletar(99);
 
         mvc.perform(delete("/api/despesas/99"))
                 .andExpect(status().isNotFound())
