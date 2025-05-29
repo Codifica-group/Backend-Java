@@ -18,6 +18,8 @@ public class AgendaServico {
     @JoinColumn(name = "servico_id")
     private Servico servico;
 
+    private Double valor;
+
     public AgendaServico () {}
 
     public AgendaServico(Agenda agenda, Servico servico) {
@@ -47,5 +49,13 @@ public class AgendaServico {
 
     public void setServico(Servico servico) {
         this.servico = servico;
+    }
+
+    public Double getValor() {
+        return valor;
+    }
+
+    public void setValor(Double valor) {
+        this.valor = valor;
     }
 }

@@ -1,6 +1,5 @@
 package com.codifica.elevebot.dto;
 
-import com.codifica.elevebot.model.Servico;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.time.LocalDateTime;
@@ -11,13 +10,12 @@ public class AgendaDTO {
 
     private Integer id;
     private Integer petId;
-    private List<Integer> servicosId;
     private ClienteDTO cliente;
     private PetDTO pet;
-    private List<Servico> servicos;
+    private List<ServicoDTO> servicos;
     private LocalDateTime dataHoraInicio;
     private LocalDateTime dataHoraFim;
-    private Double valor;
+    private Double valorTotal;
 
     public Integer getId() {
         return id;
@@ -33,14 +31,6 @@ public class AgendaDTO {
 
     public void setPetId(Integer petId) {
         this.petId = petId;
-    }
-
-    public List<Integer> getServicosId() {
-        return servicosId;
-    }
-
-    public void setServicosId(List<Integer> servicosId) {
-        this.servicosId = servicosId;
     }
 
     public ClienteDTO getCliente() {
@@ -59,11 +49,11 @@ public class AgendaDTO {
         this.pet = pet;
     }
 
-    public List<Servico> getServicos() {
+    public List<ServicoDTO> getServicos() {
         return servicos;
     }
 
-    public void setServicos(List<Servico> servicos) {
+    public void setServicos(List<ServicoDTO> servicos) {
         this.servicos = servicos;
     }
 
@@ -83,11 +73,11 @@ public class AgendaDTO {
         this.dataHoraFim = dataHoraFim;
     }
 
-    public Double getValor() {
-        return valor;
+    public Double getValorTotal() {
+        return valorTotal;
     }
 
-    public void setValor(Double valor) {
-        this.valor = valor;
+    public void setValorTotal(Double valorTotal) {
+        this.valorTotal = valorTotal;
     }
 }

@@ -1,6 +1,7 @@
 package com.codifica.elevebot.controller;
 
 import com.codifica.elevebot.dto.AgendaDTO;
+import com.codifica.elevebot.dto.ServicoDTO;
 import com.codifica.elevebot.exception.ConflictException;
 import com.codifica.elevebot.exception.NotFoundException;
 import com.codifica.elevebot.model.Filtro;
@@ -59,8 +60,8 @@ class AgendaControllerTest {
         agendaPadrao.setPetId(1);
         agendaPadrao.setDataHoraInicio(LocalDateTime.of(2023, 10, 15, 10, 0));
         agendaPadrao.setDataHoraFim(LocalDateTime.of(2023, 10, 15, 11, 0));
-        agendaPadrao.setValor(200.0);
-        agendaPadrao.setServicosId(List.of(1, 2));
+        agendaPadrao.setValorTotal(200.0);
+        agendaPadrao.setServicos(List.of( new ServicoDTO(1, 100.0), new ServicoDTO(2, 100.0)));
     }
 
     // ---------- POST ----------

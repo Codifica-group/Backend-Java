@@ -189,12 +189,12 @@ public class DevConfig {
             agenda1.setPet(pets.get(0));
             agenda1.setDataHoraInicio(dataHoraInicio);
             agenda1.setDataHoraFim(dataHoraInicio.plusHours(1));
-            agenda1.setValor(servicos.get(0).getValorBase());
             agendaRepository.save(agenda1);
 
             AgendaServico agendaServico1 = new AgendaServico();
             agendaServico1.setAgenda(agenda1);
             agendaServico1.setServico(servicos.get(0));
+            agendaServico1.setValor(servicos.get(0).getValorBase());
             agendaServicoRepository.save(agendaServico1);
 
             dataHoraInicio = dataHoraInicio.plusHours(1).plusSeconds(1);
@@ -204,12 +204,12 @@ public class DevConfig {
             agenda2.setPet(pets.get(0));
             agenda2.setDataHoraInicio(dataHoraInicio);
             agenda2.setDataHoraFim(dataHoraInicio.plusHours(1));
-            agenda2.setValor(servicos.get(1).getValorBase());
             agendaRepository.save(agenda2);
 
             AgendaServico agendaServico2 = new AgendaServico();
             agendaServico2.setAgenda(agenda2);
             agendaServico2.setServico(servicos.get(1));
+            agendaServico2.setValor(servicos.get(1).getValorBase());
             agendaServicoRepository.save(agendaServico2);
 
             dataHoraInicio = dataHoraInicio.plusHours(1).plusSeconds(1);
@@ -219,12 +219,12 @@ public class DevConfig {
             agenda3.setPet(pets.get(1));
             agenda3.setDataHoraInicio(dataHoraInicio);
             agenda3.setDataHoraFim(dataHoraInicio.plusHours(1));
-            agenda3.setValor(servicos.get(2).getValorBase());
             agendaRepository.save(agenda3);
 
             AgendaServico agendaServico3 = new AgendaServico();
             agendaServico3.setAgenda(agenda3);
             agendaServico3.setServico(servicos.get(2));
+            agendaServico3.setValor(servicos.get(2).getValorBase());
             agendaServicoRepository.save(agendaServico3);
 
             dataHoraInicio = dataHoraInicio.plusHours(1).plusSeconds(1);
@@ -234,17 +234,18 @@ public class DevConfig {
             agenda4.setPet(pets.get(1));
             agenda4.setDataHoraInicio(dataHoraInicio);
             agenda4.setDataHoraFim(dataHoraInicio.plusHours(1));
-            agenda4.setValor(servicos.get(0).getValorBase() + servicos.get(1).getValorBase());
             agendaRepository.save(agenda4);
 
             AgendaServico agendaServico4a = new AgendaServico();
             agendaServico4a.setAgenda(agenda4);
             agendaServico4a.setServico(servicos.get(0));
+            agendaServico4a.setValor(servicos.get(0).getValorBase());
             agendaServicoRepository.save(agendaServico4a);
 
             AgendaServico agendaServico4b = new AgendaServico();
             agendaServico4b.setAgenda(agenda4);
             agendaServico4b.setServico(servicos.get(1));
+            agendaServico4b.setValor(servicos.get(1).getValorBase());
             agendaServicoRepository.save(agendaServico4b);
 
             dataHoraInicio = dataHoraInicio.plusHours(1).plusSeconds(1);
@@ -254,17 +255,18 @@ public class DevConfig {
             agenda5.setPet(pets.get(2));
             agenda5.setDataHoraInicio(dataHoraInicio);
             agenda5.setDataHoraFim(dataHoraInicio.plusHours(1));
-            agenda5.setValor(servicos.get(0).getValorBase() + servicos.get(2).getValorBase());
             agendaRepository.save(agenda5);
 
             AgendaServico agendaServico5a = new AgendaServico();
             agendaServico5a.setAgenda(agenda5);
             agendaServico5a.setServico(servicos.get(0));
+            agendaServico5a.setValor(servicos.get(0).getValorBase());
             agendaServicoRepository.save(agendaServico5a);
 
             AgendaServico agendaServico5b = new AgendaServico();
             agendaServico5b.setAgenda(agenda5);
             agendaServico5b.setServico(servicos.get(2));
+            agendaServico5b.setValor(servicos.get(2).getValorBase());
             agendaServicoRepository.save(agendaServico5b);
 
             dataHoraInicio = dataHoraInicio.plusHours(1).plusSeconds(1);
@@ -274,17 +276,18 @@ public class DevConfig {
             agenda6.setPet(pets.get(2));
             agenda6.setDataHoraInicio(dataHoraInicio);
             agenda6.setDataHoraFim(dataHoraInicio.plusHours(1));
-            agenda6.setValor(servicos.get(1).getValorBase() + servicos.get(2).getValorBase());
             agendaRepository.save(agenda6);
 
             AgendaServico agendaServico6a = new AgendaServico();
             agendaServico6a.setAgenda(agenda6);
             agendaServico6a.setServico(servicos.get(1));
+            agendaServico6a.setValor(servicos.get(1).getValorBase());
             agendaServicoRepository.save(agendaServico6a);
 
             AgendaServico agendaServico6b = new AgendaServico();
             agendaServico6b.setAgenda(agenda6);
             agendaServico6b.setServico(servicos.get(2));
+            agendaServico6b.setValor(servicos.get(2).getValorBase());
             agendaServicoRepository.save(agendaServico6b);
 
             dataHoraInicio = dataHoraInicio.plusHours(1).plusSeconds(1);
@@ -294,13 +297,13 @@ public class DevConfig {
             agenda7.setPet(pets.get(3));
             agenda7.setDataHoraInicio(dataHoraInicio);
             agenda7.setDataHoraFim(dataHoraInicio.plusHours(1));
-            agenda7.setValor(servicos.get(0).getValorBase() + servicos.get(1).getValorBase() + servicos.get(2).getValorBase());
             agendaRepository.save(agenda7);
 
             for (Servico servico : servicos) {
                 AgendaServico agendaServico7 = new AgendaServico();
                 agendaServico7.setAgenda(agenda7);
                 agendaServico7.setServico(servico);
+                agendaServico7.setValor(servico.getValorBase());
                 agendaServicoRepository.save(agendaServico7);
             }
 
@@ -311,12 +314,12 @@ public class DevConfig {
             agenda8.setPet(pets.get(3));
             agenda8.setDataHoraInicio(dataHoraInicio);
             agenda8.setDataHoraFim(dataHoraInicio.plusHours(1));
-            agenda8.setValor(servicos.get(0).getValorBase());
             agendaRepository.save(agenda8);
 
             AgendaServico agendaServico8 = new AgendaServico();
             agendaServico8.setAgenda(agenda8);
             agendaServico8.setServico(servicos.get(0));
+            agendaServico8.setValor(servicos.get(0).getValorBase());
             agendaServicoRepository.save(agendaServico8);
         };
     }

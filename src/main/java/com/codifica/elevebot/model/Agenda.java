@@ -18,7 +18,6 @@ public class Agenda {
 
     private LocalDateTime dataHoraInicio;
     private LocalDateTime dataHoraFim;
-    private Double valor;
 
     public Agenda() {}
 
@@ -52,13 +51,5 @@ public class Agenda {
 
     public void setDataHoraFim(LocalDateTime dataHoraFim) {
         this.dataHoraFim = dataHoraFim;
-    }
-
-    public Double getValor() {
-        return valor;
-    }
-
-    public void setValor(Double valor) {
-        this.valor = valor;
     }
 }

@@ -1,8 +1,10 @@
 package com.codifica.elevebot.service;
 
 import com.codifica.elevebot.adapter.AgendaAdapter;
+import com.codifica.elevebot.adapter.ServicoAdapter;
 import com.codifica.elevebot.dto.AgendaDTO;
 import com.codifica.elevebot.dto.CepDTO;
+import com.codifica.elevebot.dto.ServicoDTO;
 import com.codifica.elevebot.exception.ConflictException;
 import com.codifica.elevebot.exception.NotFoundException;
 import com.codifica.elevebot.exception.IllegalArgumentException;
@@ -39,6 +41,9 @@ public class AgendaService {
     private AgendaAdapter agendaAdapter;
 
     @Autowired
+    private ServicoAdapter servicoAdapter;
+
+    @Autowired
     private CepService cepService;
 
     private static final String URL_DESLOCAMENTO = System.getenv("URL_DESLOCAMENTO");
@@ -56,20 +61,21 @@ public class AgendaService {
         Agenda agenda = agendaAdapter.toEntity(agendaDTO, pet);
         agendaRepository.save(agenda);
 
-        List<Integer> servicos = agendaDTO.getServicosId();
+        List<ServicoDTO> servicos = agendaDTO.getServicos();
         if (servicos == null || servicos.isEmpty()) {
             throw new IllegalArgumentException("É necessário informar ao menos um serviço.");
         }
-
-        for (Integer servicoId : servicos) {
-            Servico servico = servicoRepository.findById(servicoId)
-                    .orElseThrow(() -> new NotFoundException("Serviço com ID " + servicoId + " não encontrado."));
+        List<AgendaServico> agendaServicos = agendaDTO.getServicos().stream().map(servicoDTO -> {
+            Servico servico = servicoRepository.findById(servicoDTO.getId())
+                    .orElseThrow(() -> new NotFoundException("Serviço com ID " + servicoDTO.getId() + " não encontrado."));
 
             AgendaServico agendaServico = new AgendaServico();
             agendaServico.setAgenda(agenda);
             agendaServico.setServico(servico);
-            agendaServicoRepository.save(agendaServico);
-        }
+            agendaServico.setValor(servicoDTO.getValor());
+            return agendaServico;
+        }).collect(Collectors.toList());
+        agendaServicoRepository.saveAll(agendaServicos);
 
         var resposta = new HashMap<String, Object>();
         resposta.put("mensagem", "Agenda cadastrada com sucesso.");
@@ -80,13 +86,17 @@ public class AgendaService {
     public List<AgendaDTO> listar() {
         return agendaRepository.findAll().stream()
                 .map(agenda -> {
-                    List<Servico> servicos = agendaServicoRepository.findByAgenda(agenda).stream()
+                    List<AgendaServico> agendaServicos = agendaServicoRepository.findByAgenda(agenda);
+                    List<ServicoDTO> servicos = agendaServicos.stream()
                             .map(agendaServico -> {
-                                return agendaServico.getServico();
+                                Servico servico = agendaServico.getServico();
+                                Double valor = agendaServico.getValor();
+                                return servicoAdapter.toDTO(servico, valor);
                             })
-                            .collect(Collectors.toList());
+                            .toList();
 
-                    return agendaAdapter.toDTO(agenda, servicos);
+                    AgendaDTO agendaDTO = agendaAdapter.toDTO(agenda, servicos);
+                    return agendaDTO;
                 })
                 .toList();
     }
@@ -95,11 +105,17 @@ public class AgendaService {
         Agenda agenda = agendaRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Agenda não encontrada."));
 
-        List<Servico> servicos = agendaServicoRepository.findByAgenda(agenda).stream()
-                .map(AgendaServico::getServico)
-                .collect(Collectors.toList());
+        List<AgendaServico> agendaServicos = agendaServicoRepository.findByAgenda(agenda);
+        List<ServicoDTO> servicos = agendaServicos.stream()
+                .map(agendaServico -> {
+                    Servico servico = agendaServico.getServico();
+                    Double valor = agendaServico.getValor();
+                    return servicoAdapter.toDTO(servico, valor);
+                })
+                .toList();
 
-        return agendaAdapter.toDTO(agenda, servicos);
+        AgendaDTO agendaDTO = agendaAdapter.toDTO(agenda, servicos);
+        return agendaDTO;
     }
 
     public String atualizar(Integer id, AgendaDTO agendaDTO) {
@@ -117,24 +133,23 @@ public class AgendaService {
         agendaExistente.setPet(pet);
         agendaExistente.setDataHoraInicio(agendaDTO.getDataHoraInicio());
         agendaExistente.setDataHoraFim(agendaDTO.getDataHoraFim());
-        agendaExistente.setValor(agendaDTO.getValor());
         agendaRepository.save(agendaExistente);
 
         List<AgendaServico> agendaServicosAntigos = agendaServicoRepository.findByAgenda(agendaExistente);
         agendaServicoRepository.deleteAll(agendaServicosAntigos);
 
-        List<Integer> novosServicosIds = agendaDTO.getServicosId();
-        if (novosServicosIds == null || novosServicosIds.isEmpty()) {
+        if (agendaDTO.getServicos() == null || agendaDTO.getServicos().isEmpty()) {
             throw new IllegalArgumentException("É necessário informar ao menos um serviço.");
         }
 
-        for (Integer servicoId : novosServicosIds) {
-            Servico servico = servicoRepository.findById(servicoId)
-                    .orElseThrow(() -> new NotFoundException("Serviço com ID " + servicoId + " não encontrado."));
+        for (ServicoDTO servicoDTO : agendaDTO.getServicos()) {
+            Servico servico = servicoRepository.findById(servicoDTO.getId())
+                    .orElseThrow(() -> new NotFoundException("Serviço com ID " + servicoDTO.getId() + " não encontrado."));
 
             AgendaServico novoAgendaServico = new AgendaServico();
             novoAgendaServico.setAgenda(agendaExistente);
             novoAgendaServico.setServico(servico);
+            novoAgendaServico.setValor(servicoDTO.getValor());
             agendaServicoRepository.save(novoAgendaServico);
         }
 
@@ -204,10 +219,14 @@ public class AgendaService {
         }
 
         return agendas.stream().map(agenda -> {
-            List<Servico> servicos = agendaServicoRepository.findByAgenda(agenda).stream()
-                    .map(AgendaServico::getServico)
-                    .collect(Collectors.toList());
-
+            List<AgendaServico> agendaServicos = agendaServicoRepository.findByAgenda(agenda);
+            List<ServicoDTO> servicos = agendaServicos.stream()
+                    .map(agendaServico -> {
+                        Servico servico = agendaServico.getServico();
+                        Double valor = agendaServico.getValor();
+                        return servicoAdapter.toDTO(servico, valor);
+                    })
+                    .toList();
             return agendaAdapter.toDTO(agenda, servicos);
         }).toList();
     }
@@ -223,7 +242,12 @@ public class AgendaService {
                 .toList();
 
         double totalGanhos = agendasNoPeriodo.stream()
-                .mapToDouble(Agenda::getValor)
+                .mapToDouble(agenda -> {
+                    List<AgendaServico> servicos = agendaServicoRepository.findByAgenda(agenda);
+                    return servicos.stream()
+                            .mapToDouble(AgendaServico::getValor)
+                            .sum();
+                })
                 .sum();
 
         List<Despesa> despesasNoPeriodo = despesaRepository.findAll().stream()
@@ -263,10 +287,11 @@ public class AgendaService {
         Double taxaDeslocamento = deslocamentoResponse.get("taxa");
         Double tempoHoras = deslocamentoResponse.get("tempoHoras");
 
-        List<Servico> servicos = agendaDTO.getServicosId().stream().map(servicoId -> {
-            return servicoRepository.findById(servicoId)
-                    .orElseThrow(() -> new NotFoundException("Serviço não encontrado."));
-        }).collect(Collectors.toList());
+        List<Servico> servicos = agendaDTO.getServicos().stream()
+                .map(servicoDTO -> servicoRepository.findById(servicoDTO.getId())
+                        .orElseThrow(() -> new NotFoundException("Serviço com ID " + servicoDTO.getId() + " não encontrado.")))
+                .collect(Collectors.toList());
+
 
         Double valorServico = calcularValorServico(servicos, pet);
         Double sugestaoValor = taxaDeslocamento + valorServico;
