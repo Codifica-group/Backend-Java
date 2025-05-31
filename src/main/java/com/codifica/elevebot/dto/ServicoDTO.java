@@ -16,6 +16,12 @@ public class ServicoDTO {
         this.valor = valor;
     }
 
+    public ServicoDTO(Integer id, String nome, Double valor) {
+        this.id = id;
+        this.nome = nome;
+        this.valor = valor;
+    }
+
     public Integer getId() {
         return id;
     }

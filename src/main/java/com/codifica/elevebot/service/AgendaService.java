@@ -297,7 +297,7 @@ public class AgendaService {
                 .map(servicoDTO -> {
                     Servico servico = servicoRepository.findById(servicoDTO.getId())
                             .orElseThrow(() -> new NotFoundException("Serviço com ID " + servicoDTO.getId() + " não encontrado."));
-                    return new ServicoDTO(servico.getId(), servico.getValorBase());
+                    return new ServicoDTO(servico.getId(), servico.getNome(), servico.getValorBase());
                 })
                 .collect(Collectors.toList());
 
