@@ -1,6 +1,7 @@
 package com.codifica.elevebot.controller;
 
 import com.codifica.elevebot.dto.AgendaDTO;
+import com.codifica.elevebot.dto.SugestaoDTO;
 import com.codifica.elevebot.model.Filtro;
 import com.codifica.elevebot.model.Total;
 import com.codifica.elevebot.service.AgendaService;
@@ -59,7 +60,7 @@ public class AgendaController {
     }
 
     @PostMapping("/calcular/servico")
-    public ResponseEntity<Object> calcularServico(@RequestBody AgendaDTO agendaDTO) {
+    public ResponseEntity<SugestaoDTO> calcularServico(@RequestBody AgendaDTO agendaDTO) {
         return ResponseEntity.ok(agendaService.calcularServico(agendaDTO));
     }
 }

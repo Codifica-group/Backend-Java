@@ -2,14 +2,15 @@ package com.codifica.elevebot.service;
 
 import com.codifica.elevebot.adapter.AgendaAdapter;
 import com.codifica.elevebot.adapter.ServicoAdapter;
-import com.codifica.elevebot.dto.AgendaDTO;
-import com.codifica.elevebot.dto.CepDTO;
-import com.codifica.elevebot.dto.ServicoDTO;
+import com.codifica.elevebot.dto.*;
 import com.codifica.elevebot.exception.ConflictException;
 import com.codifica.elevebot.exception.NotFoundException;
 import com.codifica.elevebot.exception.IllegalArgumentException;
+import com.codifica.elevebot.filter.LogFilter;
 import com.codifica.elevebot.model.*;
 import com.codifica.elevebot.repository.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -47,6 +48,8 @@ public class AgendaService {
     private CepService cepService;
 
     private static final String URL_DESLOCAMENTO = System.getenv("URL_DESLOCAMENTO");
+
+    private static final Logger logger = LoggerFactory.getLogger(LogFilter.class);
 
 
     public Object cadastrar(AgendaDTO agendaDTO) {
@@ -268,7 +271,7 @@ public class AgendaService {
         return total;
     }
 
-    public Object calcularServico(AgendaDTO agendaDTO) {
+    public SugestaoDTO calcularServico(AgendaDTO agendaDTO) {
         Pet pet = petRepository.findById(agendaDTO.getPetId())
                 .orElseThrow(() -> new NotFoundException("Pet não encontrado."));
 
@@ -277,32 +280,33 @@ public class AgendaService {
             throw new IllegalArgumentException("Cliente ou CEP do cliente não encontrado.");
         }
 
-        CepDTO enderecoCliente = cepService.buscarCep(cliente.getCep());
-        Map<String, Double> deslocamentoResponse = consultarMicroservicoDeslocamento(enderecoCliente, cliente);
-        if (deslocamentoResponse == null || !deslocamentoResponse.containsKey("distanciaKm") || !deslocamentoResponse.containsKey("taxa")) {
-            throw new RuntimeException("Falha ao consultar o microserviço de deslocamento.");
+        DeslocamentoDTO deslocamentoDTO = new DeslocamentoDTO(0.0, 0.0, 0.0);
+        try {
+            CepDTO enderecoCliente = cepService.buscarCep(cliente.getCep());
+            Map<String, Double> deslocamentoResponse = consultarMicroservicoDeslocamento(enderecoCliente, cliente);
+
+            deslocamentoDTO.setTempo(deslocamentoResponse.get("tempoHoras"));
+            deslocamentoDTO.setDistanciaKm(deslocamentoResponse.get("distanciaKm"));
+            deslocamentoDTO.setValor(deslocamentoResponse.get("taxa"));
+        }
+        catch (Exception e) {
+            logger.error("Erro ao consultar microserviço de deslocamento: {}", e.getMessage());
         }
 
-        Double distanciaKm = deslocamentoResponse.get("distanciaKm");
-        Double taxaDeslocamento = deslocamentoResponse.get("taxa");
-        Double tempoHoras = deslocamentoResponse.get("tempoHoras");
-
-        List<Servico> servicos = agendaDTO.getServicos().stream()
-                .map(servicoDTO -> servicoRepository.findById(servicoDTO.getId())
-                        .orElseThrow(() -> new NotFoundException("Serviço com ID " + servicoDTO.getId() + " não encontrado.")))
+        List<ServicoDTO> servicosDTO = agendaDTO.getServicos().stream()
+                .map(servicoDTO -> {
+                    Servico servico = servicoRepository.findById(servicoDTO.getId())
+                            .orElseThrow(() -> new NotFoundException("Serviço com ID " + servicoDTO.getId() + " não encontrado."));
+                    return new ServicoDTO(servico.getId(), servico.getValorBase());
+                })
                 .collect(Collectors.toList());
 
+        Double valorServico = servicosDTO.stream()
+                .mapToDouble(ServicoDTO::getValor)
+                .sum();
+        Double total = valorServico + deslocamentoDTO.getValor();
 
-        Double valorServico = calcularValorServico(servicos, pet);
-        Double sugestaoValor = taxaDeslocamento + valorServico;
-
-        Map<String, Object> resposta = new HashMap<>();
-        resposta.put("sugestaoValor", sugestaoValor);
-        resposta.put("valorDeslocamento", taxaDeslocamento);
-        resposta.put("distanciaKm", distanciaKm);
-        resposta.put("tempoDeslocamento", tempoHoras);
-        resposta.put("valorServico", valorServico);
-        return resposta;
+        return new SugestaoDTO(total, servicosDTO, deslocamentoDTO);
     }
 
     private Map<String, Double> consultarMicroservicoDeslocamento(CepDTO endereco, Cliente cliente) {
