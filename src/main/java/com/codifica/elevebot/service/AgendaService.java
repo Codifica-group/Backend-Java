@@ -136,6 +136,7 @@ public class AgendaService {
         agendaExistente.setPet(pet);
         agendaExistente.setDataHoraInicio(agendaDTO.getDataHoraInicio());
         agendaExistente.setDataHoraFim(agendaDTO.getDataHoraFim());
+        agendaExistente.setValorDeslocamento(agendaDTO.getValorDeslocamento());
         agendaRepository.save(agendaExistente);
 
         List<AgendaServico> agendaServicosAntigos = agendaServicoRepository.findByAgenda(agendaExistente);
