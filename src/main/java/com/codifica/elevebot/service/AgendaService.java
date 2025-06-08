@@ -53,6 +53,10 @@ public class AgendaService {
 
 
     public Object cadastrar(AgendaDTO agendaDTO) {
+        if (agendaDTO.getDataHoraInicio().isAfter(agendaDTO.getDataHoraFim())) {
+            throw new IllegalArgumentException("A data/hora de inicio deve ser menor que a data/hora de fim.");
+        }
+
         List<Agenda> conflitos = agendaRepository.findConflitos(agendaDTO.getDataHoraInicio(), agendaDTO.getDataHoraFim());
         boolean temConflito = conflitos.stream().anyMatch(agenda ->
                 !(agendaDTO.getDataHoraInicio().isEqual(agenda.getDataHoraFim()) ||
@@ -126,6 +130,10 @@ public class AgendaService {
     }
 
     public String atualizar(Integer id, AgendaDTO agendaDTO) {
+        if (agendaDTO.getDataHoraInicio().isAfter(agendaDTO.getDataHoraFim())) {
+            throw new IllegalArgumentException("A data/hora de inicio deve ser menor que a data/hora de fim.");
+        }
+
         Agenda agendaExistente = agendaRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Agenda não encontrada."));
 
