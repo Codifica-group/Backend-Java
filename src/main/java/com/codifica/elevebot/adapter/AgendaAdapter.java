@@ -46,7 +46,7 @@ public class AgendaAdapter {
         Double valorTotal = servicos.stream()
                 .mapToDouble(ServicoDTO::getValor)
                 .sum();
-        agendaDTO.setValorTotal(valorTotal);
+        agendaDTO.setValorTotal(valorTotal + agenda.getValorDeslocamento());
         return agendaDTO;
     }
 }

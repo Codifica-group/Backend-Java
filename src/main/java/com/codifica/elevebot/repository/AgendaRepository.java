@@ -13,7 +13,7 @@ public interface AgendaRepository extends JpaRepository<Agenda, Integer> {
     @Query("SELECT COUNT(a) > 0 FROM Agenda a WHERE a.pet.id = :petId")
     boolean existsByPetId(Integer petId);
 
-    @Query("SELECT a FROM Agenda a WHERE NOT (a.dataHoraFim < :inicio OR a.dataHoraInicio > :fim)")
+    @Query("SELECT a FROM Agenda a WHERE NOT (a.dataHoraFim <= :inicio OR a.dataHoraInicio >= :fim)")
     List<Agenda> findConflitos(@Param("inicio") LocalDateTime inicio, @Param("fim") LocalDateTime fim);
 
     @Query("SELECT a FROM Agenda a WHERE a.id != :id AND NOT (a.dataHoraFim < :inicio OR a.dataHoraInicio > :fim)")

@@ -195,7 +195,7 @@ public class DevConfig {
             agendaServico1.setValor(servicos.get(0).getValorBase());
             agendaServicoRepository.save(agendaServico1);
 
-            dataHoraInicio = dataHoraInicio.plusHours(1).plusSeconds(1);
+            dataHoraInicio = dataHoraInicio.plusHours(1);
 
             // Pet 1: Tosa (09:00 - 10:00, R$40,00)
             Agenda agenda2 = new Agenda();
@@ -211,7 +211,7 @@ public class DevConfig {
             agendaServico2.setValor(servicos.get(1).getValorBase());
             agendaServicoRepository.save(agendaServico2);
 
-            dataHoraInicio = dataHoraInicio.plusHours(1).plusSeconds(1);
+            dataHoraInicio = dataHoraInicio.plusHours(1);
 
             // Pet 2: Hidratação (10:00 - 11:00, R$50,00)
             Agenda agenda3 = new Agenda();
@@ -227,7 +227,7 @@ public class DevConfig {
             agendaServico3.setValor(servicos.get(2).getValorBase());
             agendaServicoRepository.save(agendaServico3);
 
-            dataHoraInicio = dataHoraInicio.plusHours(1).plusSeconds(1);
+            dataHoraInicio = dataHoraInicio.plusHours(1);
 
             // Pet 2: Banho + Tosa (11:00 - 12:00, R$70,00)
             Agenda agenda4 = new Agenda();
@@ -249,7 +249,7 @@ public class DevConfig {
             agendaServico4b.setValor(servicos.get(1).getValorBase());
             agendaServicoRepository.save(agendaServico4b);
 
-            dataHoraInicio = dataHoraInicio.plusHours(1).plusSeconds(1);
+            dataHoraInicio = dataHoraInicio.plusHours(1);
 
             // Pet 3: Banho + Hidratação (12:00 - 13:00, R$80,00)
             Agenda agenda5 = new Agenda();
@@ -271,7 +271,7 @@ public class DevConfig {
             agendaServico5b.setValor(servicos.get(2).getValorBase());
             agendaServicoRepository.save(agendaServico5b);
 
-            dataHoraInicio = dataHoraInicio.plusHours(1).plusSeconds(1);
+            dataHoraInicio = dataHoraInicio.plusHours(1);
 
             // Pet 3: Tosa + Hidratação (13:00 - 14:00, R$90,00)
             Agenda agenda6 = new Agenda();
@@ -293,7 +293,7 @@ public class DevConfig {
             agendaServico6b.setValor(servicos.get(2).getValorBase());
             agendaServicoRepository.save(agendaServico6b);
 
-            dataHoraInicio = dataHoraInicio.plusHours(1).plusSeconds(1);
+            dataHoraInicio = dataHoraInicio.plusHours(1);
 
             // Pet 4: Banho + Tosa + Hidratação (14:00 - 15:00, R$120,00)
             Agenda agenda7 = new Agenda();
@@ -311,7 +311,7 @@ public class DevConfig {
                 agendaServicoRepository.save(agendaServico7);
             }
 
-            dataHoraInicio = dataHoraInicio.plusHours(1).plusSeconds(1);
+            dataHoraInicio = dataHoraInicio.plusHours(1);
 
             // Pet 4: Banho (15:00 - 16:00, R$30,00)
             Agenda agenda8 = new Agenda();

@@ -54,7 +54,11 @@ public class AgendaService {
 
     public Object cadastrar(AgendaDTO agendaDTO) {
         List<Agenda> conflitos = agendaRepository.findConflitos(agendaDTO.getDataHoraInicio(), agendaDTO.getDataHoraFim());
-        if (!conflitos.isEmpty()) {
+        boolean temConflito = conflitos.stream().anyMatch(agenda ->
+                !(agendaDTO.getDataHoraInicio().isEqual(agenda.getDataHoraFim()) ||
+                        agendaDTO.getDataHoraFim().isEqual(agenda.getDataHoraInicio()))
+        );
+        if (temConflito) {
             throw new ConflictException("Já existe outro agendamento no período informado.");
         }
 
@@ -126,7 +130,11 @@ public class AgendaService {
                 .orElseThrow(() -> new NotFoundException("Agenda não encontrada."));
 
         List<Agenda> conflitos = agendaRepository.findConflitosExcluindoId(id, agendaDTO.getDataHoraInicio(), agendaDTO.getDataHoraFim());
-        if (!conflitos.isEmpty()) {
+        boolean temConflito = conflitos.stream().anyMatch(agenda ->
+                !(agendaDTO.getDataHoraInicio().isEqual(agenda.getDataHoraFim()) ||
+                        agendaDTO.getDataHoraFim().isEqual(agenda.getDataHoraInicio()))
+        );
+        if (temConflito) {
             throw new ConflictException("Já existe outro agendamento no período informado.");
         }
 
@@ -283,10 +291,9 @@ public class AgendaService {
 
         DeslocamentoDTO deslocamentoDTO = new DeslocamentoDTO(0.0, 0.0, 0.0);
         try {
-            CepDTO enderecoCliente = cepService.buscarCep(cliente.getCep());
-            Map<String, Double> deslocamentoResponse = consultarMicroservicoDeslocamento(enderecoCliente, cliente);
+            Map<String, Double> deslocamentoResponse = consultarMicroservicoDeslocamento(cliente);
 
-            deslocamentoDTO.setTempo(deslocamentoResponse.get("tempoHoras"));
+            deslocamentoDTO.setTempo(deslocamentoResponse.get("tempoMinutos"));
             deslocamentoDTO.setDistanciaKm(deslocamentoResponse.get("distanciaKm"));
             deslocamentoDTO.setValor(deslocamentoResponse.get("taxa"));
         }
@@ -310,13 +317,13 @@ public class AgendaService {
         return new SugestaoDTO(total, servicosDTO, deslocamentoDTO);
     }
 
-    private Map<String, Double> consultarMicroservicoDeslocamento(CepDTO endereco, Cliente cliente) {
+    private Map<String, Double> consultarMicroservicoDeslocamento(Cliente cliente) {
         RestTemplate restTemplate = new RestTemplate();
 
         Map<String, String> deslocamentoRequest = new HashMap<>();
-        deslocamentoRequest.put("rua", endereco.getLogradouro());
+        deslocamentoRequest.put("rua", cliente.getRua());
         deslocamentoRequest.put("numero", cliente.getNumEndereco().toString());
-        deslocamentoRequest.put("cidade", endereco.getLocalidade());
+        deslocamentoRequest.put("cidade", cliente.getCidade());
         deslocamentoRequest.put("cep", cliente.getCep());
 
         return restTemplate.postForObject(URL_DESLOCAMENTO, deslocamentoRequest, Map.class);
