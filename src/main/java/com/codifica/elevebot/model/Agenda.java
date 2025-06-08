@@ -18,6 +18,7 @@ public class Agenda {
 
     private LocalDateTime dataHoraInicio;
     private LocalDateTime dataHoraFim;
+    private Double valorDeslocamento;
 
     public Agenda() {}
 
@@ -51,5 +52,13 @@ public class Agenda {
 
     public void setDataHoraFim(LocalDateTime dataHoraFim) {
         this.dataHoraFim = dataHoraFim;
+    }
+
+    public Double getValorDeslocamento() {
+        return valorDeslocamento;
+    }
+
+    public void setValorDeslocamento(Double valorDeslocamento) {
+        this.valorDeslocamento = valorDeslocamento;
     }
 }

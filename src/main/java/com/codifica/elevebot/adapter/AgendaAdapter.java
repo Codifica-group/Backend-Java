@@ -13,6 +13,7 @@ public class AgendaAdapter {
         Agenda agenda = new Agenda();
         agenda.setId(agendaDTO.getId());
         agenda.setPet(pet);
+        agenda.setValorDeslocamento(agendaDTO.getValorDeslocamento());
         agenda.setDataHoraInicio(agendaDTO.getDataHoraInicio());
         agenda.setDataHoraFim(agendaDTO.getDataHoraFim());
         return agenda;
@@ -38,6 +39,7 @@ public class AgendaAdapter {
         agendaDTO.setPet(petDTO);
         agendaDTO.setCliente(clienteDTO);
         agendaDTO.setServicos(servicos);
+        agendaDTO.setValorDeslocamento(agenda.getValorDeslocamento());
         agendaDTO.setDataHoraInicio(agenda.getDataHoraInicio());
         agendaDTO.setDataHoraFim(agenda.getDataHoraFim());
 

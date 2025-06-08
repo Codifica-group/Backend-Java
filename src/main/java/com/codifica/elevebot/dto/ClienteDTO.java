@@ -10,7 +10,10 @@ public class ClienteDTO {
     private String nome;
     private String numCelular;
     private String cep;
+    private String rua;
     private Integer numEndereco;
+    private String bairro;
+    private String cidade;
     private String complemento;
     private List<PetDTO> pets;
     private List<PacoteDTO> pacotes;
@@ -79,5 +82,29 @@ public class ClienteDTO {
 
     public void setPacotes(List<PacoteDTO> pacotes) {
         this.pacotes = pacotes;
+    }
+
+    public String getRua() {
+        return rua;
+    }
+
+    public void setRua(String rua) {
+        this.rua = rua;
+    }
+
+    public String getBairro() {
+        return bairro;
+    }
+
+    public void setBairro(String bairro) {
+        this.bairro = bairro;
+    }
+
+    public String getCidade() {
+        return cidade;
+    }
+
+    public void setCidade(String cidade) {
+        this.cidade = cidade;
     }
 }

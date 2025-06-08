@@ -77,7 +77,10 @@ public class ClienteService {
         Cliente clienteFiltro = new Cliente(cliente.getNome(),
                                             cliente.getNumCelular(),
                                             cliente.getCep(),
+                                            cliente.getRua(),
                                             cliente.getNumEndereco(),
+                                            cliente.getBairro(),
+                                            cliente.getCidade(),
                                             cliente.getComplemento());
 
         ExampleMatcher matcher = ExampleMatcher.matching()

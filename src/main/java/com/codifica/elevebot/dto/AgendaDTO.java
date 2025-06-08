@@ -13,6 +13,7 @@ public class AgendaDTO {
     private ClienteDTO cliente;
     private PetDTO pet;
     private List<ServicoDTO> servicos;
+    private Double valorDeslocamento;
     private LocalDateTime dataHoraInicio;
     private LocalDateTime dataHoraFim;
     private Double valorTotal;
@@ -79,5 +80,13 @@ public class AgendaDTO {
 
     public void setValorTotal(Double valorTotal) {
         this.valorTotal = valorTotal;
+    }
+
+    public Double getValorDeslocamento() {
+        return valorDeslocamento;
+    }
+
+    public void setValorDeslocamento(Double valorDeslocamento) {
+        this.valorDeslocamento = valorDeslocamento;
     }
 }

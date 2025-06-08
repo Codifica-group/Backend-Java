@@ -30,7 +30,10 @@ public class ClienteAdapter {
         cliente.setNome(dto.getNome());
         cliente.setNumCelular(dto.getNumCelular());
         cliente.setCep(dto.getCep());
+        cliente.setRua(dto.getRua());
         cliente.setNumEndereco(dto.getNumEndereco());
+        cliente.setBairro(dto.getBairro());
+        cliente.setCidade(dto.getCidade());
         cliente.setComplemento(dto.getComplemento());
         return cliente;
     }
@@ -41,7 +44,10 @@ public class ClienteAdapter {
         dto.setNome(entity.getNome());
         dto.setNumCelular(entity.getNumCelular());
         dto.setCep(entity.getCep());
+        dto.setRua(entity.getRua());
         dto.setNumEndereco(entity.getNumEndereco());
+        dto.setBairro(entity.getBairro());
+        dto.setCidade(entity.getCidade());
         dto.setComplemento(entity.getComplemento());
 
         Pacote pacoteAtivo = pacoteRepository.findActivePacoteByCliente(entity.getId(), LocalDate.now());
