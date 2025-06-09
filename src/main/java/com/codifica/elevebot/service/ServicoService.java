@@ -22,7 +22,7 @@ public class ServicoService {
 
     public Object cadastrar(Servico servico) {
         if (servicoRepository.existsByNome(servico.getNome())) {
-            throw new ConflictException("Servico já cadastrado.");
+            throw new ConflictException("Impossível cadastrar serviços com dados iguais.");
         }
 
         servicoRepository.save(servico);

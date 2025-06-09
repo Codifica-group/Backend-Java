@@ -29,7 +29,7 @@ public class ClienteService {
 
     public Object cadastrar(Cliente cliente) {
         if (clienteExiste(cliente)) {
-            throw new ConflictException("Cliente já cadastrado.");
+            throw new ConflictException("Impossível cadastrar dois clientes com dados iguais.");
         }
 
         clienteRepository.save(cliente);

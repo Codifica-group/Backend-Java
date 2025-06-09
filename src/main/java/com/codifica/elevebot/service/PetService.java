@@ -48,7 +48,7 @@ public class PetService {
         Pet pet = petAdapter.toEntity(petDTO, cliente, raca);
 
         if (petExiste(pet)) {
-            throw new ConflictException("Pet já cadastrado.");
+            throw new ConflictException("Impossível cadastrar dois pets com dados iguais.");
         }
 
         petRepository.save(pet);

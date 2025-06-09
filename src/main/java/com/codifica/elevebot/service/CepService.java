@@ -1,6 +1,7 @@
 package com.codifica.elevebot.service;
 
 import com.codifica.elevebot.dto.CepDTO;
+import com.codifica.elevebot.exception.InternalServerErrorException;
 import com.codifica.elevebot.exception.NotFoundException;
 import com.codifica.elevebot.exception.IllegalArgumentException;
 import org.springframework.stereotype.Service;
@@ -14,14 +15,18 @@ public class CepService {
     public CepDTO buscarCep(String cep) {
         validarCep(cep);
 
-        RestTemplate restTemplate = new RestTemplate();
-        CepDTO endereco = restTemplate.getForObject(URL_VIACEP, CepDTO.class, cep);
+        try {
+            RestTemplate restTemplate = new RestTemplate();
+            CepDTO endereco = restTemplate.getForObject(URL_VIACEP, CepDTO.class, cep);
 
-        if (endereco == null || Boolean.TRUE.equals(endereco.getErro())) {
-            throw new NotFoundException("CEP não encontrado: " + cep);
+            if (endereco == null || Boolean.TRUE.equals(endereco.getErro())) {
+                throw new NotFoundException("CEP não encontrado: " + cep);
+            }
+
+            return endereco;
+        } catch (Exception e) {
+            throw new InternalServerErrorException("Erro interno na API VIACEP: " + e);
         }
-
-        return endereco;
     }
 
     private void validarCep(String cep) {
