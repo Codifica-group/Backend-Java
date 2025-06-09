@@ -1,7 +1,9 @@
 package com.codifica.elevebot.controller;
 
 import com.codifica.elevebot.dto.AgendaDTO;
+import com.codifica.elevebot.dto.DeslocamentoDTO;
 import com.codifica.elevebot.dto.ServicoDTO;
+import com.codifica.elevebot.dto.SugestaoDTO;
 import com.codifica.elevebot.exception.ConflictException;
 import com.codifica.elevebot.exception.NotFoundException;
 import com.codifica.elevebot.model.Filtro;
@@ -244,10 +246,14 @@ class AgendaControllerTest {
     @Test
     @Order(14)
     void deveCalcularServico() throws Exception {
-        Map<String, Object> resposta = Map.of(
-                "valorServico", 150.0,
-                "sugestaoValor", 200.0
-        );
+        DeslocamentoDTO deslocamentoDTO = new DeslocamentoDTO(10.0, 5.0, 50.0);
+        List<ServicoDTO> servicosDTO = agendaPadrao.getServicos();
+        Double valorServico = servicosDTO.stream()
+                .mapToDouble(ServicoDTO::getValor)
+                .sum();
+        Double sugestaoValor = valorServico + deslocamentoDTO.getValor();
+
+        SugestaoDTO resposta = new SugestaoDTO(sugestaoValor, servicosDTO, deslocamentoDTO);
 
         when(service.calcularServico(any(AgendaDTO.class))).thenReturn(resposta);
 
@@ -255,7 +261,9 @@ class AgendaControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJson(agendaPadrao)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.valorServico").value(150.0))
-                .andExpect(jsonPath("$.sugestaoValor").value(200.0));
+                .andExpect(jsonPath("$.valor").value(sugestaoValor)) // Observe a mudança aqui
+                .andExpect(jsonPath("$.deslocamento.tempo").value(deslocamentoDTO.getTempo()))
+                .andExpect(jsonPath("$.deslocamento.distanciaKm").value(deslocamentoDTO.getDistanciaKm()))
+                .andExpect(jsonPath("$.deslocamento.valor").value(deslocamentoDTO.getValor()));
     }
 }
