@@ -313,7 +313,10 @@ public class AgendaService {
                 .map(servicoDTO -> {
                     Servico servico = servicoRepository.findById(servicoDTO.getId())
                             .orElseThrow(() -> new NotFoundException("Serviço com ID " + servicoDTO.getId() + " não encontrado."));
-                    return new ServicoDTO(servico.getId(), servico.getNome(), servico.getValorBase());
+
+                    Double valorCorrigido = calcularValorServico(servico, pet);
+
+                    return new ServicoDTO(servico.getId(), servico.getNome(), valorCorrigido);
                 })
                 .collect(Collectors.toList());
 
@@ -337,28 +340,24 @@ public class AgendaService {
         return restTemplate.postForObject(URL_DESLOCAMENTO, deslocamentoRequest, Map.class);
     }
 
-    private Double calcularValorServico(List<Servico> servicos, Pet pet) {
-        Double valorServico = 0.0;
+    private Double calcularValorServico(Servico servico, Pet pet) {
+        Double valorBase = servico.getValorBase();
+        Double adicionalPorte = 0.0;
 
-        for (Servico servico : servicos) {
-            valorServico += servico.getValorBase();
-        }
-
-        String porte = pet.getRaca().getPorte().getNome();
-        switch (porte) {
-            case "Pequeno":
-                valorServico += 10.0;
+        switch (pet.getRaca().getPorte().getId()) {
+            case 1: // Porte Pequeno
+                adicionalPorte = 0.0;
                 break;
-            case "Médio":
-                valorServico += 20.0;
+            case 2: // Porte Médio
+                adicionalPorte = 10.0;
                 break;
-            case "Grande":
-                valorServico += 30.0;
+            case 3: // Porte Grande
+                adicionalPorte = 20.0;
                 break;
             default:
                 throw new IllegalArgumentException("Porte do pet inválido.");
         }
 
-        return valorServico;
+        return valorBase + adicionalPorte;
     }
 }

@@ -81,9 +81,9 @@ public class DevConfig {
 
             //SERVICO
             List<Servico> servicos = List.of(
-                    new Servico("Banho", 30.0),
-                    new Servico("Tosa", 40.0),
-                    new Servico("Hidratação", 50.0)
+                    new Servico("Banho", 35.0),
+                    new Servico("Tosa", 50.0),
+                    new Servico("Hidratação", 15.0)
             );
             servicoRepository.saveAll(servicos);
 
