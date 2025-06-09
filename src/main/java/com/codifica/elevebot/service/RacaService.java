@@ -35,7 +35,7 @@ public class RacaService {
 
     public Object cadastrar(RacaDTO racaDTO) {
         if (racaRepository.existsByNome(racaDTO.getNome())) {
-            throw new ConflictException("Raça já cadastrada.");
+            throw new ConflictException("Impossível cadastrar duas raças com dados iguais.");
         }
 
         Porte porte = porteRepository.findById(racaDTO.getPorteId())
